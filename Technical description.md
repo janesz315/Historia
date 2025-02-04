@@ -22,6 +22,7 @@ Funkciók:
 
 ## Az adatbázis diagramja
 
+![Diagram](/backend/img/diagram.jpg)
 
 ## Táblák részletes leírása
 

@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id();
+            $table->integer('id')->autoIncrement();
             $table->string('name');
             $table->Integer('roleId');
             $table->foreign('roleId')->references('id')->on('roles')->onDelete('cascade');

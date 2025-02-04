@@ -4,20 +4,20 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        Schema::create('answers', function (Blueprint $table) {
+        Schema::create('user_tests', function (Blueprint $table) {
             $table->integer('id')->autoIncrement();
-            $table->text('answer');
-            $table->integer('questionsId');
-            $table->tinyInteger('rightAnswer')->default(0);
+            $table->integer('userId');
+            $table->string("testName");
+            $table->double('score');
+            $table->foreign('userId')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
-
-            $table->foreign('questionsId')->references('id')->on('questions')->onDelete('cascade');
         });
     }
 
@@ -26,6 +26,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('answers');
+        Schema::dropIfExists('user_tests');
     }
 };
