@@ -20,7 +20,7 @@ Egy olyan weboldal létrehozása, amely egyrészt, a közép és az emelt szint�
 
 - questions (kérdések):
     - id: a kérdés azonosítója, int(10), autoIncrement
-    - question (kérdés): itt találjuk meg a kérdést, string(255), notNull
+    - question (kérdés): itt találjuk meg a kérdést, text, notNull
     - questionTypeId (kérdésTípusId): ez határozza meg a kérdés típusát, int(10), autoIncrement, notNull
     - categoryId: (témakörId): itt adjuk meg azt, hogy melyik témakörhöz tartozik az azonosító segítségével, int(10), autoIncrement
 
