@@ -1,39 +1,43 @@
+### Mi a feladat?
+
+Egy olyan weboldal létrehozása, amely egyrészt, a közép és az emelt szintű érettségire való felkészülést támogatja kidolgozott szóbeli tételekkel és témakörökkel, másrészt a tanulónak lehetősége van tesztelni tudását az érettségire feleletválasztós kérdések segítségével. Kiválaszthatja, hogy milyen szintről szeretne kérdéseket kapni. Ezután választhat a témakörök vagy a tételek közül attól függően, hogy melyiket választotta. Ha a felhasználó szeretné tesztelni teljeskörűen a tudását, akkor megjelölheti azt, hogy az összes témakörből kapjon kérdést. Miután végzett a teszttel, akkor megkapja a pontszámot és az értékelést is.
+
 ### Az adatbázis:
 
 ## Táblák
 
- - témakörök (categories):
+ - categories (témakörök):
     - id: a témakör azonosítója, int(10), autoIncrement
     - category (témakör): a témakör neve, string(60), notNull
     - level (szint): közép vagy emelt szint, string(15), notNull
-    - elaboration (kidolgozás): maga a témakör tartalma, string(255), notNull
+    - text (szöveg): maga a témakör tartalma, text, notNull
 
-- források (sources):
+- sources (források):
     - id: a forrás azonosítója, int(10), autoIncrement
     - categoryId (témakörId): itt kapcsolódunk a témakörhöz, ez adja meg, melyik témakörbe kell,  int(10), autoIncrement
     - sourceLink (forrásLink): maga a hivatkozás, string(255)
     - note (megjegyzés): ha a forrás egy pdf-ben van, akkor itt adjuk meg az oldalszámot például, string(255), notNull
 
-- Kérdések (Questions):
+- questions (kérdések):
     - id: a kérdés azonosítója, int(10), autoIncrement
     - question (kérdés): itt találjuk meg a kérdést, string(255), notNull
-    - questionTypeId (kérdésTípusId): ez határozza meg a kérdés típusát, int(10), autoIncrement
+    - questionTypeId (kérdésTípusId): ez határozza meg a kérdés típusát, int(10), autoIncrement, notNull
     - categoryId: (témakörId): itt adjuk meg azt, hogy melyik témakörhöz tartozik az azonosító segítségével, int(10), autoIncrement
 
-- válaszok (answers):
+- answers (válaszok):
     - id: a válasz azonosítója, int(10), autoIncrement
     - answer (válasz): a válasz tartalma, string(255), notNull
     - QuestionsId (KérdésekId): itt adjuk meg a hozzátartozó kérdést az azonosító segítségével, int(10), autoIncrement
     - RightAnswer (helyesVálasz): itt döntjük el a válasz helyességét: 1 - helyes, 0 - helytelen,  tinyInt(1), notNull
 
-- kérdésTípusok (questionTypes):
+- questionTypes (kérdésTípusok):
     - id: a kérdéstípus azonosítója, int(10), autoIncrement
     - questionCategory (kérdésKategória): Ez tartalmazza azt, hogy ez milyen fajta kérdés, string(30), notNull
 
 - users (felhasználók):
     - id: a felhasználó azonosítója, int(10), autoIncrement
     - username (felhasználónév): itt van a felhasználónév, string(25), notNull
-    - roleId (szerepkörId): Itt adjuk meg azt, hogy a felhasználó milyen szerepkörben van az azonosító segítségével, int(10) autoIncrement
+    - roleId (szerepkörId): Itt adjuk meg azt, hogy a felhasználó milyen szerepkörben van az azonosító segítségével, int(10), autoIncrement
 
 - roles (szerepkörök):
     - id: a szerepkör azonosítója, int(10), autoIncrement
