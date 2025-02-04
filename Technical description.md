@@ -1,8 +1,8 @@
-### Mi a feladat?
+# A feladat leírása
 
 Egy olyan weboldal létrehozása, amely egyrészt, a közép és az emelt szintű érettségire való felkészülést támogatja kidolgozott szóbeli tételekkel és témakörökkel, másrészt a tanulónak lehetősége van tesztelni tudását az érettségire feleletválasztós kérdések segítségével. Kiválaszthatja, hogy milyen szintről szeretne kérdéseket kapni. Ezután választhat a témakörök vagy a tételek közül attól függően, hogy melyiket választotta. Ha a felhasználó szeretné tesztelni teljeskörűen a tudását, akkor megjelölheti azt, hogy az összes témakörből kapjon kérdést. Miután végzett a teszttel, akkor megkapja a pontszámot és az értékelést is. A weboldal használata regiszrációhoz kötött. A felhasználó nem hozhat létre új tartalmakat, csakis az admin. 
 
-### Az adatbázis:
+# Az adatbázis:
 
 ## Táblák
 
