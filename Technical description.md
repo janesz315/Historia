@@ -1,10 +1,29 @@
 # A feladat leírása
 
-Egy olyan weboldal létrehozása, amely egyrészt, a közép és az emelt szintű érettségire való felkészülést támogatja kidolgozott szóbeli tételekkel és témakörökkel, másrészt a tanulónak lehetősége van tesztelni tudását az érettségire feleletválasztós kérdések segítségével. Kiválaszthatja, hogy milyen szintről szeretne kérdéseket kapni. Ezután választhat a témakörök vagy a tételek közül attól függően, hogy melyiket választotta. Ha a felhasználó szeretné tesztelni teljeskörűen a tudását, akkor megjelölheti azt, hogy az összes témakörből kapjon kérdést. Miután végzett a teszttel, akkor megkapja a pontszámot és az értékelést is. A weboldal használata regiszrációhoz kötött. A felhasználó nem hozhat létre új tartalmakat, csakis az admin. 
+Egy olyan webalkalmazás létrehozása, amely egyrészt, a közép és az emelt szintű érettségire való felkészülést támogatja kidolgozott szóbeli tételekkel és témakörökkel, másrészt a tanulónak lehetősége van tesztelni tudását az érettségire feleletválasztós kérdések segítségével történelem tantárgyból.
+Funkciók:
+- Kiválaszthatja, hogy milyen szintről szeretne kérdéseket kapni. Ezután választhat a témakörök vagy a tételek közül attól függően, hogy melyiket választotta. Ha a felhasználó szeretné tesztelni teljeskörűen a tudását, akkor megjelölheti azt, hogy az összes témakörből kapjon kérdést. Miután végzett a teszttel, akkor megkapja a pontszámot és az értékelést is. 
+- Szerepkörök:
+    - A weboldal használata regiszrációhoz kötött. 
+    - admin: Ő tölti fel a tartalmakat.
+    - user: A felhasználó nem hozhat létre új tartalmakat, böngészhet és a tesztek segítségével tanulhat. Az általa készült tesztek tárolódnak az adatbázisban. 
+
+- Technológiák:
+    - Adatbázis: MySQL
+    - Backend: Laravel
+    - Frontend: Vue + Vite
+    - Csoportmunka: Git, GitHub
+    - Kommunikáció: Teams
+    - Ütemterv: GitHub projekttervező rendszere
+
+- A feladat csoportmunkában készült Jáger Kristóf és Kovács János (csoportvezető) részvételével.    
 
 # Az adatbázis:
 
-## Táblák
+## Az adatbázis diagramja
+
+
+## Táblák részletes leírása
 
  - categories (témakörök):
     - id: a témakör azonosítója, int(10), autoIncrement
