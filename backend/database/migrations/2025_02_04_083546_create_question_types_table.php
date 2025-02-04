@@ -10,13 +10,10 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('categories', function (Blueprint $table) {
+        Schema::create('question_types', function (Blueprint $table) {
             $table->integer('id')->autoIncrement();
-            $table->string('category', 255);
-            $table->string('level', 10);
-            $table->text('text');
+            $table->string('questionCategory', 30);
             $table->timestamps();
-
         });
     }
 
@@ -25,6 +22,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('categories');
+        Schema::dropIfExists('question_types');
     }
 };

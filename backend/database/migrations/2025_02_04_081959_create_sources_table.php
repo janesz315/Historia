@@ -10,13 +10,14 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('categories', function (Blueprint $table) {
+        Schema::create('sources', function (Blueprint $table) {
             $table->integer('id')->autoIncrement();
-            $table->string('category', 255);
-            $table->string('level', 10);
-            $table->text('text');
+            $table->integer('categoryId');
+            $table->string('sourceLink', 255)->nullable();
+            $table->string('note', 255);
             $table->timestamps();
 
+            $table->foreign('categoryId')->references('id')->on('categories')->onDelete('cascade');
         });
     }
 
@@ -25,6 +26,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('categories');
+        Schema::dropIfExists('sources');
     }
 };
