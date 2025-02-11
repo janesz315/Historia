@@ -18,7 +18,7 @@ return new class extends Migration
             $table->integer('userTestId');
             $table->foreign('questionId')->references('id')->on('questions');
             $table->foreign('answerId')->references('id')->on('answers');
-            $table->foreign('userTestId')->references('id')->on('user_tests');
+            $table->foreign('userTestId')->references('id')->on('user_tests')->onDelete('cascade');
             $table->timestamps();
 
         });
