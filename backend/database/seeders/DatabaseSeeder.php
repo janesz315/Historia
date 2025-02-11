@@ -24,7 +24,7 @@ class DatabaseSeeder extends Seeder
             SourceSeeder::class,
             QuestionTypesSeeder::class,
             QuestionSeeder::class,
-            // AnswersSeeder::class,
+            AnswerSeeder::class,
             // TestSeeder::class,
             // TestQuestionSeeder::class,
         ]);
