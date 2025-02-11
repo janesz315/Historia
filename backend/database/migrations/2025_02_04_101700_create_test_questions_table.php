@@ -20,7 +20,6 @@ return new class extends Migration
             $table->foreign('answerId')->references('id')->on('answers');
             $table->foreign('userTestId')->references('id')->on('user_tests')->onDelete('cascade');
             $table->timestamps();
-
         });
     }
 

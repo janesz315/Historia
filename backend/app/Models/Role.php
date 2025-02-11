@@ -2,9 +2,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Spatie\Permission\Models\Role as SpatieRole;
+use Illuminate\Database\Eloquent\Model;
 
-class Role extends SpatieRole
+class Role extends Model
 {
     use HasFactory;
+    
+    protected $fillable = [
+        'id',
+        'role'
+    ];
 }

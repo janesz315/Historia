@@ -9,4 +9,16 @@ class Source extends Model
 {
     /** @use HasFactory<\Database\Factories\SourceFactory> */
     use HasFactory;
+
+    protected $fillable = [
+        'id',
+        'categoryId',
+        'sourceLink',
+        'note'
+    ];
+
+    public function categories(): BelongsTo
+    {
+        return $this->belongsTo(Category::class, 'categoryId');
+    }
 }
