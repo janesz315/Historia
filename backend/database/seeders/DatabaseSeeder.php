@@ -20,14 +20,13 @@ class DatabaseSeeder extends Seeder
         $this->call([
             RolesSeeder::class,
             UserSeeder::class,
-            // QuestionTypesSeeder::class,
             CategorySeeder::class,
-            SourceSeeder::class
+            SourceSeeder::class,
+            QuestionTypesSeeder::class,
+            QuestionSeeder::class,
+            // AnswersSeeder::class,
             // TestSeeder::class,
             // TestQuestionSeeder::class,
-            // AnswersSeeder::class,
-            // QuestionsSeeder::class,
-            // TestResultsSeeder::class,
         ]);
     }
 }

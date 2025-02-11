@@ -15,7 +15,6 @@ class CategorySeeder extends Seeder
     {
         $filePath = database_path('../txt/temakorok.csv');
 
-
         $data = [];
         if (($handle = fopen($filePath, "r")) !== FALSE) {
             while (($row = fgetcsv($handle, 1000, ";")) !== FALSE) {
@@ -28,12 +27,8 @@ class CategorySeeder extends Seeder
             fclose($handle);
         }
 
-
         if (Category::count() === 0) {
             Category::factory()->createMany($data);
         }
-
-
-      
     }
 }
