@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
             RolesSeeder::class,
             UserSeeder::class,
             // QuestionTypesSeeder::class,
-            // CategoriesSeeder::class,
+            CategorySeeder::class,
             // TestSeeder::class,
             // TestQuestionSeeder::class,
             // AnswersSeeder::class,
