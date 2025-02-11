@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
 
     public function run(): void {
         DB::statement('DELETE FROM roles');
+        
 
         $this->call([
             RolesSeeder::class,
@@ -26,7 +27,7 @@ class DatabaseSeeder extends Seeder
             QuestionSeeder::class,
             AnswerSeeder::class,
             UserTestSeeder::class,
-            // TestQuestionSeeder::class,
+            TestQuestionSeeder::class,
         ]);
     }
 }
