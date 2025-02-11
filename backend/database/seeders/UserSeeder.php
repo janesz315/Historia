@@ -13,6 +13,7 @@ class UserSeeder extends Seeder
     {
         if (User::count() === 0) {
             User::factory()->create([
+                'id' => 1,
                 'name'     => 'test',
                 'email'    => 'test@example.com',
                 'password' => bcrypt('123'),
