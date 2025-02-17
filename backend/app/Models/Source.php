@@ -7,17 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Source extends Model
 {
-    /** @use HasFactory<\Database\Factories\SourceFactory> */
     use HasFactory;
-
-    protected $fillable = [
-        'id',
-        'categoryId',
-        'sourceLink',
-        'note'
-    ];
-
-    public function categories(): BelongsTo
+    protected $fillable = ['categoryId', 'sourceLink', 'note'];
+    public function category()
     {
         return $this->belongsTo(Category::class, 'categoryId');
     }

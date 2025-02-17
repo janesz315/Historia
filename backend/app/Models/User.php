@@ -10,49 +10,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
-    protected $fillable = [
-        'name',
-        'roleId',
-    ];
-
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
-    protected $hidden = [
-        'name',
-        'password',
-        'remember_token',
-    ];
-
-    protected $guarded = [];
-
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
-    }
-
-    /**
-     * A felhasználó szerepkörének kapcsolata.
-     */
-    public function role(): BelongsTo
+    use HasFactory;
+    protected $fillable = ['name', 'roleId', 'email', 'password'];
+    protected $hidden = ['password', 'remember_token'];
+    public function role()
     {
         return $this->belongsTo(Role::class, 'roleId');
+    }
+    public function userTests()
+    {
+        return $this->hasMany(UserTest::class, 'userId');
     }
 }

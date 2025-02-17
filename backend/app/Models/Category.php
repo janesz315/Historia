@@ -7,13 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Category extends Model
 {
-    /** @use HasFactory<\Database\Factories\CategoryFactory> */
     use HasFactory;
-
-    protected $fillable = [
-        'id',
-        'category',
-        'level',
-        'text'
-    ];
+    protected $fillable = ['category', 'level', 'text'];
+    public function questions()
+    {
+        return $this->hasMany(Question::class, 'categoryId');
+    }
+    public function sources()
+    {
+        return $this->hasMany(Source::class, 'categoryId');
+    }
 }

@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\QuestionTypes;
-use App\Http\Requests\StoreQuestionTypesRequest;
-use App\Http\Requests\UpdateQuestionTypesRequest;
+use App\Models\Source;
+use App\Http\Requests\StoreSourceRequest;
+use App\Http\Requests\UpdateSourceRequest;
 
-class QuestionTypesController extends Controller
+class SourceController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -19,7 +19,7 @@ class QuestionTypesController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreQuestionTypesRequest $request)
+    public function store(StoreSourceRequest $request)
     {
         //
     }
@@ -27,7 +27,7 @@ class QuestionTypesController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(QuestionTypes $questionTypes)
+    public function show(Source $source)
     {
         //
     }
@@ -35,7 +35,7 @@ class QuestionTypesController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateQuestionTypesRequest $request, QuestionTypes $questionTypes)
+    public function update(UpdateSourceRequest $request, Source $source)
     {
         //
     }
@@ -43,7 +43,7 @@ class QuestionTypesController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(QuestionTypes $questionTypes)
+    public function destroy(Source $source)
     {
         //
     }

@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Answers;
-use App\Http\Requests\StoreAnswersRequest;
-use App\Http\Requests\UpdateAnswersRequest;
+use App\Models\Answer;
+use App\Http\Requests\StoreAnswerRequest;
+use App\Http\Requests\UpdateAnswerRequest;
 
-class AnswersController extends Controller
+class AnswerController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -19,7 +19,7 @@ class AnswersController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreAnswersRequest $request)
+    public function store(StoreAnswerRequest $request)
     {
         //
     }
@@ -27,7 +27,7 @@ class AnswersController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Answers $answers)
+    public function show(Answer $answer)
     {
         //
     }
@@ -35,7 +35,7 @@ class AnswersController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateAnswersRequest $request, Answers $answers)
+    public function update(UpdateAnswerRequest $request, Answer $answer)
     {
         //
     }
@@ -43,7 +43,7 @@ class AnswersController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Answers $answers)
+    public function destroy(Answer $answer)
     {
         //
     }
