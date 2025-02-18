@@ -142,4 +142,40 @@ Authorization: Bearer {{token}}
 
 # ----------------- sources -------------------
 
+# ----------------- questionTypes -------------------
+
+### get questionType
+get {{host}}/api/questionCategory
+
+### get questionType by id
+GET {{host}}/api/questionCategory/1
+
+### post new questionType
+POST {{host}}/api/questionCategory/
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "questionCategory": "adasdad"
+}
+
+### update questionType
+patch {{host}}/api/questionCategory/4
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "questionCategory": "hghghghg"
+}
+
+### delete questionType by id
+delete {{host}}/api/questionCategory/4
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+# ----------------- questionTypes -------------------
+
 

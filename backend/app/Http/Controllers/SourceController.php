@@ -28,7 +28,7 @@ class SourceController extends Controller
     public function store(StoreSourceRequest $request)
     {
         $rows = Source::create(attributes: $request->all());
-        return response()->json(['rows' => $rows], options:JSON_UNESCAPED_UNICODE);
+        return response()->json(['rows' => $rows], options: JSON_UNESCAPED_UNICODE);
     }
 
     /**
@@ -37,7 +37,7 @@ class SourceController extends Controller
     public function show(int $id)
     {
         $rows = Source::find($id);
-        return response()->json(['rows' => $rows], options:JSON_UNESCAPED_UNICODE);
+        return response()->json(['rows' => $rows], options: JSON_UNESCAPED_UNICODE);
     }
 
     /**
@@ -68,7 +68,7 @@ class SourceController extends Controller
                 'id' => $id
             ];
         }
-        return response()->json($data, options:JSON_UNESCAPED_UNICODE);
+        return response()->json($data, options: JSON_UNESCAPED_UNICODE);
     }
 
     /**
@@ -89,7 +89,7 @@ class SourceController extends Controller
                 'id' => $id
             ];
         }
-        
-        return response()->json($data, options:JSON_UNESCAPED_UNICODE);
+
+        return response()->json($data, options: JSON_UNESCAPED_UNICODE);
     }
 }
