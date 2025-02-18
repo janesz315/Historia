@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SourceController;
 use App\Http\Controllers\UserController;
@@ -38,6 +39,18 @@ Route::delete('roles/{id}', [RoleController::class, 'destroy']);
 // Route::apiResource('roles', RoleController::class);
 //endregion
 
+//region categories
+Route::get('categories', [CategoryController::class, 'index']);
+Route::get('categories/{id}', [CategoryController::class, 'show']);
+Route::post('categories', [CategoryController::class, 'store']);
+    // ->middleware('auth:sanctum');
+Route::patch('categories/{id}', [CategoryController::class, 'update']);
+    // ->middleware('auth:sanctum');
+Route::delete('categories/{id}', [CategoryController::class, 'destroy']);
+    // ->middleware('auth:sanctum');
+// Route::apiResource('roles', RoleController::class);
+//endregion
+
 //region sources
 Route::get('sources', [SourceController::class, 'index']);
 Route::get('sources/{id}', [SourceController::class, 'show']);
@@ -48,3 +61,4 @@ Route::patch('sources/{id}', [SourceController::class, 'update']);
 Route::delete('sources/{id}', [SourceController::class, 'destroy']);
     // ->middleware('auth:sanctum');
 // Route::apiResource('diaks', DiakController::class);
+//endregion

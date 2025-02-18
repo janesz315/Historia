@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
 
+
 class CategoryController extends Controller
 {
     /**
@@ -13,7 +14,13 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        //
+        $rows = Category::all();
+        // $rows = Diak::orderBy('nev', 'asc')->get();
+        $data = [
+            'message' => 'ok',
+            'data' => $rows
+        ];
+        return response()->json($data, options: JSON_UNESCAPED_UNICODE);
     }
 
     /**

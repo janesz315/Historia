@@ -64,6 +64,13 @@ Authorization: Bearer {{token}}
 
 # ----------------- roles -------------------
 
+# ----------------- categories -------------------
+### get roles
+get {{host}}/api/categories
+
+# ----------------- categories -------------------
+
+
 # ----------------- source ------------------
 
 ### get sources
@@ -103,6 +110,6 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 
-# ----------------- roles -------------------
+# ----------------- sources -------------------
 
 
