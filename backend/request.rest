@@ -40,10 +40,10 @@ Authorization: Bearer {{token}}
 }
 
 ### get role by id
-get {{host}}/api/roles/3
+get {{host}}/api/roles/5
 
 ### patch role
-patch {{host}}/api/roles/3
+patch {{host}}/api/roles/5
 Accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{token}}
@@ -53,7 +53,7 @@ Authorization: Bearer {{token}}
 }
 
 ### delete role by id
-delete {{host}}/api/roles/3
+delete {{host}}/api/roles/5
 Accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{token}}
