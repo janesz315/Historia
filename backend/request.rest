@@ -5,3 +5,6 @@
 
 ### teszt
 get {{host}}/api/
+
+### get roles
+get {{host}}/api/roles

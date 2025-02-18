@@ -13,7 +13,13 @@ class RoleController extends Controller
      */
     public function index()
     {
-        //
+        $rows = Role::all();
+        // $rows = Diak::orderBy('nev', 'asc')->get();
+        $data = [
+            'message' => 'ok',
+            'data' => $rows
+        ];
+        return response()->json($data, options: JSON_UNESCAPED_UNICODE);
     }
 
     /**
