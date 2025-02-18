@@ -39,3 +39,6 @@ Authorization: Bearer {{token}}
     "role": "creator"
 }
 
+### get role by id
+get {{host}}/api/roles/3
+
