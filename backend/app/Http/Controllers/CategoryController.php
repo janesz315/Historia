@@ -28,15 +28,17 @@ class CategoryController extends Controller
      */
     public function store(StoreCategoryRequest $request)
     {
-        //
+        $rows = Category::create(attributes: $request->all());
+        return response()->json(['rows' => $rows], options:JSON_UNESCAPED_UNICODE);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Category $category)
+    public function show(int $id)
     {
-        //
+        $rows = Category::find($id);
+        return response()->json(['rows' => $rows], options:JSON_UNESCAPED_UNICODE);
     }
 
     /**

@@ -65,8 +65,26 @@ Authorization: Bearer {{token}}
 # ----------------- roles -------------------
 
 # ----------------- categories -------------------
-### get roles
+### get categories
 get {{host}}/api/categories
+
+### get categories by id
+GET {{host}}/api/categories/1
+
+
+### post new category
+POST {{host}}/api/categories/
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "category": "Lenin",
+    "level": "emelt",
+    "text": "1870-1924"
+}
+
+
 
 # ----------------- categories -------------------
 
