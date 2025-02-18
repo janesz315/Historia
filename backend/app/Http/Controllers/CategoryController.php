@@ -44,9 +44,32 @@ class CategoryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateCategoryRequest $request, Category $category)
+    public function update(UpdateCategoryRequest $request, int $id)
     {
-        //
+        $row = Category::find($id);
+        if ($row) {
+
+            try {
+                $row->update($request->all());
+                $data = [
+                    'row' => $row
+                ];
+            } catch (\Illuminate\Database\QueryException $e) {
+                $data = [
+                    'message' => 'source incorrect',
+                    'category' => $request['category'],
+                    'level' => $request['level'],
+                    'text' => $request['text']
+                ];
+            }
+
+        } else {
+            $data = [
+                'message' => 'Not found',
+                'id' => $id
+            ];
+        }
+        return response()->json($data, options:JSON_UNESCAPED_UNICODE);
     }
 
     /**

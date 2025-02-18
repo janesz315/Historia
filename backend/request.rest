@@ -84,6 +84,18 @@ Authorization: Bearer {{token}}
     "text": "1870-1924"
 }
 
+### update category
+patch {{host}}/api/categories/51
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "category": "Lenin",
+    "level": "emelt",
+    "text": "1870-1924-ig élt."
+}
+
 
 
 # ----------------- categories -------------------
