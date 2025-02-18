@@ -52,3 +52,10 @@ Authorization: Bearer {{token}}
     "role": "test"
 }
 
+### delete role by id
+delete {{host}}/api/roles/3
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+
