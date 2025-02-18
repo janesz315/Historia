@@ -42,3 +42,13 @@ Authorization: Bearer {{token}}
 ### get role by id
 get {{host}}/api/roles/3
 
+### patch role
+patch {{host}}/api/roles/3
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "role": "test"
+}
+

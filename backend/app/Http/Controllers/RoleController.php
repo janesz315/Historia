@@ -43,9 +43,30 @@ class RoleController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateRoleRequest $request, Role $role)
+    public function update(UpdateRoleRequest $request, int $id)
     {
-        //
+        $row = Role::find($id);
+        if ($row) {
+
+            try {
+                $row->update($request->all());
+                $data = [
+                    'row' => $row
+                ];
+            } catch (\Illuminate\Database\QueryException $e) {
+                $data = [
+                    'message' => 'role incorrect',
+                    'role' => $request['role']
+                ];
+            }
+
+        } else {
+            $data = [
+                'message' => 'Not found',
+                'id' => $id
+            ];
+        }
+        return response()->json($data, options:JSON_UNESCAPED_UNICODE);
     }
 
     /**
