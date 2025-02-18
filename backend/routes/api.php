@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\SourceController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -34,5 +35,16 @@ Route::patch('roles/{id}', [RoleController::class, 'update']);
     // ->middleware('auth:sanctum');
 Route::delete('roles/{id}', [RoleController::class, 'destroy']);
     // ->middleware('auth:sanctum');
-// Route::apiResource('diaks', DiakController::class);
+// Route::apiResource('roles', RoleController::class);
 //endregion
+
+//region sources
+Route::get('sources', [SourceController::class, 'index']);
+Route::get('sources/{id}', [SourceController::class, 'show']);
+Route::post('sources', [SourceController::class, 'store']);
+    // ->middleware('auth:sanctum');
+Route::patch('sources/{id}', [SourceController::class, 'update']);
+    // ->middleware('auth:sanctum');
+Route::delete('sources/{id}', [SourceController::class, 'destroy']);
+    // ->middleware('auth:sanctum');
+// Route::apiResource('diaks', DiakController::class);

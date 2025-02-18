@@ -6,6 +6,7 @@
 ### teszt
 get {{host}}/api/
 
+# ----------------- login -------------------
 ### login
 # @name login
 POST {{host}}/api/users/login 
@@ -26,6 +27,9 @@ Accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
+# ----------------- login -------------------
+
+# ----------------- roles -------------------
 ### get roles
 get {{host}}/api/roles
 
@@ -57,5 +61,48 @@ delete {{host}}/api/roles/5
 Accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{token}}
+
+# ----------------- roles -------------------
+
+# ----------------- source ------------------
+
+### get sources
+get {{host}}/api/sources
+
+### create source
+post {{host}}/api/sources/
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "categoryId": 3,
+    "sourceLink": "test",
+    "note": "test"
+}
+
+### get source by id
+get {{host}}/api/sources/5
+
+### patch source
+patch {{host}}/api/sources/5
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "categoryId": 3,
+    "sourceLink": "test",
+    "note": "test"
+}
+
+### delete source by id
+delete {{host}}/api/sources/5
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+
+# ----------------- roles -------------------
 
 

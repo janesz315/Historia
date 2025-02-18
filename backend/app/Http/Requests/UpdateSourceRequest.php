@@ -11,7 +11,7 @@ class UpdateSourceRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,9 @@ class UpdateSourceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'categoryId' => 'nullable|integer', 
+            'sourceLink' => 'nullable|string|min:2',
+            'note' => 'nullable|string|min:2'
         ];
     }
 }
