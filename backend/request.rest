@@ -6,5 +6,36 @@
 ### teszt
 get {{host}}/api/
 
+### login
+# @name login
+POST {{host}}/api/users/login 
+Accept: application/json
+Content-Type: application/json
+
+{
+    "email": "test@example.com",
+    "password": "123"
+}
+
+###
+@token = {{login.response.body.user.token}}
+
+### logout
+POST {{host}}/api/users/logout 
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
 ### get roles
 get {{host}}/api/roles
+
+### create roles
+post {{host}}/api/roles/
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "role": "creator"
+}
+

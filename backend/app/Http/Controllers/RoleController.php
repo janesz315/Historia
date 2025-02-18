@@ -27,7 +27,8 @@ class RoleController extends Controller
      */
     public function store(StoreRoleRequest $request)
     {
-        //
+        $rows = Role::create(attributes: $request->all());
+        return response()->json(['rows' => $rows], options:JSON_UNESCAPED_UNICODE);
     }
 
     /**
