@@ -202,6 +202,11 @@ Authorization: Bearer {{token}}
     "categoryId": 20 
 }
 
+### get question by id
+GET {{host}}/api/questions/1
+
+
+
 # ----------------- questions -------------------
 
 

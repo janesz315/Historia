@@ -34,9 +34,23 @@ class QuestionController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Question $question)
+    public function show(int $id)
     {
-        //
+        $row = Question::find($id);
+        if ($row) {
+            $data = [
+                'message' => 'ok',
+                'data' => $row
+            ];
+        } else {
+            $data = [
+                'message' => 'Not found',
+                'data' => [
+                    'id' => $id
+                ]
+            ];
+        }
+        return response()->json($data, options: JSON_UNESCAPED_UNICODE);
     }
 
     /**
