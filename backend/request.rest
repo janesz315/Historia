@@ -96,6 +96,13 @@ Authorization: Bearer {{token}}
     "text": "1870-1924-ig élt."
 }
 
+### delete category by id
+delete {{host}}/api/categories/51
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+
 
 
 # ----------------- categories -------------------
