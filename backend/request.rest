@@ -249,6 +249,17 @@ Authorization: Bearer {{token}}
 ### get user test by id
 GET {{host}}/api/userTests/5
 
+### update userTest
+patch {{host}}/api/userTests/5
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    
+    "testName": "Teszt 10"
+    
+}
 
 
 
