@@ -302,6 +302,13 @@ Authorization: Bearer {{token}}
     "userTestId": 3
 }
 
+### delete test question by id
+delete {{host}}/api/testQuestions/16
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+
 # ----------------- testQuestions -------------------
 
 

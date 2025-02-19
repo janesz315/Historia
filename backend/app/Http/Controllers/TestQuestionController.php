@@ -102,7 +102,7 @@ class TestQuestionController extends Controller
      */
     public function destroy(int $id)
     {
-        $row = TestQuestions::find($id);
+        $row = TestQuestion::find($id);
         if ($row) {
             $row->delete();
             $data = [
