@@ -100,8 +100,26 @@ class UserTestController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(UserTest $userTest)
+    public function destroy(int $id)
     {
-        //
+        $row = UserTest::find($id);
+        if ($row) {
+            $row->delete();
+            $data = [
+                'message' => 'ok',
+                'data' => [
+                    'id' => $id
+                ]
+            ];
+        } else {
+            $data = [
+                'message' => 'Not found',
+                'data' => [
+                    'id' => $id
+                ]
+            ];
+        }
+        return response()->json($data, options: JSON_UNESCAPED_UNICODE);
     }
+    
 }

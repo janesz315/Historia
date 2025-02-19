@@ -234,7 +234,7 @@ Authorization: Bearer {{token}}
 ### get userTests
 get {{host}}/api/userTests
 
-### create new question
+### create new userTest
 POST {{host}}/api/userTests/
 Accept: application/json
 Content-Type: application/json
@@ -260,6 +260,12 @@ Authorization: Bearer {{token}}
     "testName": "Teszt 10"
     
 }
+
+### delete userTest by id
+delete {{host}}/api/userTests/5
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{token}}
 
 
 
