@@ -275,6 +275,17 @@ Authorization: Bearer {{token}}
 ### get testQuestions
 get {{host}}/api/testQuestions
 
+### create new test question
+POST {{host}}/api/testQuestions/
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "questionId": 3,
+    "answerId": 17,
+    "userTestId": 3
+}
 
 # ----------------- testQuestions -------------------
 
