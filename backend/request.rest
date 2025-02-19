@@ -287,6 +287,11 @@ Authorization: Bearer {{token}}
     "userTestId": 3
 }
 
+### get test question by id
+GET {{host}}/api/testQuestions/5
+
+
+
 # ----------------- testQuestions -------------------
 
 
