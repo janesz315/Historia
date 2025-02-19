@@ -13,7 +13,13 @@ class UserTestController extends Controller
      */
     public function index()
     {
-        //
+        $rows = UserTest::all();
+        // $rows = Diak::orderBy('nev', 'asc')->get();
+        $data = [
+            'message' => 'ok',
+            'data' => $rows
+        ];
+        return response()->json($data, options: JSON_UNESCAPED_UNICODE);
     }
 
     /**

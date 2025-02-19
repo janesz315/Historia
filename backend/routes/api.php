@@ -6,6 +6,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SourceController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\QuestionController;
+use App\Http\Controllers\UserTestController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -85,5 +86,16 @@ Route::post('questions', [QuestionController::class, 'store']);
 Route::patch('questions/{id}', [QuestionController::class, 'update']);
 // ->middleware('auth:sanctum');
 Route::delete('questions/{id}', [QuestionController::class, 'destroy']);
+
+//endregion
+
+//region userTests
+Route::get('userTests', [UserTestController::class, 'index']);
+Route::get('userTests/{id}', [UserTestController::class, 'show']);
+Route::post('userTests', [UserTestController::class, 'store']);
+// ->middleware('auth:sanctum');
+Route::patch('userTests/{id}', [UserTestController::class, 'update']);
+// ->middleware('auth:sanctum');
+Route::delete('userTests/{id}', [UserTestController::class, 'destroy']);
 
 //endregion
