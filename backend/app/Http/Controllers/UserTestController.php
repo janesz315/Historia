@@ -27,7 +27,20 @@ class UserTestController extends Controller
      */
     public function store(StoreUserTestRequest $request)
     {
-        //
+        try {
+            $row = UserTest::create($request->all());
+            $data = [
+                'message' => 'ok',
+                'data' => $row
+            ];
+        } catch (\Illuminate\Database\QueryException $e) {
+            $data = [
+                'message' => 'The post failed',
+                'data' => $request->all()
+            ];
+        }
+
+        return response()->json($data, options: JSON_UNESCAPED_UNICODE);
     }
 
     /**

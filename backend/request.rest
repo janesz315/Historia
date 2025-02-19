@@ -234,6 +234,18 @@ Authorization: Bearer {{token}}
 ### get userTests
 get {{host}}/api/userTests
 
+### create new question
+POST {{host}}/api/userTests/
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "userId": 1,
+    "testName": "Teszt 3",
+    "score": 64.3 
+}
+
 
 # ----------------- userTests -------------------
 
