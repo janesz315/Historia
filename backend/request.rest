@@ -203,9 +203,25 @@ Authorization: Bearer {{token}}
 }
 
 ### get question by id
-GET {{host}}/api/questions/1
+GET {{host}}/api/questions/7
 
+### update questionType
+patch {{host}}/api/questions/7
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{token}}
 
+{
+    "question": "Mi az a tervgazdaság?",
+    "questionTypeId": 2,
+    "categoryId": 20 
+}
+
+### delete questionType by id
+delete {{host}}/api/questions/7
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{token}}
 
 # ----------------- questions -------------------
 

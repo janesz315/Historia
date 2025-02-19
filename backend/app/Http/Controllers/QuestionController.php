@@ -56,16 +56,57 @@ class QuestionController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateQuestionRequest $request, Question $question)
+    public function update(UpdateQuestionRequest $request, $id)
     {
-        //
+        $row = Question::find($id);
+        if ($row) {
+
+            try {
+                $row->update($request->all());
+                $data = [
+                    'message' => 'ok',
+                    'data' => $row
+                ];
+            } catch (\Illuminate\Database\QueryException $e) {
+                $data = [
+                    'message' => 'The patch failed',
+                    'data' => $request->all()
+                ];
+            }
+
+        } else {
+            $data = [
+                'message' => 'Not found',
+                'data' => [
+                    'id' => $id
+                ]
+            ];
+        }
+        return response()->json($data, options: JSON_UNESCAPED_UNICODE);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Question $question)
+    public function destroy(int $id)
     {
-        //
+        $row = Question::find($id);
+        if ($row) {
+            $row->delete();
+            $data = [
+                'message' => 'ok',
+                'data' => [
+                    'id' => $id
+                ]
+            ];
+        } else {
+            $data = [
+                'message' => 'Not found',
+                'data' => [
+                    'id' => $id
+                ]
+            ];
+        }
+        return response()->json($data, options: JSON_UNESCAPED_UNICODE);
     }
 }
