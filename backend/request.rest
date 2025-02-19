@@ -268,11 +268,13 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 
-
-
 # ----------------- userTests -------------------
 
 # ----------------- testQuestions -------------------
+
+### get testQuestions
+get {{host}}/api/testQuestions
+
 
 # ----------------- testQuestions -------------------
 
