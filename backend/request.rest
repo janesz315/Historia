@@ -185,4 +185,23 @@ Authorization: Bearer {{token}}
 
 # ----------------- questionTypes -------------------
 
+# ----------------- questions -------------------
+
+### get questions
+get {{host}}/api/questions
+
+### create new question
+POST {{host}}/api/questions/
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "question": "Mi az a szovjet?",
+    "questionTypeId": 2,
+    "categoryId": 20 
+}
+
+# ----------------- questions -------------------
+
 

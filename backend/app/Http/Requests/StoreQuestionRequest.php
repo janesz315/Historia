@@ -11,7 +11,7 @@ class StoreQuestionRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -19,10 +19,12 @@ class StoreQuestionRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules(): array
+    public function rules()
     {
         return [
-            //
+            'question' => 'required|string|max:255',
+        'questionTypeId' => 'required|exists:question_types,id', // Assuming question types are in the 'question_types' table
+        'categoryId' => 'required|exists:categories,id', // Assuming categories are in the 'categories' table
         ];
     }
 }

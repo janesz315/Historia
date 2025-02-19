@@ -5,6 +5,7 @@ use App\Http\Controllers\QuestionTypeController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SourceController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\QuestionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -74,4 +75,15 @@ Route::patch('questionCategory/{id}', [QuestionTypeController::class, 'update'])
 Route::delete('questionCategory/{id}', [QuestionTypeController::class, 'destroy']);
 // ->middleware('auth:sanctum');
 // Route::apiResource('diaks', QuestionTypeController::class);
+//endregion
+
+//region questions
+Route::get('questions', [QuestionController::class, 'index']);
+Route::get('questions/{id}', [QuestionController::class, 'show']);
+Route::post('questions', [QuestionController::class, 'store']);
+// ->middleware('auth:sanctum');
+Route::patch('questions/{id}', [QuestionController::class, 'update']);
+// ->middleware('auth:sanctum');
+Route::delete('questions/{id}', [QuestionController::class, 'destroy']);
+
 //endregion

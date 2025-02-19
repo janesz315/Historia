@@ -13,7 +13,13 @@ class QuestionController extends Controller
      */
     public function index()
     {
-        //
+        $rows = Question::all();
+        // $rows = Diak::orderBy('nev', 'asc')->get();
+        $data = [
+            'message' => 'ok',
+            'data' => $rows
+        ];
+        return response()->json($data, options: JSON_UNESCAPED_UNICODE);
     }
 
     /**
@@ -21,7 +27,8 @@ class QuestionController extends Controller
      */
     public function store(StoreQuestionRequest $request)
     {
-        //
+        $rows = Question::create(attributes: $request->all());
+        return response()->json(['rows' => $rows], options:JSON_UNESCAPED_UNICODE);
     }
 
     /**
