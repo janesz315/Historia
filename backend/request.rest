@@ -290,7 +290,17 @@ Authorization: Bearer {{token}}
 ### get test question by id
 GET {{host}}/api/testQuestions/5
 
+### update testQuestions
+patch {{host}}/api/testQuestions/16
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{token}}
 
+{
+    "questionId": 3,
+    "answerId": 16,
+    "userTestId": 3
+}
 
 # ----------------- testQuestions -------------------
 

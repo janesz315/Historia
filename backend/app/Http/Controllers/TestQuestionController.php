@@ -70,7 +70,7 @@ class TestQuestionController extends Controller
      */
     public function update(UpdateTestQuestionRequest $request, int $id)
     {
-        $row = TestQuestions::find($id);
+        $row = TestQuestion::find($id);
         if ($row) {
 
             try {
