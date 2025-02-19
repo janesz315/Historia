@@ -246,6 +246,12 @@ Authorization: Bearer {{token}}
     "score": 64.3 
 }
 
+### get user test by id
+GET {{host}}/api/userTests/5
+
+
+
+
 
 # ----------------- userTests -------------------
 
