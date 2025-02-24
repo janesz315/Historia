@@ -227,6 +227,42 @@ Authorization: Bearer {{token}}
 
 # ----------------- answers -------------------
 
+### get answers
+get {{host}}/api/answers
+
+### create new answers
+POST {{host}}/api/answers/
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "answer": "Ez a kérdés egy teszt",
+    "questionsId": 2,
+    "rightAnswer": 1
+}
+
+### get answer by id
+GET {{host}}/api/answers/4
+
+### update answer
+patch {{host}}/api/answers/4
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "answer": "Ez a kérdés is egy teszt",
+    "questionId": 4,
+    "rightAnswer": 1
+}
+
+### delete questionType by id
+delete {{host}}/api/questions/7
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
 # ----------------- answers -------------------
 
 # ----------------- userTests -------------------

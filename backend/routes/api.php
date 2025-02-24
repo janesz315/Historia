@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AnswerController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\QuestionTypeController;
 use App\Http\Controllers\RoleController;
@@ -40,7 +41,7 @@ Route::patch('roles/{id}', [RoleController::class, 'update']);
 // ->middleware('auth:sanctum');
 Route::delete('roles/{id}', [RoleController::class, 'destroy']);
 // ->middleware('auth:sanctum');
-// Route::apiResource('roles', RoleController::class);
+
 //endregion
 
 //region categories
@@ -52,7 +53,7 @@ Route::patch('categories/{id}', [CategoryController::class, 'update']);
 // ->middleware('auth:sanctum');
 Route::delete('categories/{id}', [CategoryController::class, 'destroy']);
 // ->middleware('auth:sanctum');
-// Route::apiResource('roles', RoleController::class);
+
 //endregion
 
 //region sources
@@ -64,7 +65,7 @@ Route::patch('sources/{id}', [SourceController::class, 'update']);
 // ->middleware('auth:sanctum');
 Route::delete('sources/{id}', [SourceController::class, 'destroy']);
 // ->middleware('auth:sanctum');
-// Route::apiResource('sources', SourceController::class);
+
 //endregion
 
 //region question types
@@ -76,7 +77,7 @@ Route::patch('questionCategory/{id}', [QuestionTypeController::class, 'update'])
 // ->middleware('auth:sanctum');
 Route::delete('questionCategory/{id}', [QuestionTypeController::class, 'destroy']);
 // ->middleware('auth:sanctum');
-// Route::apiResource('diaks', QuestionTypeController::class);
+
 //endregion
 
 //region questions
@@ -109,5 +110,16 @@ Route::post('testQuestions', [TestQuestionController::class, 'store']);
 Route::patch('testQuestions/{id}', [TestQuestionController::class, 'update']);
 // ->middleware('auth:sanctum');
 Route::delete('testQuestions/{id}', [TestQuestionController::class, 'destroy']);
+
+//endregion
+
+//region answers
+Route::get('answers', [AnswerController::class, 'index']);
+Route::get('answers/{id}', [AnswerController::class, 'show']);
+Route::post('answers', [AnswerController::class, 'store']);
+// ->middleware('auth:sanctum');
+Route::patch('answers/{id}', [AnswerController::class, 'update']);
+// ->middleware('auth:sanctum');
+Route::delete('answers/{id}', [AnswerController::class, 'destroy']);
 
 //endregion
