@@ -22,9 +22,9 @@ class UpdateCategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'category' => "nullable|string",
-            'level' => 'nullable|string',
-            'text' => 'nullable|text'
+            'category' => "required|string",
+            'level' => 'required|string',
+            'text' => 'required|text'
         ];
     }
 }

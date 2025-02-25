@@ -22,7 +22,9 @@ class UpdateUserTestRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'userId' => 'required|exists:users,id',
+            'testName' => 'required|string',
+            'score' => 'required|double'
         ];
     }
 }

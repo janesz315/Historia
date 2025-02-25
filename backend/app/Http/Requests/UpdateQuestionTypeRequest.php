@@ -22,7 +22,7 @@ class UpdateQuestionTypeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'questionCategory' => 'nullable|string|min:2'
+            'questionCategory' => 'required|string|min:2'
         ];
     }
 }

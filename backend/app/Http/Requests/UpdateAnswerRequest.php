@@ -22,9 +22,9 @@ class UpdateAnswerRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'answer' => 'nullable|string|min:2',
-            'questionsId' => 'nullable|integer',
-            'rightAnswer' => 'nullable|integer'
+            'answer' => 'required|string|min:2',
+            'questionId' => 'required|exists:questions,id', 
+            'rightAnswer' => 'required|integer'
         ];
     }
 }

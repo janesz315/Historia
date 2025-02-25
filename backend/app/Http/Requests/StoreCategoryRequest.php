@@ -23,9 +23,9 @@ class StoreCategoryRequest extends FormRequest
     {
         return [
             //
-            'category' => "nullable|string",
-            'level' => 'nullable|string',
-            'text' => 'nullable|text'
+            'category' => "required|string",
+            'level' => 'required|string',
+            'text' => 'required|text'
         ];
     }
 }

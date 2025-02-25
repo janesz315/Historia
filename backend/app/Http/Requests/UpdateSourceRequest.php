@@ -22,7 +22,7 @@ class UpdateSourceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'categoryId' => 'nullable|integer', 
+            'categoryId' => 'required|exists:categories,id', 
             'sourceLink' => 'nullable|string|min:2',
             'note' => 'nullable|string|min:2'
         ];

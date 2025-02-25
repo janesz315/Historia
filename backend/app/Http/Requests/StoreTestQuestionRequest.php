@@ -22,7 +22,11 @@ class StoreTestQuestionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'questionId' => 'required|exists:questions,id', 
+            'answerId' => 'required|exists:answers,id', 
+            'userTestId' => 'required|exists:user_tests,id'
+
+
         ];
     }
 }
