@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase; // Használj Laravel saját TestCase osztályát
@@ -9,7 +10,7 @@ use Illuminate\Support\Facades\Schema;
 
 class DatabaseTest extends TestCase
 {
-    use RefreshDatabase; // Ha szeretnéd, hogy minden teszt előtt új adatbázist építsen
+     use DatabaseTransactions; // Ha szeretnéd, hogy minden teszt előtt új adatbázist építsen
 
     /**
      * A basic unit test example.
