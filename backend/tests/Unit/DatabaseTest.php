@@ -42,4 +42,72 @@ public function test_database_creation_and_tables_exists()
     echo PHP_EOL . "\tAdatbázis -> DB_DATABASE={$databaseNameEnv} | adatbázis: {$databaseNameConn}";
 }
 
+// public function test_roles_table_structure()
+//     {
+//         // Ellenőrizzük, hogy a tábla létezik
+//         $this->assertTrue(Schema::hasTable('roles'));
+
+//         // Ellenőrizzük a mezőket és azok típusait
+//         $this->assertTrue(Schema::hasColumn('roles', 'id'));
+//         $this->assertTrue(Schema::hasColumn('roles', 'role'));
+//         $this->assertEquals('int', Schema::getColumnType('roles', 'id'));
+//         //dd(Schema::getColumnType('sports', 'sportNev'));
+//         $this->assertEquals('varchar', Schema::getColumnType('roles', 'role'));
+
+//         $this->assertTrue(Schema::hasColumn('roles', 'id'));
+
+//         //Elsődleges kulcs
+//         $indexes = DB::select('SHOW INDEX FROM roles');
+//         $primaryIndex = collect($indexes)->firstWhere('Key_name', 'PRIMARY');
+//         $this->assertNotNull($primaryIndex);
+
+//     }
+
+public function test_roles_table_structure()
+{
+    // Ellenőrizzük, hogy a tábla létezik
+    $this->assertTrue(Schema::hasTable('roles'));
+
+    // Ellenőrizzük a mezőket és azok típusait
+    $columns = [
+        'id' => 'int',
+        'role' => 'varchar',
+    ];
+
+    foreach ($columns as $column => $type) {
+        $this->assertTrue(Schema::hasColumn('roles', $column));  // Ellenőrizzük, hogy a mező létezik
+        $this->assertEquals($type, Schema::getColumnType('roles', $column));  // Ellenőrizzük a típusát
+    }
+
+    // Elsődleges kulcs ellenőrzése
+    $primaryIndex = collect(DB::select('SHOW INDEX FROM roles'))->firstWhere('Key_name', 'PRIMARY');
+    $this->assertNotNull($primaryIndex);
+}
+
+
+    public function test_categories_table_structure()
+    {
+        // Ellenőrizzük, hogy a tábla létezik
+        $this->assertTrue(Schema::hasTable('categories'));
+
+        // Ellenőrizzük a mezőket és azok típusait
+        $this->assertTrue(Schema::hasColumn('categories', 'id'));
+        $this->assertTrue(Schema::hasColumn('categories', 'category'));
+        $this->assertTrue(Schema::hasColumn('categories', 'level'));
+        $this->assertTrue(Schema::hasColumn('categories', 'text'));
+        $this->assertEquals('int', Schema::getColumnType('categories', 'id'));
+        //dd(Schema::getColumnType('sports', 'sportNev'));
+        $this->assertEquals('varchar', Schema::getColumnType('categories', 'category'));
+        $this->assertEquals('varchar', Schema::getColumnType('categories', 'level'));
+        $this->assertEquals('text', Schema::getColumnType('categories', 'text'));
+
+        $this->assertTrue(Schema::hasColumn('categories', 'id'));
+
+        //Elsődleges kulcs
+        $indexes = DB::select('SHOW INDEX FROM categories');
+        $primaryIndex = collect($indexes)->firstWhere('Key_name', 'PRIMARY');
+        $this->assertNotNull($primaryIndex);
+
+    }
+
 }
