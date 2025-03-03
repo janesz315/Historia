@@ -2,6 +2,8 @@
 
 namespace Tests\Unit;
 
+use App\Models\Role;
+use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
@@ -246,5 +248,62 @@ public function test_roles_table_structure()
         // Elsődleges kulcs ellenőrzése
         $primaryIndex = collect(DB::select('SHOW INDEX FROM user_tests'))->firstWhere('Key_name', 'PRIMARY');
         $this->assertNotNull($primaryIndex);
+    }
+
+    public function test_roles_users_relationships(){  
+
+        //A diák tábla kapcsolatai
+        $databaseName = env('DB_DATABASE');
+        $tableName = "users";
+        $contstraint_name = "PRIMARY";
+
+        $query = "
+            SELECT 
+                TABLE_NAME,
+                COLUMN_NAME,
+                CONSTRAINT_NAME,
+                REFERENCED_TABLE_NAME,
+                REFERENCED_COLUMN_NAME
+            FROM 
+                information_schema.KEY_COLUMN_USAGE
+            WHERE
+                TABLE_NAME = ? and CONSTRAINT_SCHEMA = ? and CONSTRAINT_NAME <> ?";
+
+                $rows= DB::select($query, [$tableName, $databaseName, $contstraint_name]);
+                // dd($rows);
+        //Idegen kulcs neve: osztalyId
+        $this->assertEquals('roleId', $rows[0]->COLUMN_NAME);
+        //Referencia tábla neve: osztalies
+        $this->assertEquals('roles', $rows[0]->REFERENCED_TABLE_NAME);
+        //Referencia oszlop neve: id
+        $this->assertEquals('id', $rows[0]->REFERENCED_COLUMN_NAME);
+
+
+        //Készítünk egy osztályt
+        $dataRole = 
+        [
+            'role' => 'creator'
+        ];
+        $role = Role::factory()->create($dataRole);
+
+        //Az új osztállyal készítek egy diákot
+        $dataUser = 
+            [
+            'roleId' => $role->id, 
+            'name' => 'Rudi', 
+            'email' => "test2@example.com", 
+            
+        ];
+        $user = User::factory()->create($dataUser);
+
+        //visszakeressük a diákot
+        $user = DB::table('users')
+        ->where('id', $user->id)
+        ->first();
+
+        //A megtalált diák osztalyId-je megegyezik a új osztály id-jével        
+        $this->assertEquals($role->id, $user->roleId);
+        // dd($diak);
+
     }
 }
