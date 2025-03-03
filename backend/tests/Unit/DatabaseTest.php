@@ -110,4 +110,140 @@ public function test_roles_table_structure()
 
     }
 
+    public function test_sources_table_structure()
+    {
+        // Ellenőrizzük, hogy a tábla létezik
+        $this->assertTrue(Schema::hasTable('sources'));
+
+        // Ellenőrizzük a mezőket és azok típusait
+        $columns = [
+            'id' => 'int',
+            'categoryId' => 'int',
+            'sourceLink' => 'varchar',
+            'note' => 'varchar',
+        ];
+
+        foreach ($columns as $column => $type) {
+            $this->assertTrue(Schema::hasColumn('sources', $column));  // Ellenőrizzük, hogy a mező létezik
+            $this->assertEquals($type, Schema::getColumnType('sources', $column));  // Ellenőrizzük a típusát
+        }
+
+        // Elsődleges kulcs ellenőrzése
+        $primaryIndex = collect(DB::select('SHOW INDEX FROM sources'))->firstWhere('Key_name', 'PRIMARY');
+        $this->assertNotNull($primaryIndex);
+    }
+
+    public function test_questionTypes_table_structure()
+    {
+        // Ellenőrizzük, hogy a tábla létezik
+        $this->assertTrue(Schema::hasTable('question_types'));
+
+        // Ellenőrizzük a mezőket és azok típusait
+        $columns = [
+            'id' => 'int',
+            'questionCategory' => 'varchar',
+            
+        ];
+
+        foreach ($columns as $column => $type) {
+            $this->assertTrue(Schema::hasColumn('question_types', $column));  // Ellenőrizzük, hogy a mező létezik
+            $this->assertEquals($type, Schema::getColumnType('question_types', $column));  // Ellenőrizzük a típusát
+        }
+
+        // Elsődleges kulcs ellenőrzése
+        $primaryIndex = collect(DB::select('SHOW INDEX FROM question_types'))->firstWhere('Key_name', 'PRIMARY');
+        $this->assertNotNull($primaryIndex);
+    }
+
+    public function test_questions_table_structure()
+    {
+        // Ellenőrizzük, hogy a tábla létezik
+        $this->assertTrue(Schema::hasTable('questions'));
+
+        // Ellenőrizzük a mezőket és azok típusait
+        $columns = [
+            'id' => 'int',
+            'question' => 'text',
+            'questionTypeId' => 'int',
+            'categoryId' => 'int',
+        ];
+
+        foreach ($columns as $column => $type) {
+            $this->assertTrue(Schema::hasColumn('questions', $column));  // Ellenőrizzük, hogy a mező létezik
+            $this->assertEquals($type, Schema::getColumnType('questions', $column));  // Ellenőrizzük a típusát
+        }
+
+        // Elsődleges kulcs ellenőrzése
+        $primaryIndex = collect(DB::select('SHOW INDEX FROM questions'))->firstWhere('Key_name', 'PRIMARY');
+        $this->assertNotNull($primaryIndex);
+    }
+
+    public function test_answers_table_structure()
+    {
+        // Ellenőrizzük, hogy a tábla létezik
+        $this->assertTrue(Schema::hasTable('answers'));
+
+        // Ellenőrizzük a mezőket és azok típusait
+        $columns = [
+            'id' => 'int',
+            'answer' => 'text',
+            'questionsId' => 'int',
+            'rightAnswer' => 'tinyint',
+        ];
+
+        foreach ($columns as $column => $type) {
+            $this->assertTrue(Schema::hasColumn('answers', $column));  // Ellenőrizzük, hogy a mező létezik
+            $this->assertEquals($type, Schema::getColumnType('answers', $column));  // Ellenőrizzük a típusát
+        }
+
+        // Elsődleges kulcs ellenőrzése
+        $primaryIndex = collect(DB::select('SHOW INDEX FROM answers'))->firstWhere('Key_name', 'PRIMARY');
+        $this->assertNotNull($primaryIndex);
+    }
+
+    public function test_testQuestions_table_structure()
+    {
+        // Ellenőrizzük, hogy a tábla létezik
+        $this->assertTrue(Schema::hasTable('test_questions'));
+
+        // Ellenőrizzük a mezőket és azok típusait
+        $columns = [
+            'id' => 'int',
+            'questionId' => 'int',
+            'answerId' => 'int',
+            'userTestId' => 'int',
+        ];
+
+        foreach ($columns as $column => $type) {
+            $this->assertTrue(Schema::hasColumn('test_questions', $column));  // Ellenőrizzük, hogy a mező létezik
+            $this->assertEquals($type, Schema::getColumnType('test_questions', $column));  // Ellenőrizzük a típusát
+        }
+
+        // Elsődleges kulcs ellenőrzése
+        $primaryIndex = collect(DB::select('SHOW INDEX FROM test_questions'))->firstWhere('Key_name', 'PRIMARY');
+        $this->assertNotNull($primaryIndex);
+    }
+
+    public function test_userTests_table_structure()
+    {
+        // Ellenőrizzük, hogy a tábla létezik
+        $this->assertTrue(Schema::hasTable('user_tests'));
+
+        // Ellenőrizzük a mezőket és azok típusait
+        $columns = [
+            'id' => 'int',
+            'userId' => 'int',
+            'testName' => 'varchar',
+            'score' => 'double',
+        ];
+
+        foreach ($columns as $column => $type) {
+            $this->assertTrue(Schema::hasColumn('user_tests', $column));  // Ellenőrizzük, hogy a mező létezik
+            $this->assertEquals($type, Schema::getColumnType('user_tests', $column));  // Ellenőrizzük a típusát
+        }
+
+        // Elsődleges kulcs ellenőrzése
+        $primaryIndex = collect(DB::select('SHOW INDEX FROM user_tests'))->firstWhere('Key_name', 'PRIMARY');
+        $this->assertNotNull($primaryIndex);
+    }
 }
