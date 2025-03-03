@@ -187,7 +187,7 @@ public function test_roles_table_structure()
         $columns = [
             'id' => 'int',
             'answer' => 'text',
-            'questionsId' => 'int',
+            'questionId' => 'int',
             'rightAnswer' => 'tinyint',
         ];
 

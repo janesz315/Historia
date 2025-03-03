@@ -57,7 +57,7 @@ class AnswerController extends Controller
                 $data = [
                     'message' => 'source incorrect',
                     'answer' => $request['answer'],
-                    'questionsId' => $request['questionId'],
+                    'questionId' => $request['questionId'],
                     'rightAnswer' => $request['rightAnswer'],
                 ];
             }

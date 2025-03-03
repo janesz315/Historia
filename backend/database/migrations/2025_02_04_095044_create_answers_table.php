@@ -13,11 +13,11 @@ return new class extends Migration {
         Schema::create('answers', function (Blueprint $table) {
             $table->integer('id')->autoIncrement();
             $table->text('answer');
-            $table->integer('questionsId');
+            $table->integer('questionId');
             $table->tinyInteger('rightAnswer')->default(0);
             $table->timestamps();
 
-            $table->foreign('questionsId')->references('id')->on('questions')->onDelete('cascade');
+            $table->foreign('questionId')->references('id')->on('questions')->onDelete('cascade');
         });
     }
 

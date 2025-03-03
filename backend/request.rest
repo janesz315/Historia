@@ -238,7 +238,7 @@ Authorization: Bearer {{token}}
 
 {
     "answer": "Ez a kérdés egy teszt",
-    "questionsId": 2,
+    "questionId": 2,
     "rightAnswer": 1
 }
 

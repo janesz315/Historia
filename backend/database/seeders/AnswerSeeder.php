@@ -34,7 +34,7 @@ class AnswerSeeder extends Seeder
                 // A válasz rögzítése, a helyes válasz csak egy válaszhoz tartozik
                 Answer::create([
                     'answer' => $faker->sentence(), // Véletlenszerű válasz
-                    'questionsId' => $question->id, // Kapcsolódás a kérdéshez
+                    'questionId' => $question->id, // Kapcsolódás a kérdéshez
                     'rightAnswer' => ($i === $correctAnswerPosition) ? 1 : 0, // Ha a helyes válasz pozíciója, akkor 1 (helyes), egyébként 0
                 ]);
             }
