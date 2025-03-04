@@ -3,6 +3,8 @@
 namespace Tests\Unit;
 
 use App\Models\Category;
+use App\Models\Question;
+use App\Models\QuestionType;
 use App\Models\Role;
 use App\Models\Source;
 use App\Models\User;
@@ -371,7 +373,68 @@ public function test_categories_sources_relationships(){
     // A megtalált user roleId-je megegyezik a új roleId-jével        
     $this->assertEquals($category->id, $source->categoryId);
 }
-}
+
+
+
+// public function test_questiontypes_questions_relationships(){  
+
+//     // A diák tábla kapcsolatai
+//     $databaseName = env('DB_DATABASE');
+//     $tableName = "questions";
+//     $constraint_name = "PRIMARY";
+
+//     $query = "
+//         SELECT 
+//             TABLE_NAME,
+//             COLUMN_NAME,
+//             CONSTRAINT_NAME,
+//             REFERENCED_TABLE_NAME,
+//             REFERENCED_COLUMN_NAME
+//         FROM 
+//             information_schema.KEY_COLUMN_USAGE
+//         WHERE
+//             TABLE_NAME = ? and CONSTRAINT_SCHEMA = ? and REFERENCED_TABLE_NAME IS NOT NULL";
+
+//     $rows = DB::select($query, [$tableName, $databaseName]);
+
+//     // Ellenőrizzük, hogy van találat
+//     if (count($rows) > 0) {
+//         // Debugging: nyomtatás, hogy megnézd mi van a $rows-ban
+//         // dd($rows);
+
+//         // Ellenőrizzük, hogy a COLUMN_NAME valóban roleId
+//         $this->assertTrue(isset($rows[0]->COLUMN_NAME));
+//         $this->assertEquals('questionTypeId', trim($rows[0]->COLUMN_NAME)); // A trim() még mindig hasznos lehet
+//         $this->assertEquals('question_types', $rows[0]->REFERENCED_TABLE_NAME);
+//         $this->assertEquals('id', $rows[0]->REFERENCED_COLUMN_NAME);
+//     } else {
+//         $this->fail('Nincs találat az idegen kulcsokra.');
+//     }
+
+//     // Készítünk egy rolet
+//     $dataQuestionType = [
+//         'questionCategory' => 'Találós kérdés'
+//     ];
+//     $questionType = QuestionType::factory()->create($dataQuestionType);
+
+//     // Az új role-val készítek egy usert
+//     $dataQuestion = [
+//         'questionTypeId' => $questionType->id,
+//         'question' => 'Mikor volt a gyulai csata?',
+//         'categoryId' => 2,
+//     ];
+//     $question = Question::factory()->create($dataQuestion);
+
+//     // Visszakeressük a usert
+//     $question = DB::table('users')
+//         ->where('id', $question->id)
+//         ->first();
+
+//     // A megtalált user roleId-je megegyezik a új roleId-jével        
+//     $this->assertEquals($questionType->id, $question->questionTypeId);
+// }
+}    
+
 
     
 
