@@ -12,12 +12,13 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 class QuizFeatureTest extends TestCase
 {
-    use RefreshDatabase;
+    use DatabaseTransactions;
 
     public function test_user_can_take_a_quiz()
     {
