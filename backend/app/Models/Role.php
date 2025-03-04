@@ -12,4 +12,9 @@ class Role extends Model
     {
         return $this->hasMany(User::class, 'roleId');
     }
+
+    protected static function newFactory()
+    {
+        return \Database\Factories\RolesFactory::new();
+    }
 }

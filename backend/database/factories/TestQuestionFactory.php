@@ -2,6 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Models\Answer;
+use App\Models\Question;
+use App\Models\UserTest;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +20,13 @@ class TestQuestionFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'questionId' => Question::factory(),  // Véletlenszerű kérdés generálása
+            'answerId' => Answer::factory(),      // Véletlenszerű válasz generálása
+            'userTestId' => UserTest::factory(),  // Véletlenszerű felhasználói teszt generálása
+            'created_at' => now(),
+            'updated_at' => now(),
         ];
     }
+
+
 }
