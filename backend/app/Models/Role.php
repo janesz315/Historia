@@ -15,6 +15,6 @@ class Role extends Model
 
     protected static function newFactory()
     {
-        return \Database\Factories\RolesFactory::new();
+        return \Database\Factories\RoleFactory::new();
     }
 }
