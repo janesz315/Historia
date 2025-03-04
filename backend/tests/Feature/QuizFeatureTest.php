@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\TestQuestion;
 use App\Models\Answer;
 use App\Models\Question;
+use App\Models\UserTest;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -42,5 +43,25 @@ class QuizFeatureTest extends TestCase
             'questionId' => $question->id,
             'rightAnswer' => 1,
         ]);
+
+        // Létrehozzuk a szerepkört és a felhasználót
+        $role = Role::factory()->create(['role' => 'guest']);
+        $user = User::factory()->create(['roleId' => $role->id]);
+
+        // Létrehozzuk a user_test rekordot
+        $userTest = UserTest::factory()->create([
+            'userId' => $user->id,  // A felhasználó azonosítója
+        ]);
+
+        // Ellenőrizzük, hogy a teszt rekordja sikeresen létrejött az adatbázisban
+        $this->assertDatabaseHas('user_tests', [
+            'userId' => $user->id,
+            'testName' => $userTest->testName,
+            'score' => $userTest->score,
+        ]);
+
+        // További ellenőrzés, például az HTTP válasz ellenőrzése
+        // $response = $this->actingAs($user)->get('/some-test-route');
+        // $response->assertStatus(200);
     }
 }
