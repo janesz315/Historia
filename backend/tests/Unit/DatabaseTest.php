@@ -252,11 +252,11 @@ public function test_roles_table_structure()
 
     public function test_roles_users_relationships(){  
 
-        //A diák tábla kapcsolatai
+        // A diák tábla kapcsolatai
         $databaseName = env('DB_DATABASE');
         $tableName = "users";
-        $contstraint_name = "PRIMARY";
-
+        $constraint_name = "PRIMARY";
+    
         $query = "
             SELECT 
                 TABLE_NAME,
@@ -267,43 +267,103 @@ public function test_roles_table_structure()
             FROM 
                 information_schema.KEY_COLUMN_USAGE
             WHERE
-                TABLE_NAME = ? and CONSTRAINT_SCHEMA = ? and CONSTRAINT_NAME <> ?";
-
-                $rows= DB::select($query, [$tableName, $databaseName, $contstraint_name]);
-                // dd($rows);
-        //Idegen kulcs neve: osztalyId
-        $this->assertEquals('roleId', $rows[0]->COLUMN_NAME);
-        //Referencia tábla neve: osztalies
-        $this->assertEquals('roles', $rows[0]->REFERENCED_TABLE_NAME);
-        //Referencia oszlop neve: id
-        $this->assertEquals('id', $rows[0]->REFERENCED_COLUMN_NAME);
-
-
-        //Készítünk egy osztályt
-        $dataRole = 
-        [
+                TABLE_NAME = ? and CONSTRAINT_SCHEMA = ? and REFERENCED_TABLE_NAME IS NOT NULL";
+    
+        $rows = DB::select($query, [$tableName, $databaseName]);
+    
+        // Ellenőrizzük, hogy van találat
+        if (count($rows) > 0) {
+            // Debugging: nyomtatás, hogy megnézd mi van a $rows-ban
+            // dd($rows);
+    
+            // Ellenőrizzük, hogy a COLUMN_NAME valóban roleId
+            $this->assertTrue(isset($rows[0]->COLUMN_NAME));
+            $this->assertEquals('roleId', trim($rows[0]->COLUMN_NAME)); // A trim() még mindig hasznos lehet
+            $this->assertEquals('roles', $rows[0]->REFERENCED_TABLE_NAME);
+            $this->assertEquals('id', $rows[0]->REFERENCED_COLUMN_NAME);
+        } else {
+            $this->fail('Nincs találat az idegen kulcsokra.');
+        }
+    
+        // Készítünk egy rolet
+        $dataRole = [
             'role' => 'creator'
         ];
         $role = Role::factory()->create($dataRole);
-
-        //Az új osztállyal készítek egy diákot
-        $dataUser = 
-            [
-            'roleId' => $role->id, 
-            'name' => 'Rudi', 
-            'email' => "test2@example.com", 
-            
+    
+        // Az új role-val készítek egy usert
+        $dataUser = [
+            'roleId' => $role->id,
+            'name' => 'Rudi',
+            'email' => "test2@example.com",
         ];
         $user = User::factory()->create($dataUser);
-
-        //visszakeressük a diákot
+    
+        // Visszakeressük a usert
         $user = DB::table('users')
-        ->where('id', $user->id)
-        ->first();
-
-        //A megtalált diák osztalyId-je megegyezik a új osztály id-jével        
+            ->where('id', $user->id)
+            ->first();
+    
+        // A megtalált user roleId-je megegyezik a új roleId-jével        
         $this->assertEquals($role->id, $user->roleId);
-        // dd($diak);
-
     }
-}
+}    
+    
+
+//     public function test_roles_users_relationships(){  
+
+//         //A diák tábla kapcsolatai
+//         $databaseName = env('DB_DATABASE');
+//         $tableName = "users";
+//         $contstraint_name = "PRIMARY";
+
+//         $query = "
+//             SELECT 
+//                 TABLE_NAME,
+//                 COLUMN_NAME,
+//                 CONSTRAINT_NAME,
+//                 REFERENCED_TABLE_NAME,
+//                 REFERENCED_COLUMN_NAME
+//             FROM 
+//                 information_schema.KEY_COLUMN_USAGE
+//             WHERE
+//                 TABLE_NAME = ? and CONSTRAINT_SCHEMA = ? and CONSTRAINT_NAME <> ?";
+
+//                 $rows= DB::select($query, [$tableName, $databaseName, $contstraint_name]);
+//                 // dd($rows);
+//         //Idegen kulcs neve
+//         $this->assertEquals('roleId', $rows[0]->COLUMN_NAME);
+//         //Referencia tábla neve
+//         $this->assertEquals('roles', $rows[0]->REFERENCED_TABLE_NAME);
+//         //Referencia oszlop neve
+//         $this->assertEquals('id', $rows[0]->REFERENCED_COLUMN_NAME);
+
+
+//         //Készítünk egy rolet
+//         $dataRole = 
+//         [
+//             'role' => 'creator'
+//         ];
+//         $role = Role::factory()->create($dataRole);
+
+//         //Az új role-val készítek egy usert
+//         $dataUser = 
+//             [
+//             'roleId' => $role->id, 
+//             'name' => 'Rudi', 
+//             'email' => "test2@example.com", 
+            
+//         ];
+//         $user = User::factory()->create($dataUser);
+
+//         //visszakeressük a usert
+//         $user = DB::table('users')
+//         ->where('id', $user->id)
+//         ->first();
+
+//         //A megtalált user roleId-je megegyezik a új roleIid-jével        
+//         $this->assertEquals($role->id, $user->roleId);
+//         // dd($diak);
+
+//     }
+// }

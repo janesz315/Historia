@@ -258,7 +258,7 @@ Authorization: Bearer {{token}}
 }
 
 ### delete questionType by id
-delete {{host}}/api/questions/7
+delete {{host}}/api/answers/9
 Accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{token}}
