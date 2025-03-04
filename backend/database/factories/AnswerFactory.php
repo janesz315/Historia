@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Question;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +18,11 @@ class AnswerFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'answer' => $this->faker->text(200),  // Véletlenszerű válasz szöveg
+            'questionId' => Question::factory(),  // Hozzárendeljük a generált kérdést
+            'rightAnswer' => $this->faker->boolean(),  // Véletlenszerűen generálunk helyes (1) vagy hibás (0) választ
+            'created_at' => now(),
+            'updated_at' => now(),
         ];
     }
 }

@@ -17,7 +17,11 @@ class CategoryFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'category' => $this->faker->word(),  // Véletlenszerű kategória név (pl. "Matematika")
+            'level' => $this->faker->randomElement(['easy', 'medium', 'hard']),  // Véletlenszerű szint: easy, medium vagy hard
+            'text' => $this->faker->text(),  // Véletlenszerű leírás
+            'created_at' => now(),
+            'updated_at' => now(),
         ];
     }
 }
