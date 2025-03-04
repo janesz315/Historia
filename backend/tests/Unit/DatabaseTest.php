@@ -2,7 +2,9 @@
 
 namespace Tests\Unit;
 
+use App\Models\Category;
 use App\Models\Role;
+use App\Models\Source;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -307,7 +309,70 @@ public function test_roles_table_structure()
         // A megtalált user roleId-je megegyezik a új roleId-jével        
         $this->assertEquals($role->id, $user->roleId);
     }
-}    
+   
+
+
+public function test_categories_sources_relationships(){  
+
+    // A diák tábla kapcsolatai
+    $databaseName = env('DB_DATABASE');
+    $tableName = "sources";
+    $constraint_name = "PRIMARY";
+
+    $query = "
+        SELECT 
+            TABLE_NAME,
+            COLUMN_NAME,
+            CONSTRAINT_NAME,
+            REFERENCED_TABLE_NAME,
+            REFERENCED_COLUMN_NAME
+        FROM 
+            information_schema.KEY_COLUMN_USAGE
+        WHERE
+            TABLE_NAME = ? and CONSTRAINT_SCHEMA = ? and REFERENCED_TABLE_NAME IS NOT NULL";
+
+    $rows = DB::select($query, [$tableName, $databaseName]);
+
+    // Ellenőrizzük, hogy van találat
+    if (count($rows) > 0) {
+        // Debugging: nyomtatás, hogy megnézd mi van a $rows-ban
+        // dd($rows);
+
+        // Ellenőrizzük, hogy a COLUMN_NAME valóban roleId
+        $this->assertTrue(isset($rows[0]->COLUMN_NAME));
+        $this->assertEquals('categoryId', trim($rows[0]->COLUMN_NAME)); // A trim() még mindig hasznos lehet
+        $this->assertEquals('categories', $rows[0]->REFERENCED_TABLE_NAME);
+        $this->assertEquals('id', $rows[0]->REFERENCED_COLUMN_NAME);
+    } else {
+        $this->fail('Nincs találat az idegen kulcsokra.');
+    }
+
+    // Készítünk egy rolet
+    $dataCategory = [
+        'category' => 'Asszíria',
+        'level' => 'emelt',
+        'text' => ''
+    ];
+    $category = Category::factory()->create($dataCategory);
+
+    // Az új role-val készítek egy usert
+    $dataSource = [
+        'categoryId' => $category->id,
+        'sourceLink' => 'https://mek.oszk.hu',
+        'note' => "68-71. oldal",
+    ];
+    $source = Source::factory()->create($dataSource);
+
+    // Visszakeressük a usert
+    $source = DB::table('sources')
+        ->where('id', $source->id)
+        ->first();
+
+    // A megtalált user roleId-je megegyezik a új roleId-jével        
+    $this->assertEquals($category->id, $source->categoryId);
+}
+}
+
     
 
 //     public function test_roles_users_relationships(){  
