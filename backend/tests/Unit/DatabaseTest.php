@@ -726,6 +726,65 @@ public function test_questions_answers_userTests_testQuestions_relationships(){
     $this->assertEquals($userTest->id, $testQuestionData->userTestId);
 }
 
+public function test_users_userTests_relationships(){  
+
+    // Az user_tests tábla kapcsolatai
+    $databaseName = env('DB_DATABASE');
+    $tableName = "user_tests";
+    $constraint_name = "PRIMARY";
+
+    $query = "
+        SELECT 
+            TABLE_NAME,
+            COLUMN_NAME,
+            CONSTRAINT_NAME,
+            REFERENCED_TABLE_NAME,
+            REFERENCED_COLUMN_NAME
+        FROM 
+            information_schema.KEY_COLUMN_USAGE
+        WHERE
+            TABLE_NAME = ? and CONSTRAINT_SCHEMA = ? and REFERENCED_TABLE_NAME IS NOT NULL";
+
+    $rows = DB::select($query, [$tableName, $databaseName]);
+
+    // Ellenőrizzük, hogy van találat
+    if (count($rows) > 0) {
+        // Debugging: nyomtatás, hogy megnézd mi van a $rows-ban
+        // dd($rows);
+
+        // Ellenőrizzük, hogy a COLUMN_NAME valóban userId
+        $this->assertTrue(isset($rows[0]->COLUMN_NAME));
+        $this->assertEquals('userId', trim($rows[0]->COLUMN_NAME)); // A trim() még mindig hasznos lehet
+        $this->assertEquals('users', $rows[0]->REFERENCED_TABLE_NAME);
+        $this->assertEquals('id', $rows[0]->REFERENCED_COLUMN_NAME);
+    } else {
+        $this->fail('Nincs találat az idegen kulcsokra.');
+    }
+
+    // Készítünk egy usert
+    $dataUser = [
+        'roleId' => 2,
+        'name' => 'Rudi',
+        'email' => "test2@example.com",
+    ];
+    $user = User::factory()->create($dataUser);
+
+    // Az új user-rel készítek egy user tesztet
+    $dataUserTest = [
+        'userId' => $user->id,
+        'testName' => 'teszt1201',
+        'score' => 93.1
+    ];
+    $userTest = UserTest::factory()->create($dataUserTest);
+
+    // Visszakeressük az user Tesztet
+    $userTest = DB::table('user_tests')
+        ->where('id', $userTest->id)
+        ->first();
+
+    // A megtalált user teszt userId-je megegyezik a új userId-jével        
+    $this->assertEquals($user->id, $userTest->userId);
+}
 
 }    
 
