@@ -8,7 +8,9 @@ use App\Models\Question;
 use App\Models\QuestionType;
 use App\Models\Role;
 use App\Models\Source;
+use App\Models\TestQuestion;
 use App\Models\User;
+use App\Models\UserTest;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
@@ -104,7 +106,7 @@ public function test_roles_table_structure()
         $this->assertTrue(Schema::hasColumn('categories', 'level'));
         $this->assertTrue(Schema::hasColumn('categories', 'text'));
         $this->assertEquals('int', Schema::getColumnType('categories', 'id'));
-        //dd(Schema::getColumnType('sports', 'sportNev'));
+        
         $this->assertEquals('varchar', Schema::getColumnType('categories', 'category'));
         $this->assertEquals('varchar', Schema::getColumnType('categories', 'level'));
         $this->assertEquals('text', Schema::getColumnType('categories', 'text'));
@@ -257,7 +259,7 @@ public function test_roles_table_structure()
 
     public function test_roles_users_relationships(){  
 
-        // A diák tábla kapcsolatai
+        // A users tábla kapcsolatai
         $databaseName = env('DB_DATABASE');
         $tableName = "users";
         $constraint_name = "PRIMARY";
@@ -317,7 +319,7 @@ public function test_roles_table_structure()
 
 public function test_categories_sources_relationships(){  
 
-    // A diák tábla kapcsolatai
+    // A sources tábla kapcsolatai
     $databaseName = env('DB_DATABASE');
     $tableName = "sources";
     $constraint_name = "PRIMARY";
@@ -341,7 +343,7 @@ public function test_categories_sources_relationships(){
         // Debugging: nyomtatás, hogy megnézd mi van a $rows-ban
         // dd($rows);
 
-        // Ellenőrizzük, hogy a COLUMN_NAME valóban roleId
+        // Ellenőrizzük, hogy a COLUMN_NAME valóban categoryId
         $this->assertTrue(isset($rows[0]->COLUMN_NAME));
         $this->assertEquals('categoryId', trim($rows[0]->COLUMN_NAME)); // A trim() még mindig hasznos lehet
         $this->assertEquals('categories', $rows[0]->REFERENCED_TABLE_NAME);
@@ -350,7 +352,7 @@ public function test_categories_sources_relationships(){
         $this->fail('Nincs találat az idegen kulcsokra.');
     }
 
-    // Készítünk egy rolet
+    // Készítünk egy kategóriát
     $dataCategory = [
         'category' => 'Asszíria',
         'level' => 'emelt',
@@ -358,7 +360,7 @@ public function test_categories_sources_relationships(){
     ];
     $category = Category::factory()->create($dataCategory);
 
-    // Az új role-val készítek egy usert
+    // Az új kategóriával készítek egy source-t
     $dataSource = [
         'categoryId' => $category->id,
         'sourceLink' => 'https://mek.oszk.hu',
@@ -366,12 +368,12 @@ public function test_categories_sources_relationships(){
     ];
     $source = Source::factory()->create($dataSource);
 
-    // Visszakeressük a usert
+    // Visszakeressük a source-t
     $source = DB::table('sources')
         ->where('id', $source->id)
         ->first();
 
-    // A megtalált user roleId-je megegyezik a új roleId-jével        
+    // A megtalált category sourceId-je megegyezik a új categoryId-jével        
     $this->assertEquals($category->id, $source->categoryId);
 }
 
@@ -494,9 +496,9 @@ public function test_categories_sources_relationships(){
 //     $this->assertEquals($questionType->id, $question->questionTypeId);
 // }
 
-public function test_questiontypes_questions_categories_relationships(){  
+public function test_questiontypes_categories_questions_relationships(){  
 
-    // A diák tábla kapcsolatai
+    // A questions tábla kapcsolatai
     $databaseName = env('DB_DATABASE');
     $tableName = "questions";
 
@@ -574,7 +576,7 @@ public function test_questiontypes_questions_categories_relationships(){
 
 public function test_questions_answers_relationships(){  
 
-    // A diák tábla kapcsolatai
+    // Az answers tábla kapcsolatai
     $databaseName = env('DB_DATABASE');
     $tableName = "answers";
     $constraint_name = "PRIMARY";
@@ -598,7 +600,7 @@ public function test_questions_answers_relationships(){
         // Debugging: nyomtatás, hogy megnézd mi van a $rows-ban
         // dd($rows);
 
-        // Ellenőrizzük, hogy a COLUMN_NAME valóban roleId
+        // Ellenőrizzük, hogy a COLUMN_NAME valóban questionId
         $this->assertTrue(isset($rows[0]->COLUMN_NAME));
         $this->assertEquals('questionId', trim($rows[0]->COLUMN_NAME)); // A trim() még mindig hasznos lehet
         $this->assertEquals('questions', $rows[0]->REFERENCED_TABLE_NAME);
@@ -607,7 +609,7 @@ public function test_questions_answers_relationships(){
         $this->fail('Nincs találat az idegen kulcsokra.');
     }
 
-    // Készítünk egy rolet
+    // Készítünk egy questiont
     $dataQuestion = [
         'question' => 'Mikor volt a Bastille ostroma?',
         'questionTypeId' => 2,
@@ -615,7 +617,7 @@ public function test_questions_answers_relationships(){
     ];
     $question = Question::factory()->create($dataQuestion);
 
-    // Az új role-val készítek egy usert
+    // Az új question-val készítek egy answert
     $dataAnswer = [
         'questionId' => $question->id,
         'answer' => '1789. július 14.',
@@ -623,14 +625,107 @@ public function test_questions_answers_relationships(){
     ];
     $answer = Answer::factory()->create($dataAnswer);
 
-    // Visszakeressük a usert
+    // Visszakeressük az answert
     $answer = DB::table('answers')
         ->where('id', $answer->id)
         ->first();
 
-    // A megtalált user roleId-je megegyezik a új roleId-jével        
+    // A megtalált answer questionId-je megegyezik a új questionId-jével        
     $this->assertEquals($question->id, $answer->questionId);
 }
+
+public function test_questions_answers_userTests_testQuestions_relationships(){  
+
+    // A test_questions tábla kapcsolatai
+    $databaseName = env('DB_DATABASE');
+    $tableName = "test_questions";
+
+    // Lekérdezzük mindhárom idegen kulcsot (questionId, answerId, userTestId)
+    $query = "
+        SELECT 
+            TABLE_NAME,
+            COLUMN_NAME,
+            CONSTRAINT_NAME,
+            REFERENCED_TABLE_NAME,
+            REFERENCED_COLUMN_NAME
+        FROM 
+            information_schema.KEY_COLUMN_USAGE
+        WHERE
+            TABLE_NAME = ? 
+            AND CONSTRAINT_SCHEMA = ? 
+            AND REFERENCED_TABLE_NAME IS NOT NULL
+            AND COLUMN_NAME IN ('questionId','answerId','userTestId')";
+
+    $rows = DB::select($query, [$tableName, $databaseName]);
+
+    // Ellenőrizzük, hogy van találat
+    if (count($rows) > 0) {
+        $columnNames = array_column($rows, 'COLUMN_NAME');
+        
+        // Ellenőrizzük, hogy mindhárom idegen kulcs szerepel
+        $this->assertTrue(in_array('questionId', $columnNames));
+        $this->assertTrue(in_array('answerId', $columnNames));
+        $this->assertTrue(in_array('userTestId', $columnNames));
+
+        // Ellenőrizzük a 'questionId' kapcsolatot
+        $questionIdRelation = collect($rows)->firstWhere('COLUMN_NAME', 'questionId');
+        $this->assertEquals('questions', $questionIdRelation->REFERENCED_TABLE_NAME);
+        $this->assertEquals('id', $questionIdRelation->REFERENCED_COLUMN_NAME);
+
+        // Ellenőrizzük a 'answerId' kapcsolatot
+        $answerIdRelation = collect($rows)->firstWhere('COLUMN_NAME', 'answerId');
+        $this->assertEquals('answers', $answerIdRelation->REFERENCED_TABLE_NAME);
+        $this->assertEquals('id', $answerIdRelation->REFERENCED_COLUMN_NAME);
+
+        // Ellenőrizzük a 'userTestId' kapcsolatot
+        $userTestIdRelation = collect($rows)->firstWhere('COLUMN_NAME', 'userTestId');
+        $this->assertEquals('user_tests', $userTestIdRelation->REFERENCED_TABLE_NAME);
+        $this->assertEquals('id', $userTestIdRelation->REFERENCED_COLUMN_NAME);
+    } else {
+        $this->fail('Nincs találat az idegen kulcsokra.');
+    }
+
+    // Készítünk egy kérdés rekordot
+    $dataQuestion = [
+        'question' => 'Mikor volt Buda visszafoglalása?'
+    ];
+    $question = Question::factory()->create($dataQuestion);
+
+    // Készítünk egy válasz rekordot
+    $dataAnswer = [
+        'answer' => '1602'
+    ];
+    $answer = Answer::factory()->create($dataAnswer);
+
+    // Készítünk egy felhasználói teszt rekordot
+    $dataUserTest = [
+        'testName' => 'teszt310'
+    ];
+    $userTest = UserTest::factory()->create($dataUserTest);
+
+    // Az új kérdéstípus és kategóriával készítek egy kérdést
+    $dataTestQuestion = [
+        'questionId' => $question->id,
+        'answerId' => $answer->id,
+        'userTestId' => $userTest->id
+    ];
+    $testQuestion = TestQuestion::factory()->create($dataTestQuestion);
+
+    // Visszakeressük a kérdést és ellenőrizzük mindhárom kapcsolatot
+    $testQuestionData = DB::table('test_questions')
+        ->where('id', $testQuestion->id)
+        ->first();
+
+    // Ellenőrizzük, hogy a questionId kapcsolódik a megfelelő kérdéshez
+    $this->assertEquals($question->id, $testQuestionData->questionId);
+    
+    // Ellenőrizzük, hogy az answerId kapcsolódik a megfelelő válaszhoz
+    $this->assertEquals($answer->id, $testQuestionData->answerId);
+
+    // Ellenőrizzük, hogy a userTestId kapcsolódik a megfelelő felhasználói teszthez
+    $this->assertEquals($userTest->id, $testQuestionData->userTestId);
+}
+
 
 }    
 
