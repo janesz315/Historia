@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use App\Models\Answer;
 use App\Models\Category;
 use App\Models\Question;
 use App\Models\QuestionType;
@@ -433,6 +434,204 @@ public function test_categories_sources_relationships(){
 //     // A megtalált user roleId-je megegyezik a új roleId-jével        
 //     $this->assertEquals($questionType->id, $question->questionTypeId);
 // }
+
+// public function test_questiontypes_questions_relationships(){  
+
+//     // A diák tábla kapcsolatai
+//     $databaseName = env('DB_DATABASE');
+//     $tableName = "questions";
+//     $constraint_name = "PRIMARY";
+
+//     // Lekérdezzük a `questionTypeId` idegen kulcsot
+//     $query = "
+//         SELECT 
+//             TABLE_NAME,
+//             COLUMN_NAME,
+//             CONSTRAINT_NAME,
+//             REFERENCED_TABLE_NAME,
+//             REFERENCED_COLUMN_NAME
+//         FROM 
+//             information_schema.KEY_COLUMN_USAGE
+//         WHERE
+//             TABLE_NAME = ? and CONSTRAINT_SCHEMA = ? and COLUMN_NAME = 'questionTypeId' and REFERENCED_TABLE_NAME IS NOT NULL";
+
+//     $rows = DB::select($query, [$tableName, $databaseName]);
+
+//     // Ellenőrizzük, hogy van találat
+//     if (count($rows) > 0) {
+//         // Debugging: nyomtatás, hogy megnézd mi van a $rows-ban
+//         // dd($rows);
+
+//         // Ellenőrizzük, hogy a COLUMN_NAME valóban questionTypeId
+//         $this->assertTrue(isset($rows[0]->COLUMN_NAME));
+//         $this->assertEquals('questionTypeId', trim($rows[0]->COLUMN_NAME)); // A trim() még mindig hasznos lehet
+//         $this->assertEquals('question_types', $rows[0]->REFERENCED_TABLE_NAME);
+//         $this->assertEquals('id', $rows[0]->REFERENCED_COLUMN_NAME);
+//     } else {
+//         $this->fail('Nincs találat az idegen kulcsokra.');
+//     }
+
+//     // Készítünk egy kérdéstípus rekordot
+//     $dataQuestionType = [
+//         'questionCategory' => 'Találós kérdés'
+//     ];
+//     $questionType = QuestionType::factory()->create($dataQuestionType);
+
+//     // Az új kérdéstípus-val készítek egy kérdést
+//     $dataQuestion = [
+//         'questionTypeId' => $questionType->id,
+//         'question' => 'Mikor volt a gyulai csata?',
+//         'categoryId' => 2,
+//     ];
+//     $question = Question::factory()->create($dataQuestion);
+
+//     // Visszakeressük a kérdést és ellenőrizzük a kérdéstípus kapcsolatot
+//     $question = DB::table('questions')
+//         ->where('id', $question->id)
+//         ->first();
+
+//     // A megtalált kérdés questionTypeId-je megegyezik az új kérdéstípus id-jével        
+//     $this->assertEquals($questionType->id, $question->questionTypeId);
+// }
+
+public function test_questiontypes_questions_categories_relationships(){  
+
+    // A diák tábla kapcsolatai
+    $databaseName = env('DB_DATABASE');
+    $tableName = "questions";
+
+    // Lekérdezzük mindkét idegen kulcsot (questionTypeId és categoryId)
+    $query = "
+        SELECT 
+            TABLE_NAME,
+            COLUMN_NAME,
+            CONSTRAINT_NAME,
+            REFERENCED_TABLE_NAME,
+            REFERENCED_COLUMN_NAME
+        FROM 
+            information_schema.KEY_COLUMN_USAGE
+        WHERE
+            TABLE_NAME = ? 
+            AND CONSTRAINT_SCHEMA = ? 
+            AND REFERENCED_TABLE_NAME IS NOT NULL
+            AND COLUMN_NAME IN ('questionTypeId', 'categoryId')";
+
+    $rows = DB::select($query, [$tableName, $databaseName]);
+
+    // Ellenőrizzük, hogy van találat
+    if (count($rows) > 0) {
+        $columnNames = array_column($rows, 'COLUMN_NAME');
+        
+        // Ellenőrizzük, hogy mindkét idegen kulcs szerepel
+        $this->assertTrue(in_array('questionTypeId', $columnNames));
+        $this->assertTrue(in_array('categoryId', $columnNames));
+
+        // Ellenőrizzük a 'questionTypeId' kapcsolatot
+        $questionTypeIdRelation = collect($rows)->firstWhere('COLUMN_NAME', 'questionTypeId');
+        $this->assertEquals('question_types', $questionTypeIdRelation->REFERENCED_TABLE_NAME);
+        $this->assertEquals('id', $questionTypeIdRelation->REFERENCED_COLUMN_NAME);
+
+        // Ellenőrizzük a 'categoryId' kapcsolatot
+        $categoryIdRelation = collect($rows)->firstWhere('COLUMN_NAME', 'categoryId');
+        $this->assertEquals('categories', $categoryIdRelation->REFERENCED_TABLE_NAME);
+        $this->assertEquals('id', $categoryIdRelation->REFERENCED_COLUMN_NAME);
+    } else {
+        $this->fail('Nincs találat az idegen kulcsokra.');
+    }
+
+    // Készítünk egy kérdéstípus rekordot
+    $dataQuestionType = [
+        'questionCategory' => 'Találós kérdés'
+    ];
+    $questionType = QuestionType::factory()->create($dataQuestionType);
+
+    // Készítünk egy kategória rekordot
+    $dataCategory = [
+        'category' => 'Történelem'
+    ];
+    $category = Category::factory()->create($dataCategory);
+
+    // Az új kérdéstípus és kategóriával készítek egy kérdést
+    $dataQuestion = [
+        'questionTypeId' => $questionType->id,
+        'categoryId' => $category->id,
+        'question' => 'Mikor volt a gyulai csata?',
+    ];
+    $question = Question::factory()->create($dataQuestion);
+
+    // Visszakeressük a kérdést és ellenőrizzük mindkét kapcsolatot
+    $question = DB::table('questions')
+        ->where('id', $question->id)
+        ->first();
+
+    // Ellenőrizzük, hogy a questionTypeId kapcsolódik a megfelelő kérdéstípushoz
+    $this->assertEquals($questionType->id, $question->questionTypeId);
+    
+    // Ellenőrizzük, hogy a categoryId kapcsolódik a megfelelő kategóriához
+    $this->assertEquals($category->id, $question->categoryId);
+}
+
+
+public function test_questions_answers_relationships(){  
+
+    // A diák tábla kapcsolatai
+    $databaseName = env('DB_DATABASE');
+    $tableName = "answers";
+    $constraint_name = "PRIMARY";
+
+    $query = "
+        SELECT 
+            TABLE_NAME,
+            COLUMN_NAME,
+            CONSTRAINT_NAME,
+            REFERENCED_TABLE_NAME,
+            REFERENCED_COLUMN_NAME
+        FROM 
+            information_schema.KEY_COLUMN_USAGE
+        WHERE
+            TABLE_NAME = ? and CONSTRAINT_SCHEMA = ? and REFERENCED_TABLE_NAME IS NOT NULL";
+
+    $rows = DB::select($query, [$tableName, $databaseName]);
+
+    // Ellenőrizzük, hogy van találat
+    if (count($rows) > 0) {
+        // Debugging: nyomtatás, hogy megnézd mi van a $rows-ban
+        // dd($rows);
+
+        // Ellenőrizzük, hogy a COLUMN_NAME valóban roleId
+        $this->assertTrue(isset($rows[0]->COLUMN_NAME));
+        $this->assertEquals('questionId', trim($rows[0]->COLUMN_NAME)); // A trim() még mindig hasznos lehet
+        $this->assertEquals('questions', $rows[0]->REFERENCED_TABLE_NAME);
+        $this->assertEquals('id', $rows[0]->REFERENCED_COLUMN_NAME);
+    } else {
+        $this->fail('Nincs találat az idegen kulcsokra.');
+    }
+
+    // Készítünk egy rolet
+    $dataQuestion = [
+        'question' => 'Mikor volt a Bastille ostroma?',
+        'questionTypeId' => 2,
+        'categoryId' => 12
+    ];
+    $question = Question::factory()->create($dataQuestion);
+
+    // Az új role-val készítek egy usert
+    $dataAnswer = [
+        'questionId' => $question->id,
+        'answer' => '1789. július 14.',
+        'rightAnswer' => 1,
+    ];
+    $answer = Answer::factory()->create($dataAnswer);
+
+    // Visszakeressük a usert
+    $answer = DB::table('answers')
+        ->where('id', $answer->id)
+        ->first();
+
+    // A megtalált user roleId-je megegyezik a új roleId-jével        
+    $this->assertEquals($question->id, $answer->questionId);
+}
+
 }    
 
 
