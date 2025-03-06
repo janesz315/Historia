@@ -30,6 +30,11 @@ const router = createRouter({
       component: () => import('../views/AboutView.vue'),
       meta: {title: (route) => 'Rólunk'}
     },
+    { path: "/:pathMatch(.*)*",
+      name: "NotFound",
+      component: HomeView,
+      meta: {title: (route) => 'Kezdőlap'}
+    },
   ],
 })
 
