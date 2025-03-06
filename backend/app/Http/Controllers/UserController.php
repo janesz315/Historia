@@ -78,7 +78,7 @@ class UserController extends Controller
         if (count($rows)!=0) {
             # már van ilyen email
             $data = [
-                'message' => 'This email alredy exists',
+                'message' => 'This email already exists',
                 'email' => $request['email']
             ];
         } else {
@@ -118,7 +118,7 @@ class UserController extends Controller
             if (count($rows)!=0) {
                 # már van ilyen email
                 $data = [
-                    'message' => 'This email alredy exists',
+                    'message' => 'This email already exists',
                     'email' => $request['email']
                 ];
             }else{

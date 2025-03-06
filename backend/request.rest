@@ -27,6 +27,44 @@ Accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
+### get users
+get {{host}}/api/users
+Accept: application/json
+Authorization: Bearer {{token}}
+
+### get user by Id
+get {{host}}/api/users/1
+Accept: application/json
+Authorization: Bearer {{token}}
+
+### post user
+post {{host}}/api/users
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "name": "test4",
+    "roleId": 2,
+    "email": "test4@example.com",
+    "password": "123"
+}
+
+### delete user by id
+delete {{host}}/api/users/3
+Accept: application/json
+Authorization: Bearer {{token}}
+
+### patch user by id
+patch {{host}}/api/users/2
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "password": "1234"
+}
+
 # ----------------- login -------------------
 
 # ----------------- roles -------------------
