@@ -22,18 +22,21 @@ import { RouterLink, RouterView } from 'vue-router'
             <li>
               <RouterLink to="/about" class="nav-link">Rólunk</RouterLink>
             </li>
-            <!-- <li>
-              <RouterLink to="/temakor" class="nav-link">Témakörök</RouterLink>
+            <li>
+              <RouterLink to="/temakor" class="nav-link" v-if="stateAuth.user">Témakörök</RouterLink>
             </li>
             <li>
-              <RouterLink to="/test" class="nav-link">Tesztelés</RouterLink>
+              <RouterLink to="/test" class="nav-link" v-if="stateAuth.user">Tesztelés</RouterLink>
             </li>
             <li>
-              <RouterLink to="/login" class="nav-link">Bejelentkezés</RouterLink>
+              <RouterLink to="/login" class="nav-link" v-if="!stateAuth.user">Bejelentkezés</RouterLink>
             </li>
             <li>
-              <RouterLink to="/register" class="nav-link">Regisztráció</RouterLink>
-            </li> -->
+              <RouterLink class="nav-link" to="#" @click="Logout()" v-if="stateAuth.user">Kijelentkezés</RouterLink>
+            </li>
+            <li>
+              <RouterLink to="/signup" class="nav-link" v-if="!stateAuth.user">Regisztráció</RouterLink>
+            </li>
           </ul>
         </nav>
       </div>
@@ -44,6 +47,40 @@ import { RouterLink, RouterView } from 'vue-router'
   </div>
 </template>
 
+<script>
+import { useCounterStore } from '@/stores/counter'
+import { RouterLink, RouterView } from "vue-router"
+import { useAuthStore } from "@/stores/useAuthStore.js";
+import axios from "axios";
+import { BASE_URL } from "@/helpers/baseUrls";
+
+export default {
+  data(){
+    return{
+      state: useCounterStore(),
+      stateAuth: useAuthStore(),
+    }
+  },
+  methods:{
+    async Logout(){const url = `${BASE_URL}/users/logout`;
+    const headers = {
+        Accept: 'application/json',
+        Authorization: `Bearer ${this.stateAuth.token}`
+    };
+    try {
+      const response = await axios.post(url, null, { headers });
+            // this.errorMessage = "Successful logout!";
+          } 
+          catch (error) {
+            console.error('Error:', error); // Logold a hibát
+            // this.errorMessage = "Logout failed";
+          }
+          this.stateAuth.clearStoredData()
+          this.$router.push('/')
+        }
+  }
+};
+</script>
 <style scoped>
 /* Alap stílusok */
 * {
