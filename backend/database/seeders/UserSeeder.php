@@ -1,4 +1,5 @@
 <?php
+
 namespace Database\Seeders;
 
 use App\Models\User;
@@ -11,12 +12,13 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
+        // Csak akkor hozzuk létre az adatot, ha még nem létezik
         if (User::count() === 0) {
-            User::factory()->create([
+            User::create([
                 'id' => 1,
-                'name'     => 'test',
-                'email'    => 'test@example.com',
-                'password' => bcrypt('123'),
+                'name' => 'test',
+                'email' => 'test@example.com',
+                'password' => '123', // Nem szükséges titkosítani itt, mivel a modell automatikusan megteszi
                 'roleId' => 1,
             ]);
         }

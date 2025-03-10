@@ -16,6 +16,15 @@ class DatabaseSeeder extends Seeder
 
     public function run(): void {
         DB::statement('DELETE FROM roles');
+        DB::statement('DELETE FROM users');
+        DB::statement('DELETE FROM categories');
+        DB::statement('DELETE FROM sources');
+        DB::statement('DELETE FROM question_types');
+        DB::statement('DELETE FROM questions');
+        DB::statement('DELETE FROM answers');
+        DB::statement('DELETE FROM user_tests');
+        DB::statement('DELETE FROM test_questions');
+
         
 
         $this->call([

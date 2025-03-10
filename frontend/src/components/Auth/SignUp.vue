@@ -87,7 +87,6 @@
   </div>
 </template>
 
-
 <script>
 import axios from "axios";
 import { BASE_URL } from "../../helpers/baseUrls";
@@ -98,6 +97,7 @@ export default {
       email: "",
       password: "",
       confirmPassword: "",
+      roleId: 2,  // Bevezetésre került a roleId változó
       isLoading: false,
     };
   },
@@ -125,10 +125,12 @@ export default {
         "Content-Type": "application/json",
       };
 
+      // A roleId-t is hozzáadjuk a payload-hoz
       const payload = {
         name: this.username,
         email: this.email,
         password: this.password,
+        roleId: this.roleId,  // roleId változó hozzáadása
       };
 
       this.isLoading = true;
@@ -154,7 +156,6 @@ export default {
   },
 };
 </script>
-
 
 <style scoped>
 /* Optional: Custom styling for form validation feedback */

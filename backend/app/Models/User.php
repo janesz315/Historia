@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\HasApiTokens;
 
 
@@ -22,4 +23,22 @@ class User extends Authenticatable
     {
         return $this->hasMany(UserTest::class, 'userId');
     }
+
+     // A jelszó titkosítása a mentés előtt
+     protected static function booted()
+     {
+         // Ha új felhasználót hozunk létre, titkosítjuk a jelszót
+         static::creating(function ($user) {
+             if ($user->password) {
+                 $user->password = Hash::make($user->password);
+             }
+         });
+ 
+         // Ha módosítjuk a felhasználó adatait, a jelszó titkosítása
+         static::updating(function ($user) {
+             if ($user->password) {
+                 $user->password = Hash::make($user->password);
+             }
+         });
+     }
 }

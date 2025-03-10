@@ -64,30 +64,40 @@ export default {
         }
     },
     methods:{
-        async userAuth() {
+      async userAuth() {
     this.errorMessage = "...";
     const url = `${BASE_URL}/users/login`;
     const headers = {
         Accept: 'application/json',
         'Content-Type': 'application/json',
     };
-    
-    // Ellenőrizzük a válasz teljes tartalmát
-    // console.log('Response:', response);
+
     try {
+        // Ellenőrizd, hogy az email és jelszó helyesen van-e beállítva
+        if (!this.user.email || !this.user.password) {
+            this.errorMessage = "Email and password are required!";
+            return;
+        }
+
         const response = await axios.post(url, this.user, { headers });
+
+        if (response.data && response.data.user) {
             this.store.setId(response.data.user.id);
             this.store.setUser(response.data.user.name);
             this.store.setToken(response.data.user.token);
             this.errorMessage = "Successful login!";
-            this.$router.push('/')
-        } 
-    catch (error) {
+            this.$router.push('/');
+        } else {
+            this.errorMessage = "Invalid credentials!";
+        }
+
+    } catch (error) {
         console.error('Error:', error); // Logold a hibát
         this.errorMessage = "Login failed";
-        this.store.clearStoredData()
+        this.store.clearStoredData();
     }
 }
+
 
     }
 }

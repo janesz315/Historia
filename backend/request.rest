@@ -44,9 +44,9 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-    "name": "test4",
+    "name": "test6",
     "roleId": 2,
-    "email": "test4@example.com",
+    "email": "test6@example.com",
     "password": "123"
 }
 
