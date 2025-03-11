@@ -51,6 +51,14 @@
               <li v-if="stateAuth.user" class="nav-item">
                 <RouterLink class="nav-link" to="#" @click="Logout()">Kijelentkezés</RouterLink>
               </li>
+              <!-- Saját profil -->
+              <li v-if="stateAuth.user" class="nav-item">
+                <RouterLink class="nav-link" to="/profil">Profil</RouterLink>
+              </li>
+              <li v-if="stateAuth.user" class="nav-item nav-link">
+              <i class="bi bi-person"></i> <span v-if="stateAuth.user"> {{ stateAuth.user }}</span>
+             
+              </li>
             </ul>
           </div>
         </nav>

@@ -6,7 +6,7 @@ import { useAuthStore } from "@/stores/useAuthStore.js";
 function checkIfNotLogged() {
   const storeAuth = useAuthStore();
   if (!storeAuth.user) {
-    return "/login";
+    return "/bejelentkezes";
   } else {
     
   }
@@ -54,12 +54,22 @@ const router = createRouter({
       meta: {title: (route) => 'Regisztráció'}
     },
     {
+      path: '/profil',
+      name: 'profile',
+      // route level code-splitting
+      // this generates a separate chunk (About.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import('@/components/Auth/Profile.vue'),
+      meta: {title: (route) => 'Profilom'}
+    },
+    {
       path: '/temakorok',
       name: 'categories',
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () => import('../views/CategoriesView.vue'),
+      beforeEnter: [checkIfNotLogged],
       meta: {title: (route) => 'Témakörök'}
     },
     {
@@ -69,6 +79,7 @@ const router = createRouter({
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () => import('../views/CategoriesAdminView.vue'),
+      beforeEnter: [checkIfNotLogged],
       meta: {title: (route) => 'Témakörök - Admin'}
     },
     {
@@ -78,6 +89,7 @@ const router = createRouter({
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () => import('../views/TestsView.vue'),
+      beforeEnter: [checkIfNotLogged],
       meta: {title: (route) => 'Tesztek'}
     },
     {
@@ -87,6 +99,7 @@ const router = createRouter({
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () => import('../views/TestsAdminView.vue'),
+      beforeEnter: [checkIfNotLogged],
       meta: {title: (route) => 'Tesztek - Admin'}
     },
     {
@@ -96,6 +109,7 @@ const router = createRouter({
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () => import('../views/AdminView.vue'),
+      beforeEnter: [checkIfNotLogged],
       meta: {title: (route) => 'Admin felület'}
     },
   ],
