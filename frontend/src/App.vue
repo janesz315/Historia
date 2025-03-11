@@ -9,43 +9,50 @@
         </div>
 
         <!-- Navigációs menü -->
-        <nav>
-          <ul>
-            <li>
-              <RouterLink to="/" class="nav-link">Kezdőlap</RouterLink>
-            </li>
-            <li>
-              <RouterLink to="/about" class="nav-link">Rólunk</RouterLink>
-            </li>
-            <!-- Témakörök és Tesztelés menüpontok csak akkor jelennek meg, ha a felhasználó be van jelentkezve -->
-            <li v-if="stateAuth.user && stateAuth.roleId === 2">
-              <RouterLink to="/temakorok" class="nav-link">Témakörök</RouterLink>
-            </li>
-            <li v-if="stateAuth.user && stateAuth.roleId === 2">
-              <RouterLink to="/teszt" class="nav-link">Tesztelés</RouterLink>
-            </li>
-            <li v-if="stateAuth.user && stateAuth.roleId === 1">
-              <RouterLink to="/temakorokAdmin" class="nav-link">Témakörök</RouterLink>
-            </li>
-            <li v-if="stateAuth.user && stateAuth.roleId === 1">
-              <RouterLink to="/tesztAdmin" class="nav-link">Tesztelés</RouterLink>
-            </li>
-            <!-- Admin menüpontok -->
-            <li v-if="stateAuth.user && stateAuth.roleId === 1">
-              <RouterLink to="/admin" class="nav-link">Admin Felület</RouterLink>
-            </li>
-            <!-- Bejelentkezés és Regisztráció csak akkor jelenik meg, ha nincs bejelentkezve -->
-            <li v-if="!stateAuth.user">
-              <RouterLink to="/login" class="nav-link">Bejelentkezés</RouterLink>
-            </li>
-            <li v-if="!stateAuth.user">
-              <RouterLink to="/signup" class="nav-link">Regisztráció</RouterLink>
-            </li>
-            <!-- Kijelentkezés csak akkor jelenik meg, ha be van jelentkezve a felhasználó -->
-            <li v-if="stateAuth.user">
-              <RouterLink class="nav-link" to="#" @click="Logout()">Kijelentkezés</RouterLink>
-            </li>
-          </ul>
+        <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #2c3e50;">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <RouterLink to="/" class="nav-link">Kezdőlap</RouterLink>
+              </li>
+              <li class="nav-item">
+                <RouterLink to="/about" class="nav-link">Rólunk</RouterLink>
+              </li>
+              <!-- Témakörök és Tesztelés menüpontok csak akkor jelennek meg, ha a felhasználó be van jelentkezve -->
+              <!-- Admin -->
+              <li v-if="stateAuth.user && stateAuth.roleId === 1" class="nav-item">
+                <RouterLink to="/temakorokAdmin" class="nav-link">Témakörök</RouterLink>
+              </li>
+              <li v-if="stateAuth.user && stateAuth.roleId === 1" class="nav-item">
+                <RouterLink to="/tesztAdmin" class="nav-link">Tesztelés</RouterLink>
+              </li>
+              <!-- User -->
+              <li v-if="stateAuth.user && stateAuth.roleId === 2" class="nav-item">
+                <RouterLink to="/temakorok" class="nav-link">Témakörök</RouterLink>
+              </li>
+              <li v-if="stateAuth.user && stateAuth.roleId === 2" class="nav-item">
+                <RouterLink to="/teszt" class="nav-link">Tesztelés</RouterLink>
+              </li>
+              <!-- Admin menüpontok -->
+              <li v-if="stateAuth.user && stateAuth.roleId === 1" class="nav-item">
+                <RouterLink to="/admin" class="nav-link">Admin Felület</RouterLink>
+              </li>
+              <!-- Bejelentkezés és Regisztráció csak akkor jelenik meg, ha nincs bejelentkezve -->
+              <li v-if="!stateAuth.user" class="nav-item">
+                <RouterLink to="/login" class="nav-link">Bejelentkezés</RouterLink>
+              </li>
+              <li v-if="!stateAuth.user" class="nav-item">
+                <RouterLink to="/signup" class="nav-link">Regisztráció</RouterLink>
+              </li>
+              <!-- Kijelentkezés csak akkor jelenik meg, ha be van jelentkezve a felhasználó -->
+              <li v-if="stateAuth.user" class="nav-item">
+                <RouterLink class="nav-link" to="#" @click="Logout()">Kijelentkezés</RouterLink>
+              </li>
+            </ul>
+          </div>
         </nav>
       </div>
     </header>
@@ -115,17 +122,12 @@ body {
   font-weight: bold;
 }
 
-nav {
+/* A Bootstrap navbar osztályok most biztosítják a menü megjelenését és rejtését */
+.navbar-nav {
   display: flex;
 }
 
-nav ul {
-  display: flex;
-  list-style: none;
-  margin: 0;
-}
-
-nav li {
+.nav-item {
   margin-left: 20px;
 }
 
@@ -145,21 +147,26 @@ nav li {
 
 /* Mobil reszponzív menü */
 @media (max-width: 768px) {
-  nav {
-    display: none; /* Elrejtjük a menüt mobil nézetben */
+  /* Az alapértelmezett menü el van rejtve, és csak a hamburger ikon jelenik meg */
+  .navbar-collapse {
+    display: none;
   }
 
-  .wrapper {
-    justify-content: center; /* Középre igazítjuk a menüt mobil nézetben */
+  .navbar-toggler {
+    display: block; /* Hamburger ikon */
   }
 
-  nav ul {
+  .navbar-collapse.show {
+    display: block; /* A menü akkor jelenik meg, ha a hamburger ikonra kattintanak */
+  }
+
+  .navbar-nav {
     display: block;
     width: 100%;
     text-align: center;
   }
 
-  nav li {
+  .nav-item {
     margin: 10px 0;
   }
 
@@ -168,14 +175,5 @@ nav li {
     padding: 15px;
     font-size: 18px;
   }
-
-  /* Hamburger ikon a mobil verzióhoz */
-  .hamburger {
-    display: block;
-    cursor: pointer;
-    font-size: 30px;
-    color: #fff;
-  }
 }
 </style>
-
