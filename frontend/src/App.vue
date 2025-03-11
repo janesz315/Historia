@@ -19,7 +19,7 @@
                 <RouterLink to="/" class="nav-link">Kezdőlap</RouterLink>
               </li>
               <li class="nav-item">
-                <RouterLink to="/about" class="nav-link">Rólunk</RouterLink>
+                <RouterLink to="/rolunk" class="nav-link">Rólunk</RouterLink>
               </li>
               <!-- Témakörök és Tesztelés menüpontok csak akkor jelennek meg, ha a felhasználó be van jelentkezve -->
               <!-- Admin -->
@@ -27,14 +27,14 @@
                 <RouterLink to="/temakorokAdmin" class="nav-link">Témakörök</RouterLink>
               </li>
               <li v-if="stateAuth.user && stateAuth.roleId === 1" class="nav-item">
-                <RouterLink to="/tesztAdmin" class="nav-link">Tesztelés</RouterLink>
+                <RouterLink to="/tesztekAdmin" class="nav-link">Tesztelés</RouterLink>
               </li>
               <!-- User -->
               <li v-if="stateAuth.user && stateAuth.roleId === 2" class="nav-item">
                 <RouterLink to="/temakorok" class="nav-link">Témakörök</RouterLink>
               </li>
               <li v-if="stateAuth.user && stateAuth.roleId === 2" class="nav-item">
-                <RouterLink to="/teszt" class="nav-link">Tesztelés</RouterLink>
+                <RouterLink to="/tesztek" class="nav-link">Tesztelés</RouterLink>
               </li>
               <!-- Admin menüpontok -->
               <li v-if="stateAuth.user && stateAuth.roleId === 1" class="nav-item">
@@ -42,10 +42,10 @@
               </li>
               <!-- Bejelentkezés és Regisztráció csak akkor jelenik meg, ha nincs bejelentkezve -->
               <li v-if="!stateAuth.user" class="nav-item">
-                <RouterLink to="/login" class="nav-link">Bejelentkezés</RouterLink>
+                <RouterLink to="/bejelentkezes" class="nav-link">Bejelentkezés</RouterLink>
               </li>
               <li v-if="!stateAuth.user" class="nav-item">
-                <RouterLink to="/signup" class="nav-link">Regisztráció</RouterLink>
+                <RouterLink to="/regisztracio" class="nav-link">Regisztráció</RouterLink>
               </li>
               <!-- Kijelentkezés csak akkor jelenik meg, ha be van jelentkezve a felhasználó -->
               <li v-if="stateAuth.user" class="nav-item">

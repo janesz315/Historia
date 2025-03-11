@@ -22,7 +22,7 @@ const router = createRouter({
       meta: {title: (route) => 'Kezdőlap'}
     },
     {
-      path: '/about',
+      path: '/rolunk',
       name: 'about',
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
@@ -36,22 +36,67 @@ const router = createRouter({
       meta: {title: (route) => 'Kezdőlap'}
     },
     {
-      path: '/login',
+      path: '/bejelentkezes',
       name: 'login',
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () => import('@/components/Auth/Login.vue'),
-      meta: {title: (route) => 'Login'}
+      meta: {title: (route) => 'Bejelentkezés'}
     },
     {
-      path: '/signup',
+      path: '/regisztracio',
       name: 'signup',
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () => import('@/components/Auth/SignUp.vue'),
-      meta: {title: (route) => 'Sign up'}
+      meta: {title: (route) => 'Regisztráció'}
+    },
+    {
+      path: '/temakorok',
+      name: 'categories',
+      // route level code-splitting
+      // this generates a separate chunk (About.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import('../views/CategoriesView.vue'),
+      meta: {title: (route) => 'Témakörök'}
+    },
+    {
+      path: '/temakorokadmin',
+      name: 'categoriesadmin',
+      // route level code-splitting
+      // this generates a separate chunk (About.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import('../views/CategoriesAdminView.vue'),
+      meta: {title: (route) => 'Témakörök - Admin'}
+    },
+    {
+      path: '/tesztek',
+      name: 'tests',
+      // route level code-splitting
+      // this generates a separate chunk (About.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import('../views/TestsView.vue'),
+      meta: {title: (route) => 'Tesztek'}
+    },
+    {
+      path: '/tesztekadmin',
+      name: 'testsadmin',
+      // route level code-splitting
+      // this generates a separate chunk (About.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import('../views/TestsAdminView.vue'),
+      meta: {title: (route) => 'Tesztek - Admin'}
+    },
+    {
+      path: '/admin',
+      name: 'admin',
+      // route level code-splitting
+      // this generates a separate chunk (About.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import('../views/AdminView.vue'),
+      meta: {title: (route) => 'Admin felület'}
     },
   ],
 })
