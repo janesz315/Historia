@@ -63,43 +63,41 @@ export default {
 
         }
     },
-    methods:{
-      async userAuth() {
+    methods: {
+  async userAuth() {
     this.errorMessage = "...";
     const url = `${BASE_URL}/users/login`;
     const headers = {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
     };
 
     try {
-        // Ellenőrizd, hogy az email és jelszó helyesen van-e beállítva
-        if (!this.user.email || !this.user.password) {
-            this.errorMessage = "Email and password are required!";
-            return;
-        }
+      if (!this.user.email || !this.user.password) {
+        this.errorMessage = "Email and password are required!";
+        return;
+      }
 
-        const response = await axios.post(url, this.user, { headers });
+      const response = await axios.post(url, this.user, { headers });
 
-        if (response.data && response.data.user) {
-            this.store.setId(response.data.user.id);
-            this.store.setUser(response.data.user.name);
-            this.store.setToken(response.data.user.token);
-            this.errorMessage = "Successful login!";
-            this.$router.push('/');
-        } else {
-            this.errorMessage = "Invalid credentials!";
-        }
-
+      if (response.data && response.data.user) {
+        // Frissítjük a roleId-t is
+        this.store.setId(response.data.user.id);
+        this.store.setUser(response.data.user.name);
+        this.store.setToken(response.data.user.token);
+        this.store.setRoleId(response.data.user.roleId); // Hozzáadva a roleId
+        this.errorMessage = "Successful login!";
+        this.$router.push('/');
+      } else {
+        this.errorMessage = "Invalid credentials!";
+      }
     } catch (error) {
-        console.error('Error:', error); // Logold a hibát
-        this.errorMessage = "Login failed";
-        this.store.clearStoredData();
+      console.error('Error:', error);
+      this.errorMessage = "Login failed";
+      this.store.clearStoredData();
     }
+  }
 }
-
-
-    }
 }
 </script>
 

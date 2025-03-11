@@ -1,10 +1,5 @@
-<script setup>
-import { RouterLink, RouterView } from 'vue-router'
-</script>
-
 <template>
   <div>
-
     <!-- Fő fejléc -->
     <header>
       <div class="wrapper">
@@ -22,20 +17,33 @@ import { RouterLink, RouterView } from 'vue-router'
             <li>
               <RouterLink to="/about" class="nav-link">Rólunk</RouterLink>
             </li>
-            <li>
-              <RouterLink to="/temakor" class="nav-link" v-if="stateAuth.user">Témakörök</RouterLink>
+            <!-- Témakörök és Tesztelés menüpontok csak akkor jelennek meg, ha a felhasználó be van jelentkezve -->
+            <li v-if="stateAuth.user && stateAuth.roleId === 2">
+              <RouterLink to="/temakorok" class="nav-link">Témakörök</RouterLink>
             </li>
-            <li>
-              <RouterLink to="/test" class="nav-link" v-if="stateAuth.user">Tesztelés</RouterLink>
+            <li v-if="stateAuth.user && stateAuth.roleId === 2">
+              <RouterLink to="/teszt" class="nav-link">Tesztelés</RouterLink>
             </li>
-            <li>
-              <RouterLink to="/login" class="nav-link" v-if="!stateAuth.user">Bejelentkezés</RouterLink>
+            <li v-if="stateAuth.user && stateAuth.roleId === 1">
+              <RouterLink to="/temakorokAdmin" class="nav-link">Témakörök</RouterLink>
             </li>
-            <li>
-              <RouterLink class="nav-link" to="#" @click="Logout()" v-if="stateAuth.user">Kijelentkezés</RouterLink>
+            <li v-if="stateAuth.user && stateAuth.roleId === 1">
+              <RouterLink to="/tesztAdmin" class="nav-link">Tesztelés</RouterLink>
             </li>
-            <li>
-              <RouterLink to="/signup" class="nav-link" v-if="!stateAuth.user">Regisztráció</RouterLink>
+            <!-- Admin menüpontok -->
+            <li v-if="stateAuth.user && stateAuth.roleId === 1">
+              <RouterLink to="/admin" class="nav-link">Admin Felület</RouterLink>
+            </li>
+            <!-- Bejelentkezés és Regisztráció csak akkor jelenik meg, ha nincs bejelentkezve -->
+            <li v-if="!stateAuth.user">
+              <RouterLink to="/login" class="nav-link">Bejelentkezés</RouterLink>
+            </li>
+            <li v-if="!stateAuth.user">
+              <RouterLink to="/signup" class="nav-link">Regisztráció</RouterLink>
+            </li>
+            <!-- Kijelentkezés csak akkor jelenik meg, ha be van jelentkezve a felhasználó -->
+            <li v-if="stateAuth.user">
+              <RouterLink class="nav-link" to="#" @click="Logout()">Kijelentkezés</RouterLink>
             </li>
           </ul>
         </nav>
@@ -48,39 +56,36 @@ import { RouterLink, RouterView } from 'vue-router'
 </template>
 
 <script>
-import { useCounterStore } from '@/stores/counter'
-import { RouterLink, RouterView } from "vue-router"
 import { useAuthStore } from "@/stores/useAuthStore.js";
+import { RouterLink, RouterView } from "vue-router";
 import axios from "axios";
 import { BASE_URL } from "@/helpers/baseUrls";
 
 export default {
-  data(){
-    return{
-      state: useCounterStore(),
+  data() {
+    return {
       stateAuth: useAuthStore(),
-    }
-  },
-  methods:{
-    async Logout(){const url = `${BASE_URL}/users/logout`;
-    const headers = {
-        Accept: 'application/json',
-        Authorization: `Bearer ${this.stateAuth.token}`
     };
-    try {
-      const response = await axios.post(url, null, { headers });
-            // this.errorMessage = "Successful logout!";
-          } 
-          catch (error) {
-            console.error('Error:', error); // Logold a hibát
-            // this.errorMessage = "Logout failed";
-          }
-          this.stateAuth.clearStoredData()
-          this.$router.push('/')
-        }
-  }
+  },
+  methods: {
+    async Logout() {
+      const url = `${BASE_URL}/users/logout`;
+      const headers = {
+        Accept: "application/json",
+        Authorization: `Bearer ${this.stateAuth.token}`,
+      };
+      try {
+        await axios.post(url, null, { headers });
+      } catch (error) {
+        console.error("Error:", error);
+      }
+      this.stateAuth.clearStoredData();
+      this.$router.push("/");
+    },
+  },
 };
 </script>
+
 <style scoped>
 /* Alap stílusok */
 * {
