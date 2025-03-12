@@ -69,13 +69,13 @@ Route::delete('sources/{id}', [SourceController::class, 'destroy']);
 //endregion
 
 //region question types
-Route::get('questionCategory', [QuestionTypeController::class, 'index']);
-Route::get('questionCategory/{id}', [QuestionTypeController::class, 'show']);
-Route::post('questionCategory', [QuestionTypeController::class, 'store']);
+Route::get('questionTypes', [QuestionTypeController::class, 'index']);
+Route::get('questionTypes/{id}', [QuestionTypeController::class, 'show']);
+Route::post('questionTypes', [QuestionTypeController::class, 'store']);
 // ->middleware('auth:sanctum');
-Route::patch('questionCategory/{id}', [QuestionTypeController::class, 'update']);
+Route::patch('questionTypes/{id}', [QuestionTypeController::class, 'update']);
 // ->middleware('auth:sanctum');
-Route::delete('questionCategory/{id}', [QuestionTypeController::class, 'destroy']);
+Route::delete('questionTypes/{id}', [QuestionTypeController::class, 'destroy']);
 // ->middleware('auth:sanctum');
 
 //endregion
