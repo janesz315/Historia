@@ -190,13 +190,13 @@ Authorization: Bearer {{token}}
 # ----------------- questionTypes -------------------
 
 ### get questionType
-get {{host}}/api/questionCategory
+get {{host}}/api/questionTypes
 
 ### get questionType by id
-GET {{host}}/api/questionCategory/1
+GET {{host}}/api/questionTypes/1
 
 ### post new questionType
-POST {{host}}/api/questionCategory/
+POST {{host}}/api/questionTypes/
 Accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{token}}
@@ -206,7 +206,7 @@ Authorization: Bearer {{token}}
 }
 
 ### update questionType
-patch {{host}}/api/questionCategory/4
+patch {{host}}/api/questionTypes/4
 Accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{token}}
@@ -216,7 +216,7 @@ Authorization: Bearer {{token}}
 }
 
 ### delete questionType by id
-delete {{host}}/api/questionCategory/4
+delete {{host}}/api/questionTypes/4
 Accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{token}}
