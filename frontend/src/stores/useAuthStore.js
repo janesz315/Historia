@@ -29,13 +29,12 @@ export const useAuthStore = defineStore("auth", {
       localStorage.removeItem("currentToken");
       localStorage.removeItem("user");
       localStorage.removeItem("id");
+      localStorage.removeItem("token");
       localStorage.removeItem("roleId"); // roleId törlése is
       this.token = null;
       this.user = null;
       this.id = null;
       this.roleId = null;
-      this.store.clearStoredData();
-      console.log("Cleared token from localStorage:", localStorage.getItem("token"));
     },
   },
 });

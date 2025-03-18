@@ -1,12 +1,12 @@
 <template>
   <div class="container mt-5">
-    <h1>User Profile</h1>
+    <h1>Felhasználói Profil</h1>
 
     <!-- Username -->
     <div class="card mb-3">
       <div class="card-body d-flex justify-content-between align-items-center">
         <p>
-          <strong>Username:</strong>
+          <strong>Felhasználónév:</strong>
           {{ isEditingField === "name" ? "" : user.name }}
         </p>
         <div v-if="isEditingField === 'name'" class="d-flex align-items-center">
@@ -17,12 +17,12 @@
             placeholder="Enter new username"
           />
           <button class="btn btn-success me-2" @click="saveField('name')">
-            Save
+            Mentés
           </button>
-          <button class="btn btn-secondary" @click="cancelEdit">Cancel</button>
+          <button class="btn btn-secondary" @click="cancelEdit">Mégse</button>
         </div>
         <button v-else class="btn btn-warning" @click="startEdit('name')">
-          Edit
+          Módosítás
         </button>
       </div>
     </div>
@@ -45,12 +45,12 @@
             placeholder="Enter new email"
           />
           <button class="btn btn-success me-2" @click="saveField('email')">
-            Save
+            Mentés
           </button>
-          <button class="btn btn-secondary" @click="cancelEdit">Cancel</button>
+          <button class="btn btn-secondary" @click="cancelEdit">Mégse</button>
         </div>
         <button v-else class="btn btn-warning" @click="startEdit('email')">
-          Edit
+          Módosítás
         </button>
       </div>
     </div>
@@ -58,7 +58,7 @@
     <!-- Password -->
     <div class="card mb-3">
       <div class="card-body d-flex justify-content-between align-items-center">
-        <p><strong>Password:</strong>******</p>
+        <p><strong>Jelszó:</strong>******</p>
         <div
           v-if="isEditingField === 'password'"
           class="d-flex align-items-center"
@@ -70,19 +70,19 @@
             placeholder="Enter new password"
           />
           <button class="btn btn-success me-2" @click="saveField('password')">
-            Save
+            Mentés
           </button>
-          <button class="btn btn-secondary" @click="cancelEdit">Cancel</button>
+          <button class="btn btn-secondary" @click="cancelEdit">Mégse</button>
         </div>
         <button v-else class="btn btn-warning" @click="startEdit('password')">
-          Edit
+          Módosítás
         </button>
       </div>
     </div>
 
     <!-- Delete Account -->
     <button class="btn btn-danger mt-3" @click="deleteUser">
-      Delete Account
+      Fiók törlése
     </button>
   </div>
 </template>
