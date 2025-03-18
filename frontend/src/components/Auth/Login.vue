@@ -5,20 +5,20 @@
       <form @submit.prevent="userAuth">
         <div class="input-group">
           <span class="icon"><i class="fas fa-envelope"></i></span>
-          <input 
-            type="email" 
-            v-model="user.email" 
-            placeholder="Email cím*" 
+          <input
+            type="email"
+            v-model="user.email"
+            placeholder="Email cím*"
             required
           />
         </div>
 
         <div class="input-group">
           <span class="icon"><i class="fas fa-lock"></i></span>
-          <input 
-            type="password" 
-            v-model="user.password" 
-            placeholder="Jelszó*" 
+          <input
+            type="password"
+            v-model="user.password"
+            placeholder="Jelszó*"
             required
           />
         </div>
@@ -53,54 +53,79 @@ export default {
   },
   methods: {
     async userAuth() {
-  this.errorMessage = null;
-  this.loading = true;
+      this.errorMessage = null;
+      this.loading = true;
 
-  try {
-    if (!this.user.email || !this.user.password) {
-      this.errorMessage = " Kérlek, add meg az email címed és a jelszavad!";
-      this.loading = false;
-      return;
-    }
+      try {
+        if (!this.user.email || !this.user.password) {
+          this.errorMessage = " Kérlek, add meg az email címed és a jelszavad!";
+          this.loading = false;
+          return;
+        }
 
-    const response = await axios.post(`${BASE_URL}/users/login`, this.user, {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-    });
+        const response = await axios.post(
+          `${BASE_URL}/users/login`,
+          this.user,
+          {
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
-    if (response.data && response.data.user) {
-      this.store.setId(response.data.user.id);
-      this.store.setUser(response.data.user.name);
-      this.store.setToken(response.data.user.token);
-      this.store.setRoleId(response.data.user.roleId);
+        if (response.data && response.data.user) {
+          this.store.setId(response.data.user.id);
+          this.store.setUser(response.data.user.name);
+          this.store.setToken(response.data.user.token);
+          this.store.setRoleId(response.data.user.roleId);
 
-      // 🔴 Itt állítsd be az új tokent az Axios fejlécekhez
-      axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.user.token}`;
+          // 🔴 Itt állítsd be az új tokent az Axios fejlécekhez
+          axios.defaults.headers.common[
+            "Authorization"
+          ] = `Bearer ${response.data.user.token}`;
 
-      this.$router.push("/");
-    } else {
-      this.errorMessage = " Helytelen bejelentkezési adatok!";
-    }
-  } catch (error) {
-    console.error("Error:", error);
-    this.errorMessage = " Sikertelen bejelentkezés!";
-  } finally {
-    this.loading = false;
-  }
-}
+          this.$router.push("/");
+        } else {
+          this.errorMessage = " Helytelen bejelentkezési adatok!";
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        this.errorMessage = " Sikertelen bejelentkezés!";
+      } finally {
+        this.loading = false;
+      }
+      // Fixálja a magasságot, hogy az UI ne ugráljon a billentyűzet feljövetelekor
+      function setDynamicHeight() {
+        document.documentElement.style.setProperty(
+          "--vh",
+          `${window.innerHeight}px`
+        );
+      }
+
+      // Meghívás betöltéskor és méretváltozáskor
+      window.addEventListener("resize", setDynamicHeight);
+      setDynamicHeight();
+    },
   },
 };
 </script>
 
 <style scoped>
+html,
+body {
+  height: var(--vh, 100vh); /* Dinamikus magasság a JavaScript alapján */
+  overflow: hidden; /* Megakadályozza a görgetést */
+}
+
 /* 📌 Teljes képernyős bejelentkezési doboz */
 .login-container {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 80vh;
+  min-height: 80vh; /* Mindig legalább a teljes képernyőt lefedi */
+  padding: 20px; /* Megakadályozza, hogy teljesen a tetejére kerüljön */
+  background: #f9f9f9;
 }
 
 /* 📌 Középre igazított bejelentkezési kártya */
@@ -110,7 +135,8 @@ export default {
   border-radius: 15px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   text-align: center;
-  width: 320px;
+  width: 350px;
+  transition: transform 0.3s ease-in-out; /* Finom animáció a méretváltozásra */
 }
 
 /* 📌 Cím */
