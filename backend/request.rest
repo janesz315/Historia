@@ -33,7 +33,7 @@ Accept: application/json
 Authorization: Bearer {{token}}
 
 ### get user by Id
-get {{host}}/api/users/1
+get {{host}}/api/users/10
 Accept: application/json
 Authorization: Bearer {{token}}
 
@@ -56,13 +56,14 @@ Accept: application/json
 Authorization: Bearer {{token}}
 
 ### patch user by id
-patch {{host}}/api/users/2
+patch {{host}}/api/users/10
 Accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-    "password": "1234"
+    "email": "kaaaaab@gmail.com",
+    "password" : "12345"
 }
 
 # ----------------- login -------------------

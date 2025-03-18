@@ -53,39 +53,43 @@ export default {
   },
   methods: {
     async userAuth() {
-      this.errorMessage = null;
-      this.loading = true;
+  this.errorMessage = null;
+  this.loading = true;
 
-      try {
-        if (!this.user.email || !this.user.password) {
-          this.errorMessage = " Kérlek, add meg az email címed és a jelszavad!";
-          this.loading = false;
-          return;
-        }
+  try {
+    if (!this.user.email || !this.user.password) {
+      this.errorMessage = " Kérlek, add meg az email címed és a jelszavad!";
+      this.loading = false;
+      return;
+    }
 
-        const response = await axios.post(`${BASE_URL}/users/login`, this.user, {
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-        });
+    const response = await axios.post(`${BASE_URL}/users/login`, this.user, {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    });
 
-        if (response.data && response.data.user) {
-          this.store.setId(response.data.user.id);
-          this.store.setUser(response.data.user.name);
-          this.store.setToken(response.data.user.token);
-          this.store.setRoleId(response.data.user.roleId);
-          this.$router.push("/");
-        } else {
-          this.errorMessage = " Helytelen bejelentkezési adatok!";
-        }
-      } catch (error) {
-        console.error("Error:", error);
-        this.errorMessage = " Sikertelen bejelentkezés!";
-      } finally {
-        this.loading = false;
-      }
-    },
+    if (response.data && response.data.user) {
+      this.store.setId(response.data.user.id);
+      this.store.setUser(response.data.user.name);
+      this.store.setToken(response.data.user.token);
+      this.store.setRoleId(response.data.user.roleId);
+
+      // 🔴 Itt állítsd be az új tokent az Axios fejlécekhez
+      axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.user.token}`;
+
+      this.$router.push("/");
+    } else {
+      this.errorMessage = " Helytelen bejelentkezési adatok!";
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    this.errorMessage = " Sikertelen bejelentkezés!";
+  } finally {
+    this.loading = false;
+  }
+}
   },
 };
 </script>

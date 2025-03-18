@@ -119,7 +119,7 @@ export default {
         });
 
         alert(" Sikeres regisztráció!");
-        this.$router.push("/login");
+        this.$router.push("/bejelentkezes");
       } catch (error) {
         console.error("Hiba:", error);
         this.errorMessage = "🚨 Hiba történt. Próbáld újra!";

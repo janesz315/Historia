@@ -110,30 +110,30 @@ class UserController extends Controller
     }
 
     public function update(UpdateUserRequest $request, int $id)
-    {
-        $row = User::find($id);
-        if ($row) {
-            $rows = User::where('email', $request['email'])
-            ->get();
-            if (count($rows)!=0) {
-                # már van ilyen email
-                $data = [
-                    'message' => 'This email already exists',
-                    'email' => $request['email']
-                ];
-            }else{
-                //nincs még ilyen email
-                $row->update($request->all());
-                $data = [
-                    'row' => $row
-                ];
-            }
-        } else {
-            $data = [
-                'message' => 'Not found',
-                'id' => $id
-            ];
-        }
-        return response()->json($data, options:JSON_UNESCAPED_UNICODE);
+{
+    $row = User::find($id);
+
+    if (!$row) {
+        return response()->json([
+            'message' => 'Not found',
+            'id' => $id
+        ], 404);
     }
+
+    // Ha van e-mail a kérésben ÉS az eltér a meglévőtől, akkor ellenőrizzük az egyediséget
+    if ($request->has('email') && $request->email !== $row->email) {
+        $emailExists = User::where('email', $request->email)->exists();
+        if ($emailExists) {
+            return response()->json([
+                'message' => 'This email already exists',
+                'email' => $request->email
+            ], 400);
+        }
+    }
+
+    // Csak azokat az adatokat frissítjük, amik valóban változtak
+    $row->update($request->only(['name', 'email', 'password']));
+    
+    return response()->json(['row' => $row], 200);
+}
 }

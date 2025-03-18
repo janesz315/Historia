@@ -98,9 +98,12 @@ export default {
     },
     async saveField(field) {
   try {
+    // A teljes user objektumot elküldjük, de csak egy mezőt módosítunk
+    const updatedUser = { ...this.user, [field]: this.updatedField[field] };
+
     const response = await axios.patch(
       `${BASE_URL}/users/${this.store.id}`,
-      { [field]: this.updatedField[field] },
+      updatedUser,
       {
         headers: {
           Authorization: `Bearer ${this.store.token}`,
@@ -108,29 +111,27 @@ export default {
       }
     );
 
-    // Logoljunk ki minden adatot a válaszból, hogy lássuk, mit kapunk
-    console.log(response.data); // Ellenőrizd, mi érkezik a válaszban
+    console.log("Szerver válasza:", response.data);
 
-    // Ellenőrizzük, hogy van-e üzenet, ami azt jelzi, hogy az email már létezik
     if (response.data.message === "This email already exists") {
       alert("Error: This email is already in use.");
     } else {
       alert(`${field} updated successfully.`);
-      this.user[field] = this.updatedField[field];
+      this.user = response.data.row; // Frissítsük a teljes user objektumot
       this.cancelEdit();
 
-      // Ha email vagy jelszó módosul, log-out és átirányítás
       if (field === "email" || field === "password") {
         alert("Please log in again.");
         this.store.clearStoredData();
-        this.$router.push("/login");
+        this.$router.push("/bejelentkezes");
       }
     }
   } catch (error) {
     console.error("Error updating field:", error);
     alert("Failed to update field. Please try again.");
   }
-},
+}
+,
 
     async deleteUser() {
       if (confirm("Are you sure you want to delete your account?")) {

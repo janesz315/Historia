@@ -14,7 +14,7 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
     protected $fillable = ['name', 'roleId', 'email', 'password'];
-    protected $hidden = ['password', 'remember_token'];
+    protected $hidden = ['remember_token'];
     public function role()
     {
         return $this->belongsTo(Role::class, 'roleId');
@@ -27,18 +27,18 @@ class User extends Authenticatable
      // A jelszó titkosítása a mentés előtt
      protected static function booted()
      {
-         // Ha új felhasználót hozunk létre, titkosítjuk a jelszót
          static::creating(function ($user) {
-             if ($user->password) {
+             if (!empty($user->password)) {
                  $user->password = Hash::make($user->password);
              }
          });
- 
-         // Ha módosítjuk a felhasználó adatait, a jelszó titkosítása
+     
          static::updating(function ($user) {
-             if ($user->password) {
+             // Csak akkor hash-eljük újra a jelszót, ha tényleg megváltozott
+             if ($user->isDirty('password') && !empty($user->password)) {
                  $user->password = Hash::make($user->password);
              }
          });
      }
+     
 }
