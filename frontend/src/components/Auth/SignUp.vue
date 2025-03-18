@@ -122,7 +122,7 @@ export default {
         this.$router.push("/login");
       } catch (error) {
         console.error("Hiba:", error);
-        this.errorMessage = "🚨 Hiba történt. Próbáld újra!";
+        this.errorMessage = " Hiba történt. Próbáld újra!";
       } finally {
         this.isLoading = false;
       }
@@ -134,20 +134,23 @@ export default {
 <style scoped>
 /* 📌 Háttér */
 .register-container {
-  display: flex;
+ display: flex;
   align-items: center;
   justify-content: center;
-  height: 80vh;
+  min-height: 80vh; /* Mindig legalább a teljes képernyőt lefedi */
+  padding: 20px; /* Megakadályozza, hogy teljesen a tetejére kerüljön */
+  background: #f9f9f9;
 }
 
 /* 📌 Regisztrációs kártya */
 .register-card {
-  background: white;
+   background: white;
   padding: 30px;
   border-radius: 15px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   text-align: center;
   width: 350px;
+  transition: transform 0.3s ease-in-out; /* Finom animáció a méretváltozásra */
 }
 
 /* 📌 Cím */

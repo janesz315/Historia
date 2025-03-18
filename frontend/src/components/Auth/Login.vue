@@ -3,28 +3,33 @@
     <div class="login-card">
       <h2 class="login-title">Bejelentkezés</h2>
       <form @submit.prevent="userAuth">
+        <!-- Email mező -->
         <div class="input-group">
           <span class="icon"><i class="fas fa-envelope"></i></span>
-          <input 
-            type="email" 
-            v-model="user.email" 
-            placeholder="Email cím*" 
+          <input
+            type="email"
+            v-model="user.email"
+            placeholder="Email*"
+            autocomplete="email"
             required
           />
         </div>
 
+        <!-- Jelszó mező -->
         <div class="input-group">
           <span class="icon"><i class="fas fa-lock"></i></span>
-          <input 
-            type="password" 
-            v-model="user.password" 
-            placeholder="Jelszó*" 
+          <input
+            type="password"
+            v-model="user.password"
+            placeholder="Jelszó*"
+            autocomplete="current-password"
             required
           />
         </div>
 
-        <button type="submit" class="login-button">
-          <span v-if="loading"> Bejelentkezés...</span>
+        <!-- Bejelentkezés gomb -->
+        <button type="submit" class="login-button" :disabled="isLoading">
+          <span v-if="isLoading"> Bejelentkezés...</span>
           <span v-else> Bejelentkezés</span>
         </button>
 
@@ -43,23 +48,22 @@ export default {
   data() {
     return {
       user: {
-        email: "",
-        password: "",
+        email: "test@example.com",
+        password: "123",
       },
       store: useAuthStore(),
       errorMessage: null,
-      loading: false,
+      isLoading: false,
     };
   },
   methods: {
     async userAuth() {
       this.errorMessage = null;
-      this.loading = true;
-
+      this.isLoading = true;
+      
       try {
         if (!this.user.email || !this.user.password) {
-          this.errorMessage = " Kérlek, add meg az email címed és a jelszavad!";
-          this.loading = false;
+          this.errorMessage = " Email és jelszó megadása kötelező!";
           return;
         }
 
@@ -75,39 +79,59 @@ export default {
           this.store.setUser(response.data.user.name);
           this.store.setToken(response.data.user.token);
           this.store.setRoleId(response.data.user.roleId);
+
           this.$router.push("/");
         } else {
-          this.errorMessage = " Helytelen bejelentkezési adatok!";
+          this.errorMessage = " Érvénytelen adatok!";
         }
       } catch (error) {
-        console.error("Error:", error);
+        console.error("Hiba:", error);
         this.errorMessage = " Sikertelen bejelentkezés!";
+        this.store.clearStoredData();
       } finally {
-        this.loading = false;
+        this.isLoading = false;
       }
     },
   },
 };
+
+// Fixálja a magasságot, hogy az UI ne ugráljon a billentyűzet feljövetelekor
+function setDynamicHeight() {
+  document.documentElement.style.setProperty("--vh", `${window.innerHeight}px`);
+}
+
+// Meghívás betöltéskor és méretváltozáskor
+window.addEventListener("resize", setDynamicHeight);
+setDynamicHeight();
 </script>
 
 <style scoped>
-/* 📌 Teljes képernyős bejelentkezési doboz */
+html, body {
+  height: var(--vh, 100vh); /* Dinamikus magasság a JavaScript alapján */
+  overflow: hidden; /* Megakadályozza a görgetést */
+}
+
+
+/* 📌 Háttér */
 .login-container {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 80vh;
+  min-height: 80vh; /* Mindig legalább a teljes képernyőt lefedi */
+  padding: 20px; /* Megakadályozza, hogy teljesen a tetejére kerüljön */
+  background: #f9f9f9;
 }
 
-/* 📌 Középre igazított bejelentkezési kártya */
 .login-card {
   background: white;
   padding: 30px;
   border-radius: 15px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   text-align: center;
-  width: 320px;
+  width: 350px;
+  transition: transform 0.3s ease-in-out; /* Finom animáció a méretváltozásra */
 }
+
 
 /* 📌 Cím */
 .login-title {
@@ -115,7 +139,7 @@ export default {
   margin-bottom: 20px;
 }
 
-/* 📌 Bemeneti mezők */
+/* 📌 Input mezők */
 .input-group {
   display: flex;
   align-items: center;
@@ -139,7 +163,7 @@ input {
   font-size: 1rem;
 }
 
-/* 📌 Bejelentkezés gomb */
+/* 📌 Bejelentkezési gomb */
 .login-button {
   background: #007bff;
   color: white;
@@ -153,13 +177,13 @@ input {
 }
 
 .login-button:hover {
-  background: #0056b3;
+  background: #0056;
 }
 
-/* 📌 Hibaüzenet */
+/* 📌 Hibaüzenetek */
 .error-message {
   color: red;
-  margin-top: 10px;
+  margin-top: 5px;
   font-size: 0.9rem;
 }
 </style>
