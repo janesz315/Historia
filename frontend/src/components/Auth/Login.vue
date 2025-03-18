@@ -1,48 +1,35 @@
 <template>
-  <!-- <h1>Lenin</h1> -->
-  <div class="contanier">
-    <div class="row my-5">
-      <div class="col-md-6 mx-auto">
-        <div class="card">
-          <h5 class="card-header">Login</h5>
-          <div class="card-body">
-            <form @submit.prevent="userAuth">
-              <div class="form-group mb-3">
-                <input
-                  type="text"
-                  v-model="user.email"
-                  placeholder="Email*"
-                  class="form-control"
-                />
-              </div>
-              <div class="form-group mb-3">
-                <input
-                  type="password"
-                  v-model="user.password"
-                  placeholder="Password*"
-                  class="form-control"
-                />
-              </div>
-              <div class="form-group mb-3">
-                <div class="d-flex align-items-center">
-                  <button type="submit" class="btn btn-primary me-4">
-                    Login
-                  </button>
- 
-                  <div
-                    class="spinner-border m-0 p-0"
-                    role="status"
-                    v-if="errorMessage == '...'"
-                  >
-                    <span class="visually-hidden m-0">Loading...</span>
-                  </div>
-                  <span v-if="errorMessage != '...'">{{ errorMessage }}</span>
-                </div>
-              </div>
-            </form>
-          </div>
+  <div class="login-container">
+    <div class="login-card">
+      <h2 class="login-title">Bejelentkezés</h2>
+      <form @submit.prevent="userAuth">
+        <div class="input-group">
+          <span class="icon"><i class="fas fa-envelope"></i></span>
+          <input 
+            type="email" 
+            v-model="user.email" 
+            placeholder="Email cím*" 
+            required
+          />
         </div>
-      </div>
+
+        <div class="input-group">
+          <span class="icon"><i class="fas fa-lock"></i></span>
+          <input 
+            type="password" 
+            v-model="user.password" 
+            placeholder="Jelszó*" 
+            required
+          />
+        </div>
+
+        <button type="submit" class="login-button">
+          <span v-if="loading"> Bejelentkezés...</span>
+          <span v-else> Bejelentkezés</span>
+        </button>
+
+        <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
+      </form>
     </div>
   </div>
 </template>
@@ -51,56 +38,128 @@
 import { useAuthStore } from "../../stores/useAuthStore.js";
 import axios from "axios";
 import { BASE_URL } from "../../helpers/baseUrls";
+
 export default {
-    data(){
-        return {
-            user: {
-                email: "test@example.com",
-                password: "123",
-            },
-            store: useAuthStore(),
-            errorMessage: null,
-
-        }
-    },
-    methods: {
-  async userAuth() {
-    this.errorMessage = "...";
-    const url = `${BASE_URL}/users/login`;
-    const headers = {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
+  data() {
+    return {
+      user: {
+        email: "",
+        password: "",
+      },
+      store: useAuthStore(),
+      errorMessage: null,
+      loading: false,
     };
+  },
+  methods: {
+    async userAuth() {
+      this.errorMessage = null;
+      this.loading = true;
 
-    try {
-      if (!this.user.email || !this.user.password) {
-        this.errorMessage = "Email and password are required!";
-        return;
+      try {
+        if (!this.user.email || !this.user.password) {
+          this.errorMessage = " Kérlek, add meg az email címed és a jelszavad!";
+          this.loading = false;
+          return;
+        }
+
+        const response = await axios.post(`${BASE_URL}/users/login`, this.user, {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (response.data && response.data.user) {
+          this.store.setId(response.data.user.id);
+          this.store.setUser(response.data.user.name);
+          this.store.setToken(response.data.user.token);
+          this.store.setRoleId(response.data.user.roleId);
+          this.$router.push("/");
+        } else {
+          this.errorMessage = " Helytelen bejelentkezési adatok!";
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        this.errorMessage = " Sikertelen bejelentkezés!";
+      } finally {
+        this.loading = false;
       }
-
-      const response = await axios.post(url, this.user, { headers });
-
-      if (response.data && response.data.user) {
-        // Frissítjük a roleId-t is
-        this.store.setId(response.data.user.id);
-        this.store.setUser(response.data.user.name);
-        this.store.setToken(response.data.user.token);
-        this.store.setRoleId(response.data.user.roleId); // Hozzáadva a roleId
-        this.errorMessage = "Successful login!";
-        this.$router.push('/');
-      } else {
-        this.errorMessage = "Invalid credentials!";
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      this.errorMessage = "Login failed";
-      this.store.clearStoredData();
-    }
-  }
-}
-}
+    },
+  },
+};
 </script>
 
-<style>
+<style scoped>
+/* 📌 Teljes képernyős bejelentkezési doboz */
+.login-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 80vh;
+}
 
+/* 📌 Középre igazított bejelentkezési kártya */
+.login-card {
+  background: white;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 320px;
+}
+
+/* 📌 Cím */
+.login-title {
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+}
+
+/* 📌 Bemeneti mezők */
+.input-group {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 10px;
+  background: #f9f9f9;
+}
+
+.input-group .icon {
+  margin-right: 10px;
+  color: #007bff;
+}
+
+input {
+  border: none;
+  outline: none;
+  flex-grow: 1;
+  background: transparent;
+  font-size: 1rem;
+}
+
+/* 📌 Bejelentkezés gomb */
+.login-button {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 12px;
+  width: 100%;
+  border-radius: 8px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.login-button:hover {
+  background: #0056b3;
+}
+
+/* 📌 Hibaüzenet */
+.error-message {
+  color: red;
+  margin-top: 10px;
+  font-size: 0.9rem;
+}
 </style>
