@@ -1,44 +1,70 @@
 <template>
-  <div class="about-container">
-    <h1 class="title">Rólunk</h1>
+  <div class="my-container">
+    <div class="about-container">
+      <h1 class="title">Rólunk</h1>
 
-    <section class="about-section">
-      <p>
-        Üdvözlünk! Mi egy szenvedélyes csapat vagyunk, akik azért dolgoznak, hogy a lehető legjobb élményt nyújtsuk felhasználóinknak.
-        Célunk, hogy innovatív megoldásokat kínáljunk és egy támogató közösséget építsünk.
-      </p>
-    </section>
+      <section class="about-section">
+        <p>
+          Üdvözlünk! Mi egy szenvedélyes csapat vagyunk, akik azért dolgoznak,
+          hogy a lehető legjobb élményt nyújtsuk felhasználóinknak. Célunk, hogy
+          innovatív megoldásokat kínáljunk és egy támogató közösséget építsünk.
+        </p>
+      </section>
 
-    <section class="mission">
-      <h2>Küldetésünk</h2>
-      <p>Minőségi szolgáltatást nyújtani, és közösséget építeni minden felhasználónk számára.</p>
-    </section>
+      <section class="mission">
+        <h2>Küldetésünk</h2>
+        <p>
+          Minőségi szolgáltatást nyújtani, és közösséget építeni minden
+          felhasználónk számára.
+        </p>
+      </section>
 
-    <section class="team">
-      <h2>Csapatunk</h2>
-      <div class="team-grid">
-        <div class="team-member" v-for="member in teamMembers" :key="member.id">
-          <img :src="`/images/${member.image}`" :alt="member.name" class="team-img" />
-          <h3>{{ member.name }}</h3>
-          <p>{{ member.role }}</p>
+      <section class="team">
+        <h2>Csapatunk</h2>
+        <div class="team-grid">
+          <div
+            class="team-member"
+            v-for="member in teamMembers"
+            :key="member.id"
+          >
+            <img
+              :src="`/images/${member.image}`"
+              :alt="member.name"
+              class="team-img"
+            />
+            <h3>{{ member.name }}</h3>
+            <p>{{ member.role }}</p>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <section class="contact">
-      <h2>Kapcsolat</h2>
-      <p>Elérsz minket emailben: <a href="mailto:info@weboldal.hu">info@weboldal.hu</a></p>
-    </section>
+      <section class="contact">
+        <h2>Kapcsolat</h2>
+        <p>
+          Elérsz minket emailben:
+          <a href="mailto:info@weboldal.hu">info@weboldal.hu</a>
+        </p>
+      </section>
+    </div>
   </div>
 </template>
-
 <script>
 export default {
   data() {
     return {
       teamMembers: [
-        { id: 1, name: "Kovács János", role: "Csoportvezető", image: "profil2.jpg" },
-        { id: 2, name: "Jáger Kristóf", role: "Fejlesztő", image: "profil1.jpg" },
+        {
+          id: 1,
+          name: "Kovács János",
+          role: "Csoportvezető",
+          image: "profil2.jpg",
+        },
+        {
+          id: 2,
+          name: "Jáger Kristóf",
+          role: "Fejlesztő",
+          image: "profil1.jpg",
+        },
       ],
     };
   },
@@ -46,6 +72,13 @@ export default {
 </script>
 
 <style scoped>
+.my-container {
+  background-image: url("/images/parchment-texture.jpg");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+
 .about-container {
   max-width: 800px;
   margin: auto;
@@ -58,7 +91,10 @@ export default {
   margin-bottom: 20px;
 }
 
-.about-section, .mission, .team, .contact {
+.about-section,
+.mission,
+.team,
+.contact {
   margin-bottom: 30px;
   background: white;
   padding: 20px;
