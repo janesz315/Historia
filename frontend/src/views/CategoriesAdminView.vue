@@ -9,18 +9,28 @@
       </div>
       <div v-if="category.expanded" class="card-body">
         <p class="card-text">Szint: {{ category.level }}</p>
-        <p class="card-text">Leírás: {{ category.text }}</p>
+        <div v-if="category.editing">
+          <QuillEditor v-model="category.text"></QuillEditor>
+          <button @click="saveCategory(category)">Mentés</button>
+          <button @click="category.editing = false">Mégse</button>
+        </div>
+        <p v-else class="card-text">{{ category.text }} <button @click="category.editing = true">Szerkesztés</button></p>
       </div>
     </div>
   </div>
+
 </template>
 
 <script>
 import axios from 'axios';
 import { ref, onMounted } from 'vue';
 import { BASE_URL } from "../helpers/baseUrls";
+import QuillEditor from '@/components/Editor/QuillEditor.vue'; // Importáld a CKEditor komponenst
 
 export default {
+  components: {
+    QuillEditor,
+  },
   setup() {
     const categories = ref([]);
 
