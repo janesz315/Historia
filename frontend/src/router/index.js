@@ -3,13 +3,19 @@ import HomeView from '../views/HomeView.vue'
 import { useAuthStore } from "@/stores/useAuthStore.js";
 
 
-function checkIfNotLogged() {
+function checkIfNotLogged(to, from, next) {
   const storeAuth = useAuthStore();
+
   if (!storeAuth.user) {
-    return "/bejelentkezes";
-  } else {
-    
+    return next("/bejelentkezes"); // Ha nincs bejelentkezve, átirányít a bejelentkezési oldalra
   }
+
+  // Ha admin jogosultságú oldalra próbál belépni a felhasználó, és nem admin
+  if (to.meta.requiresAdmin && storeAuth.roleId !== 1) {
+    return next("/"); // Ha nem admin, átirányítás a kezdőlapra
+  }
+
+  next(); // Ha minden rendben, folytatás
 }
 
 const router = createRouter({
@@ -80,7 +86,7 @@ const router = createRouter({
       // which is lazy-loaded when the route is visited.
       component: () => import('../views/CategoriesAdminView.vue'),
       beforeEnter: [checkIfNotLogged],
-      meta: {title: (route) => 'Témakörök - Admin'}
+      meta: {title: (route) => 'Témakörök - Admin', requiresAdmin: true,}
     },
     {
       path: '/tesztek',
@@ -100,7 +106,7 @@ const router = createRouter({
       // which is lazy-loaded when the route is visited.
       component: () => import('../views/TestsAdminView.vue'),
       beforeEnter: [checkIfNotLogged],
-      meta: {title: (route) => 'Tesztek - Admin'}
+      meta: {title: (route) => 'Tesztek - Admin', requiresAdmin: true,}
     },
     {
       path: '/admin',
@@ -110,7 +116,7 @@ const router = createRouter({
       // which is lazy-loaded when the route is visited.
       component: () => import('../views/AdminView.vue'),
       beforeEnter: [checkIfNotLogged],
-      meta: {title: (route) => 'Admin felület'}
+      meta: {title: (route) => 'Admin felület', requiresAdmin: true,}
     },
   ],
 })
