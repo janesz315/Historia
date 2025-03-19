@@ -123,3 +123,12 @@ Route::patch('answers/{id}', [AnswerController::class, 'update']);
 Route::delete('answers/{id}', [AnswerController::class, 'destroy']);
 
 //endregion
+
+//region admin interface
+
+// Route::middleware(['auth:sanctum', 'admin'])->group(function () {
+//     Route::get('/users', [UserController::class, 'index']);
+//     Route::put('/users/{id}/roleId', [UserController::class, 'updateRole']);
+// });
+
+//endregion

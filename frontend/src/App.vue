@@ -170,7 +170,8 @@ body {
 }
 
 .logo a {
-  font-size: 28px;
+  font-family: 'Cinzel', serif;
+  font-size: 32px;
   color: #fff;
   text-decoration: none;
   font-weight: bold;

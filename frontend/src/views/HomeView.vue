@@ -46,7 +46,6 @@ export default {
   align-items: center;
   justify-content: center;
   height: 80vh;
-  background: #f5f5f5;
   padding: 20px;
 }
 

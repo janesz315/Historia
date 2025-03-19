@@ -113,15 +113,15 @@ export default {
 
     console.log("Szerver válasza:", response.data);
 
-    if (response.data.message === "This email already exists") {
-      alert("Error: This email is already in use.");
+    if (response.data.message === "Ez az e-mail már létezik") {
+      alert("Error: Ez az e-mail már használatban van.");
     } else {
-      alert(`${field} updated successfully.`);
+      alert(`${field} sikeresen frissítve.`);
       this.user = response.data.row; // Frissítsük a teljes user objektumot
       this.cancelEdit();
 
       if (field === "email" || field === "password") {
-        alert("Please log in again.");
+        alert("Kérlek jelentkezz be újra.");
         this.store.clearStoredData();
         this.$router.push("/bejelentkezes");
       }
@@ -141,12 +141,12 @@ export default {
               Authorization: `Bearer ${this.store.token}`,
             },
           });
-          alert("Account deleted successfully.");
+          alert("Felhasználó sikeresen törölve");
           this.store.clearStoredData(); // Clear user data and token
           this.$router.push("/register"); // Redirect to registration page
         } catch (error) {
           console.error("Error deleting user:", error);
-          alert("Failed to delete account. Please try again.");
+          alert("Nem sikerült letörölni a fiókot. Kérlek próbáld újra.");
         }
       }
     },
