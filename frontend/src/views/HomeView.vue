@@ -1,25 +1,39 @@
 <template>
-  <div class="container">
-    <h1 class="title">Kezdőlap</h1>
+  <div class="my-container">
+    <div class="container">
+      <h1 class="title">Kezdőlap</h1>
 
-    <div v-if="!user" class="card">
-      <p>Üdvözlünk! Kérlek, jelentkezz be, vagy regisztrálj!</p>
-      <div class="btn-group">
-        <router-link to="/bejelentkezes" class="btn">Bejelentkezés</router-link>
-        <router-link to="/regisztracio" class="btn">Regisztráció</router-link>
+      <div v-if="!user" class="card">
+        <p>Üdvözlünk! Kérlek, jelentkezz be, vagy regisztrálj!</p>
+        <div class="btn-group">
+          <router-link to="/bejelentkezes" class="btn"
+            >Bejelentkezés</router-link
+          >
+          <router-link to="/regisztracio" class="btn">Regisztráció</router-link>
+        </div>
       </div>
-    </div>
 
-    <div v-else-if="roleId === 2" class="card">
-      <p>Üdvözlünk, <strong>{{ user }}</strong>! Itt találhatod a személyes információidat.</p>
-      <router-link to="/temakorok" class="btn">Témakörök</router-link>
-    </div>
+      <div v-else-if="roleId === 2" class="card">
+        <p>
+          Üdvözlünk, <strong>{{ user }}</strong
+          >! Itt találhatod a személyes információidat.
+        </p>
+        <router-link to="/temakorok" class="btn">Témakörök</router-link>
+      </div>
 
-    <div v-else-if="roleId === 1" class="card">
-      <p>Üdvözlünk, <strong>admin</strong>! Itt kezelheted a felhasználókat és a tartalmakat.</p>
-      <div class="btn-group">
-        <router-link to="/temakorokadmin" class="btn">Admin Témakörök</router-link>
-        <router-link to="/tesztekadmin" class="btn">Admin Tesztek</router-link>
+      <div v-else-if="roleId === 1" class="card">
+        <p>
+          Üdvözlünk, <strong>admin</strong>! Itt kezelheted a felhasználókat és
+          a tartalmakat.
+        </p>
+        <div class="btn-group">
+          <router-link to="/temakorokadmin" class="btn"
+            >Admin Témakörök</router-link
+          >
+          <router-link to="/tesztekadmin" class="btn"
+            >Admin Tesztek</router-link
+          >
+        </div>
       </div>
     </div>
   </div>
@@ -40,28 +54,37 @@ export default {
 </script>
 
 <style scoped>
+.my-container {
+  background-image: url("/images/parchment-texture.jpg");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+
 .container {
+  height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 80vh;
-  padding: 20px;
 }
 
 .title {
-  font-size: 2rem;
+  font-size: 2.5rem;
   margin-bottom: 20px;
+  font-family: "Cinzel", serif;
+  color: #5a3e1b;
 }
 
 .card {
-  background: white;
+  background: rgba(255, 248, 220, 0.9);
   padding: 20px;
   border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   text-align: center;
   max-width: 400px;
   width: 100%;
+  border: 2px solid #8b5a2b;
 }
 
 .btn-group {
@@ -72,15 +95,17 @@ export default {
 }
 
 .btn {
-  background: #007bff;
+  background: #8b5a2b;
   color: white;
   padding: 10px 15px;
   border-radius: 5px;
   text-decoration: none;
-  transition: background 0.3s;
+  transition: background 0.3s, transform 0.2s;
+  font-family: "Cinzel", serif;
 }
 
 .btn:hover {
-  background: #0056b3;
+  background: #5a3e1b;
+  transform: scale(1.05);
 }
 </style>

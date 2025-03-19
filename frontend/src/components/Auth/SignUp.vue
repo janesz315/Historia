@@ -134,29 +134,35 @@ export default {
 <style scoped>
 /* 📌 Háttér */
 .register-container {
- display: flex;
+  display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 80vh; /* Mindig legalább a teljes képernyőt lefedi */
+  min-height: 100vh; /* Mindig legalább a teljes képernyőt lefedi */
   padding: 20px; /* Megakadályozza, hogy teljesen a tetejére kerüljön */
-  background: #f9f9f9;
+  background-image: url("/images/parchment-texture.jpg");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
 }
 
 /* 📌 Regisztrációs kártya */
 .register-card {
-   background: white;
-  padding: 30px;
-  border-radius: 15px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+ background: rgba(255, 248, 220, 0.9);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   text-align: center;
-  width: 350px;
-  transition: transform 0.3s ease-in-out; /* Finom animáció a méretváltozásra */
+  max-width: 400px;
+  width: 100%;
+  border: 2px solid #8b5a2b;
 }
 
 /* 📌 Cím */
 .register-title {
-  font-size: 1.8rem;
+  font-size: 2.5rem;
   margin-bottom: 20px;
+  font-family: 'Cinzel', serif;
+  color: #5a3e1b;
 }
 
 /* 📌 Input mezők */
@@ -185,7 +191,7 @@ input {
 
 /* 📌 Regisztrációs gomb */
 .register-button {
-  background: #007bff;
+  background: #8b5a2b;
   color: white;
   border: none;
   padding: 12px;
@@ -197,7 +203,8 @@ input {
 }
 
 .register-button:hover {
-  background: #0056b3;
+  background: #5a3e1b;
+  transform: scale(1.05);
 }
 
 /* 📌 Hibaüzenetek */

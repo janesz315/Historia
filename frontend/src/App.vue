@@ -2,7 +2,7 @@
   <div>
     <!-- Fő fejléc -->
     <header>
-      <div class="wrapper">
+      <div class="wrapper container-fluid">
         <!-- Logo / Weboldal neve -->
         <div class="logo">
           <RouterLink to="/">Historia</RouterLink>
@@ -11,7 +11,7 @@
         <!-- Navigációs menü -->
         <nav
           class="navbar navbar-expand-lg navbar-dark"
-          style="background-color: #2c3e50"
+          style="background-color: #8b5a2b;"
         >
           <button
             class="navbar-toggler"
@@ -155,22 +155,17 @@ export default {
   box-sizing: border-box;
 }
 
-body {
-  font-family: Arial, sans-serif;
-  background-color: #f4f4f4;
-}
-
 /* Fejléc és navigáció */
 .wrapper {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 10px 20px;
-  background-color: #2c3e50; /* Sötét kékeszöld háttér */
+  background-color: #8b5a2b; /* Sötét kékeszöld háttér */
 }
 
 .logo a {
-  font-family: 'Cinzel', serif;
+  font-family: "Cinzel", serif;
   font-size: 32px;
   color: #fff;
   text-decoration: none;
