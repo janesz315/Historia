@@ -58,7 +58,7 @@ export default {
 
       try {
         if (!this.user.email || !this.user.password) {
-          this.errorMessage = " Kérlek, add meg az email címed és a jelszavad!";
+          this.errorMessage = "Kérlek, add meg az email címed és a jelszavad!";
           this.loading = false;
           return;
         }
@@ -87,11 +87,11 @@ export default {
 
           this.$router.push("/");
         } else {
-          this.errorMessage = " Helytelen bejelentkezési adatok!";
+          this.errorMessage = "Helytelen bejelentkezési adatok!";
         }
       } catch (error) {
         console.error("Error:", error);
-        this.errorMessage = " Sikertelen bejelentkezés!";
+        this.errorMessage = "Sikertelen bejelentkezés!";
       } finally {
         this.loading = false;
       }

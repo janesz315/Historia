@@ -113,7 +113,7 @@ export default {
 
     console.log("Szerver válasza:", response.data);
 
-    if (response.data.message === "Ez az e-mail már létezik") {
+    if (response.data.message === "This email already exists") {
       alert("Error: Ez az e-mail már használatban van.");
     } else {
       alert(`${field} sikeresen frissítve.`);
@@ -128,13 +128,13 @@ export default {
     }
   } catch (error) {
     console.error("Error updating field:", error);
-    alert("Failed to update field. Please try again.");
+    alert("Nem sikerült frissíteni a mezőt. Kérjük, próbálja újra.");
   }
 }
 ,
 
     async deleteUser() {
-      if (confirm("Are you sure you want to delete your account?")) {
+      if (confirm("Biztosan le akarod törölni a fiókodat?")) {
         try {
           await axios.delete(`${BASE_URL}/users/${this.store.id}`, {
             headers: {
