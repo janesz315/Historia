@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="my-container">
     <!-- Fő fejléc -->
     <header>
       <div class="wrapper container-fluid">
@@ -153,6 +153,11 @@ export default {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+.my-container {
+  height: 100%;
+  overflow: hidden;
 }
 
 /* Fejléc és navigáció */
