@@ -155,7 +155,7 @@ export default {
 }
 
 .my-container {
-  height: 100vh;
+  height: 90vh;
   margin: 0;
   padding: 0;
   background-image: url('images/parchment-texture.jpg');
