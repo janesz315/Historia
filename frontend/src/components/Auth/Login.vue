@@ -123,7 +123,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 100vh; /* Mindig legalább a teljes képernyőt lefedi */
+  height: 90vh; /* Mindig legalább a teljes képernyőt lefedi */
   padding: 20px; /* Megakadályozza, hogy teljesen a tetejére kerüljön */
   background-image: url("/images/parchment-texture.jpg");
   background-size: cover;

@@ -154,14 +154,8 @@ export default {
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
 }
 
-#app {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
 .my-container {
-  height: 100%;
+  height: 100vh;
   margin: 0;
   padding: 0;
   background-image: url('images/parchment-texture.jpg');
