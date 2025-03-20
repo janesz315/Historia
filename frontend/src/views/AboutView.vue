@@ -89,17 +89,20 @@ export default {
 .title {
   font-size: 2.5rem;
   margin-bottom: 20px;
+  color: #5a3e1b;
 }
 
 .about-section,
 .mission,
 .team,
 .contact {
+  color: #5a3e1b;
   margin-bottom: 30px;
-  background: white;
+  background: rgba(255, 248, 220, 0.9);
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 2px solid #8b5a2b;
 }
 
 .team-grid {

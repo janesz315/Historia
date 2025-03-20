@@ -125,14 +125,15 @@ body {
   justify-content: center;
   min-height: 100vh; /* Mindig legalább a teljes képernyőt lefedi */
   padding: 20px; /* Megakadályozza, hogy teljesen a tetejére kerüljön */
-  background: #f9f9f9;
-  background-image: url("images/parchment-texture.jpg");
-  background-size: 100%;
+  background-image: url("/images/parchment-texture.jpg");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
 }
 
 /* 📌 Középre igazított bejelentkezési kártya */
 .login-card {
- background: rgba(255, 248, 220, 0.9);
+  background: rgba(255, 248, 220, 0.9);
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
