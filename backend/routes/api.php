@@ -11,6 +11,8 @@ use App\Http\Controllers\UserTestController;
 use App\Http\Controllers\TestQuestionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\UserRoleController;
+
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -126,9 +128,7 @@ Route::delete('answers/{id}', [AnswerController::class, 'destroy']);
 
 //region admin interface
 
-// Route::middleware(['auth:sanctum', 'admin'])->group(function () {
-//     Route::get('/users', [UserController::class, 'index']);
-//     Route::put('/users/{id}/roleId', [UserController::class, 'updateRole']);
-// });
+Route::get('/users', [UserRoleController::class, 'index']);
+Route::put('/users/{id}/role', [UserRoleController::class, 'updateRole']);
 
 //endregion
