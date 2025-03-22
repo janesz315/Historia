@@ -8,42 +8,60 @@ import Quill from "quill";
 import "quill/dist/quill.snow.css";
 
 export default {
+
   props: {
-    value: String,
+    modelValue: String, // 🔹 A v-model értékét fogadja
   },
-  setup(props, { emit }) {
-    const editor = ref(null);
-    let quill = null;
-
-    onMounted(() => {
-      quill = new Quill(editor.value, {
-        theme: "snow",
-      });
-
-      quill.on('text-change', () => {
-        emit('update:value', quill.root.innerHTML);
-      });
-
-      // Inicializáljuk a Quill-t a props.value értékkel
-      if (props.value) {
-        quill.root.innerHTML = props.value;
-      }
-    });
-
-    // Ha a props.value változik, frissítjük a Quill-t
-    watch(() => props.value, (newValue) => {
-      if (quill && quill.root.innerHTML !== newValue) {
-        quill.root.innerHTML = newValue;
-      }
-    });
-
+  emits: ["update:modelValue"], // 🔹 Kibocsátja a frissített értéket
+  data() {
     return {
-      editor,
-      quill,
+      editor: null, // Quill példány tárolása
     };
   },
+  mounted() {
+    this.editor = new Quill(this.$refs.editor, {
+      theme: "snow",
+      // placeholder: "Írj valamit...",
+    });
+
+    // 🔹 Beállítjuk a kezdeti tartalmat
+    this.editor.root.innerHTML = this.modelValue || "";
+
+    // 🔹 Figyeljük a szerkesztőt és frissítjük a v-model értékét
+    this.editor.on("text-change", () => {
+      this.$emit("update:modelValue", this.editor.root.innerHTML);
+    });
+  },
+  watch: {
+    modelValue(newValue) {
+      if (this.editor && newValue !== this.editor.root.innerHTML) {
+        this.editor.root.innerHTML = newValue;
+      }
+    },
+  },
 };
+//   data() {
+//     return {
+//       quill: null,
+//       editorContent: ''
+//     };
+//   },
+//   mounted() {
+//     this.quill = new Quill(this.$refs.editor, {
+//       theme: 'snow',
+//       // placeholder: 'Írj valamit...'
+//     });
+//       this.quill.root.innerHTML = this.editorContent
+//   },
+//   methods: {
+//     saveContent() {
+//       this.editorContent = this.quill.root.innerHTML;
+//       console.log("Mentett tartalom:", this.editorContent);
+//     }
+//   }
+// };
 </script>
+
 
 <style scoped>
 .editor {
