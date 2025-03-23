@@ -1,11 +1,19 @@
 <template>
   <div class="container">
-    <h1>
-      Itt tudod hozzáadni, törölni, vagy módosítani a témakörökkel kapcsolatos
-      információkat.
-    </h1>
+    <h1>Témakörök kezelése</h1>
 
-    <div v-for="category in categories" :key="category.id" class="card mb-3">
+    <!-- Szűrő -->
+    <div class="mb-3">
+      <label for="levelFilter">Szűrés szint szerint:</label>
+      <select v-model="selectedLevel" class="form-select">
+        <option value="">Mindegyik</option>
+        <option value="közép">Közép</option>
+        <option value="emelt">Emelt</option>
+      </select>
+    </div>
+
+    <!-- Szűrt kategóriák megjelenítése -->
+    <div v-for="category in filteredCategories" :key="category.id" class="card mb-3">
       <CategoryCard :category="category" :saveCategory="saveCategory" />
     </div>
   </div>
@@ -22,24 +30,30 @@ export default {
   data() {
     return {
       categories: [],
+      selectedLevel: "", // Szűréshez kiválasztott szint
       store: useAuthStore(),
     };
+  },
+  computed: {
+    filteredCategories() {
+      if (!this.selectedLevel) return this.categories; // Ha nincs szűrés, az összes kategória látható
+      return this.categories.filter(category => category.level === this.selectedLevel);
+    },
   },
   async created() {
     await this.fetchCategories();
   },
   methods: {
-    // 🔄 Kategóriák lekérése az API-ból
     async fetchCategories() {
       try {
         const response = await axios.get(`${BASE_URL}/categories`, {
           headers: { Authorization: `Bearer ${this.store.token}` },
         });
 
-        this.categories = response.data.data.map((category) => ({
+        this.categories = response.data.data.map(category => ({
           ...category,
-          expanded: false, // Kezdetben összecsukva
-          editing: false, // Kezdetben nem szerkeszthető
+          expanded: false, 
+          editing: false,  
         }));
       } catch (error) {
         console.error("Hiba a kategóriák lekérésekor:", error);
@@ -47,26 +61,20 @@ export default {
       }
     },
 
-    // ✅ Kategória mentése
     async saveCategory(category) {
       try {
         await axios.patch(
           `${BASE_URL}/categories/${category.id}`,
-          {
-            category: category.category, // ✅ Kategória neve
-            level: category.level, // ✅ Szint
-            text: category.text, // ✅ Szerkesztett szöveg
-          }, // 🔹 Biztosítsd, hogy a `text` kulcs létezik
-          {
-            headers: {
-              Authorization: `Bearer ${this.store.token}`,
-              "Content-Type": "application/json", // 🔹 Kifejezetten JSON formátumban küldés
-            },
-          }
+          { 
+            category: category.category,  //  Kategória neve
+            level: category.level,        //  Szint
+            text: category.text           //  Szerkesztett szöveg
+          },
+          { headers: { Authorization: `Bearer ${this.store.token}` } }
         );
 
         alert("Sikeres mentés!");
-        await this.fetchCategories(); // 🔄 Újratöltjük a kategóriákat mentés után
+        await this.fetchCategories();
       } catch (error) {
         console.error("Hiba mentéskor:", error);
         alert("Mentés sikertelen.");

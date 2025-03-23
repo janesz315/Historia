@@ -7,7 +7,6 @@
           <button type="button" class="btn-close" @click="closeModal"></button>
         </div>
         <div class="modal-body">
-          <!-- 🔹 v-model-rel kötjük a QuillEditorhoz -->
           <QuillEditor v-model="tempText" />
         </div>
         <div class="modal-footer">
@@ -20,7 +19,6 @@
 </template>
 
 <script>
-import { ref, watch, onMounted } from "vue";
 import QuillEditor from "@/components/Editor/QuillEditor.vue";
 import { Modal } from "bootstrap";
 
@@ -28,44 +26,45 @@ export default {
   components: { QuillEditor },
   props: {
     category: Object,
-    saveCategory: Function,
+    saveCategory: Function, // A mentési függvény
   },
-  setup(props) {
-    const tempText = ref(""); // Ideiglenes változó a szöveg szerkesztéséhez
-    const modal = ref(null);
-    let modalInstance = null;
-    const modalId = `editModal-${props.category.id}`;
-
-    onMounted(() => {
-      modalInstance = new Modal(modal.value);
-    });
-
-    // Ha változik az eredeti kategória szövege, frissítsük a szerkesztő tartalmát
-    watch(
-      () => props.category.text,
-      (newText) => {
-        tempText.value = newText;
+  data() {
+    return {
+      tempText: "", // Ideiglenes szöveg a szerkesztőhöz
+      modalInstance: null, // Bootstrap modal objektum
+    };
+  },
+  computed: {
+    modalId() {
+      return `editModal-${this.category.id}`;
+    },
+  },
+  watch: {
+    // Ha a kategória szövege változik, frissítsük a tempText-et
+    "category.text": {
+      handler(newText) {
+        this.tempText = newText;
       },
-      { immediate: true }
-    );
-
-    const saveChanges = async () => {
-      props.category.text = tempText.value; // 🔹 Frissítjük a kategória szövegét
-      await props.saveCategory(props.category); // 🔹 Elmentjük az adatbázisba
-      modalInstance.hide(); // 🔹 Bezárjuk a modalt
-    };
-
-    const closeModal = () => {
-      tempText.value = props.category.text; // 🔹 Visszaállítjuk az eredeti értéket
-      modalInstance.hide();
-    };
-
-    const openModal = () => {
-      tempText.value = props.category.text; // 🔹 Szerkesztő inicializálás
-      modalInstance.show();
-    };
-
-    return { tempText, saveChanges, closeModal, openModal, modalId, modal };
+      immediate: true,
+    },
+  },
+  mounted() {
+    this.modalInstance = new Modal(this.$refs.modal);
+  },
+  methods: {
+    openModal() {
+      this.tempText = this.category.text; // Szöveg beállítása a szerkesztőbe
+      this.modalInstance.show();
+    },
+    closeModal() {
+      this.tempText = this.category.text; // Visszaállítás az eredeti értékre
+      this.modalInstance.hide();
+    },
+    async saveChanges() {
+      this.category.text = this.tempText; // Frissítés a kategória objektumban
+      await this.saveCategory(this.category); // Küldés a szerverre
+      this.modalInstance.hide();
+    },
   },
 };
 </script>
