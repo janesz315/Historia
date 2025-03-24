@@ -1,6 +1,6 @@
 <template>
   <div class="card">
-    <div class="card-header" @click="category.expanded = !category.expanded">
+    <div class="card-header" style="cursor:pointer" @click="category.expanded = !category.expanded">
       {{ category.category }}
       <span v-if="category.expanded">▲</span>
       <span v-else>▼</span>
