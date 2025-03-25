@@ -15,6 +15,7 @@
     <!-- Szűrt kategóriák megjelenítése -->
     <div v-for="category in filteredCategories" :key="category.id" class="card mb-3">
       <CategoryCard :category="category" :saveCategory="saveCategory" />
+      <button class="btn btn-danger" @click="confirmDelete(category.id)">Törlés</button>
     </div>
   </div>
 </template>
@@ -78,6 +79,25 @@ export default {
       } catch (error) {
         console.error("Hiba mentéskor:", error);
         alert("Mentés sikertelen.");
+      }
+    },
+    async deleteCategory(categoryId) {
+      try {
+        await axios.delete(`${BASE_URL}/categories/${categoryId}`, {
+          headers: { Authorization: `Bearer ${this.store.token}` },
+        });
+
+        alert("Kategória sikeresen törölve!");
+        await this.fetchCategories();
+      } catch (error) {
+        console.error("Hiba törléskor:", error);
+        alert("Törlés sikertelen.");
+      }
+    },
+
+    confirmDelete(categoryId) {
+      if (confirm("Biztosan törölni szeretnéd ezt a kategóriát?")) {
+        this.deleteCategory(categoryId);
       }
     },
   },
