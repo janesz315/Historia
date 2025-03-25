@@ -29,3 +29,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.card {
+  margin-bottom: 10px;
+}
+</style>
