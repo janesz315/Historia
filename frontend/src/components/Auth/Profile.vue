@@ -155,7 +155,8 @@ export default {
 }
 
 .my-container {
-  height: 90vh;
+  height: 100vh;
+  width: 100vw;
   margin: 0;
   padding: 0;
   background-image: url('images/parchment-texture.jpg');
@@ -163,6 +164,7 @@ export default {
   background-position: center;
   background-attachment: fixed;
   overflow: hidden;
+  position: fixed;
 }
 
 /* 📜 Kártyák (Felhasználónév, Email, Jelszó) */

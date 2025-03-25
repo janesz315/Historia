@@ -77,7 +77,7 @@ export default {
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
-  min-height: 90vh;
+  min-height: auto;
   display: flex;
   justify-content: center;
   align-items: center;
