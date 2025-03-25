@@ -14,7 +14,7 @@
 
     <!-- Szűrt kategóriák megjelenítése -->
     <div v-for="category in filteredCategories" :key="category.id" class="card mb-3 p-3">
-      <CategoryCard :category="category" :saveCategory="saveCategory" />
+      <CategoryCard :category="category" :saveCategory="saveCategory" :confirmDelete="confirmDelete" />
       
       <!-- Kategória leírás -->
 
