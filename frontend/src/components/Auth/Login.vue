@@ -5,22 +5,12 @@
       <form @submit.prevent="userAuth">
         <div class="input-group">
           <span class="icon"><i class="fas fa-envelope"></i></span>
-          <input
-            type="email"
-            v-model="user.email"
-            placeholder="Email cím*"
-            required
-          />
+          <input type="email" v-model="user.email" placeholder="Email cím*" required />
         </div>
 
         <div class="input-group">
           <span class="icon"><i class="fas fa-lock"></i></span>
-          <input
-            type="password"
-            v-model="user.password"
-            placeholder="Jelszó*"
-            required
-          />
+          <input type="password" v-model="user.password" placeholder="Jelszó*" required />
         </div>
 
         <button type="submit" class="login-button">
@@ -114,8 +104,10 @@ export default {
 <style scoped>
 html,
 body {
-  height: var(--vh, 100vh); /* Dinamikus magasság a JavaScript alapján */
-  overflow: hidden; /* Megakadályozza a görgetést */
+  height: var(--vh, 100vh);
+  /* Dinamikus magasság a JavaScript alapján */
+  overflow: hidden;
+  /* Megakadályozza a görgetést */
 }
 
 /* 📌 Teljes képernyős bejelentkezési doboz */
@@ -123,12 +115,14 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 90vh; /* Mindig legalább a teljes képernyőt lefedi */
-  padding: 20px; /* Megakadályozza, hogy teljesen a tetejére kerüljön */
   background-image: url("/images/parchment-texture.jpg");
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  position: fixed;
 }
 
 /* 📌 Középre igazított bejelentkezési kártya */
@@ -141,6 +135,7 @@ body {
   max-width: 400px;
   width: 100%;
   border: 2px solid #8b5a2b;
+  transform: translateY(-10%);
 }
 
 /* 📌 Cím */

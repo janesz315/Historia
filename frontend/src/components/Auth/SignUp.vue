@@ -6,54 +6,34 @@
         <!-- Felhasználónév -->
         <div class="input-group">
           <span class="icon"><i class="fas fa-user"></i></span>
-          <input
-            type="text"
-            v-model="username"
-            placeholder="Felhasználónév*"
-            required
-          />
+          <input type="text" v-model="username" placeholder="Felhasználónév*" required />
         </div>
         <p v-if="username && username.length < 2" class="error-message">
-           Legalább 2 karakter hosszúnak kell lennie.
+          Legalább 2 karakter hosszúnak kell lennie.
         </p>
 
         <!-- Email -->
         <div class="input-group">
           <span class="icon"><i class="fas fa-envelope"></i></span>
-          <input
-            type="email"
-            v-model="email"
-            placeholder="E-mail cím*"
-            required
-          />
+          <input type="email" v-model="email" placeholder="E-mail cím*" required />
         </div>
 
         <!-- Jelszó -->
         <div class="input-group">
           <span class="icon"><i class="fas fa-lock"></i></span>
-          <input
-            type="password"
-            v-model="password"
-            placeholder="Jelszó*"
-            required
-          />
+          <input type="password" v-model="password" placeholder="Jelszó*" required />
         </div>
         <p v-if="password && password.length < 6" class="error-message">
-           A jelszónak minimum 6 karakter hosszúnak kell lennie.
+          A jelszónak minimum 6 karakter hosszúnak kell lennie.
         </p>
 
         <!-- Jelszó megerősítés -->
         <div class="input-group">
           <span class="icon"><i class="fas fa-lock"></i></span>
-          <input
-            type="password"
-            v-model="confirmPassword"
-            placeholder="Jelszó mégegyszer*"
-            required
-          />
+          <input type="password" v-model="confirmPassword" placeholder="Jelszó mégegyszer*" required />
         </div>
         <p v-if="confirmPassword && confirmPassword !== password" class="error-message">
-           A jelszavak nem egyeznek!
+          A jelszavak nem egyeznek!
         </p>
 
         <!-- Regisztráció gomb -->
@@ -137,17 +117,19 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 90vh; /* Mindig legalább a teljes képernyőt lefedi */
-  padding: 20px; /* Megakadályozza, hogy teljesen a tetejére kerüljön */
   background-image: url("/images/parchment-texture.jpg");
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  position: fixed;
 }
 
 /* 📌 Regisztrációs kártya */
 .register-card {
- background: rgba(255, 248, 220, 0.9);
+  background: rgba(255, 248, 220, 0.9);
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -155,6 +137,7 @@ export default {
   max-width: 400px;
   width: 100%;
   border: 2px solid #8b5a2b;
+  transform: translateY(-10%);
 }
 
 /* 📌 Cím */

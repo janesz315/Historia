@@ -6,12 +6,7 @@
     </div>
 
     <!-- Új témakör modal -->
-    <TopicModal
-      v-if="showModal"
-      :showModal="showModal"
-      @close="closeModal"
-      @submit="addNewTopic"
-    />
+    <TopicModal v-if="showModal" :showModal="showModal" @close="closeModal" @submit="addNewTopic" />
 
     <!-- Szűrő -->
     <div class="mb-3">
@@ -26,7 +21,7 @@
     <!-- Szűrt kategóriák megjelenítése -->
     <div v-for="category in filteredCategories" :key="category.id" class="card mb-3 p-3">
       <CategoryCard :category="category" :saveCategory="saveCategory" :confirmDelete="confirmDelete" />
-      
+
       <!-- Kategória leírás -->
 
       <!-- Források -->
@@ -36,7 +31,7 @@
           <li v-for="source in sources[category.id]" :key="source.id">
             <a :href="source.sourceLink" target="_blank">{{
               source.sourceLink
-            }}</a>
+              }}</a>
             <p>{{ source.note }}</p>
           </li>
         </ul>
