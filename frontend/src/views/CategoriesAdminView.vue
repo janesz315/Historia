@@ -1,6 +1,17 @@
 <template>
   <div class="container">
-    <h1>Témakörök kezelése</h1>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1>Témakörök kezelése</h1>
+      <button @click="openModal" class="btn btn-primary">Új Témakör</button>
+    </div>
+
+    <!-- Új témakör modal -->
+    <TopicModal
+      v-if="showModal"
+      :showModal="showModal"
+      @close="closeModal"
+      @submit="addNewTopic"
+    />
 
     <!-- Szűrő -->
     <div class="mb-3">
@@ -13,9 +24,17 @@
     </div>
 
     <!-- Szűrt kategóriák megjelenítése -->
-    <div v-for="category in filteredCategories" :key="category.id" class="card mb-3 p-3">
-      <CategoryCard :category="category" :saveCategory="saveCategory" />
-      
+    <div
+      v-for="category in filteredCategories"
+      :key="category.id"
+      class="card mb-3 p-3"
+    >
+      <CategoryCard
+        :category="category"
+        :saveCategory="saveCategory"
+        :confirmDelete="confirmDelete"
+      />
+
       <!-- Kategória leírás -->
 
       <!-- Források -->
@@ -23,14 +42,13 @@
         <h6>Források:</h6>
         <ul>
           <li v-for="source in sources[category.id]" :key="source.id">
-            <a :href="source.sourceLink" target="_blank">{{ source.sourceLink }}</a>
+            <a :href="source.sourceLink" target="_blank">{{
+              source.sourceLink
+            }}</a>
             <p>{{ source.note }}</p>
           </li>
         </ul>
       </div>
-
-      <!-- Törlés gomb -->
-      <!-- <button class="btn btn-danger btn-sm ms-2" @click="confirmDelete(category.id)">🗑</button> -->
     </div>
   </div>
 </template>
@@ -40,21 +58,25 @@ import axios from "axios";
 import { BASE_URL } from "../helpers/baseUrls";
 import { useAuthStore } from "../stores/useAuthStore";
 import CategoryCard from "@/components/Cards/CategoryCard.vue";
+import TopicModal from "@/components/Modals/TopicModal.vue";
 
 export default {
-  components: { CategoryCard },
+  components: { CategoryCard, TopicModal },
   data() {
     return {
       categories: [],
-      sources: {}, // A sources adatok tárolására
-      selectedLevel: "", // Szűréshez kiválasztott szint
+      sources: {},
+      selectedLevel: "",
       store: useAuthStore(),
+      showModal: false,
     };
   },
   computed: {
     filteredCategories() {
       if (!this.selectedLevel) return this.categories;
-      return this.categories.filter(category => category.level === this.selectedLevel);
+      return this.categories.filter(
+        (category) => category.level === this.selectedLevel
+      );
     },
   },
   async created() {
@@ -62,16 +84,51 @@ export default {
     await this.fetchSources();
   },
   methods: {
+    async addNewTopic(newTopic) {
+      try {
+        // Extra ellenőrzés a szintre
+        if (!["közép", "emelt"].includes(newTopic.level)) {
+          alert("Érvénytelen szint érték!");
+          return;
+        }
+
+        const response = await axios.post(
+          `${BASE_URL}/categories`,
+          {
+            category: newTopic.category.trim(),
+            level: newTopic.level, // Itt már biztos helyes az érték
+            text: newTopic.text.trim(),
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${this.store.token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        alert("Sikeres létrehozás!");
+        await this.fetchCategories();
+        this.showModal = false;
+      } catch (error) {
+        console.error("Hiba részletei:", {
+          request: error.config,
+          response: error.response,
+        });
+        alert(`Hiba: ${error.response?.data?.message || error.message}`);
+      }
+    },
+
     async fetchCategories() {
       try {
         const response = await axios.get(`${BASE_URL}/categories`, {
           headers: { Authorization: `Bearer ${this.store.token}` },
         });
 
-        this.categories = response.data.data.map(category => ({
+        this.categories = response.data.data.map((category) => ({
           ...category,
-          expanded: false, 
-          editing: false,  
+          expanded: false,
+          editing: false,
         }));
       } catch (error) {
         console.error("Hiba a kategóriák lekérésekor:", error);
@@ -85,7 +142,6 @@ export default {
           headers: { Authorization: `Bearer ${this.store.token}` },
         });
 
-        // A sources objektumban kategória ID szerint csoportosítjuk a forrásokat
         this.sources = response.data.data.reduce((acc, source) => {
           if (!acc[source.categoryId]) acc[source.categoryId] = [];
           acc[source.categoryId].push(source);
@@ -101,10 +157,10 @@ export default {
       try {
         await axios.patch(
           `${BASE_URL}/categories/${category.id}`,
-          { 
-            category: category.category,  
-            level: category.level,        
-            text: category.text           
+          {
+            category: category.category,
+            level: category.level,
+            text: category.text,
           },
           { headers: { Authorization: `Bearer ${this.store.token}` } }
         );
@@ -140,3 +196,19 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+/* Opcionális stílusok a jobb megjelenítéshez */
+.btn-primary {
+  background-color: #28a745;
+  border-color: #28a745;
+}
+
+.card {
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+</style>
