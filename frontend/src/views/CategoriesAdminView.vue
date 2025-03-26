@@ -2,11 +2,14 @@
   <div class="container">
     <div class="d-flex justify-content-between align-items-center mb-4">
       <h1>Témakörök kezelése</h1>
-      <button @click="openModal" class="btn btn-primary">Új Témakör</button>
+      <button
+        class="btn btn-outline-success"
+        data-bs-toggle="modal"
+        data-bs-target="#topicModal"
+      >
+        <i class="bi bi-plus-lg"></i> Új témakör
+      </button>
     </div>
-
-    <!-- Új témakör modal -->
-    <TopicModal v-if="showModal" :showModal="showModal" @close="closeModal" @submit="addNewTopic" />
 
     <!-- Szűrő -->
     <div class="mb-3">
@@ -19,10 +22,16 @@
     </div>
 
     <!-- Szűrt kategóriák megjelenítése -->
-    <div v-for="category in filteredCategories" :key="category.id" class="card mb-3 p-3">
-      <CategoryCard :category="category" :saveCategory="saveCategory" :confirmDelete="confirmDelete" />
-
-      <!-- Kategória leírás -->
+    <div
+      v-for="category in filteredCategories"
+      :key="category.id"
+      class="card mb-3 p-3"
+    >
+      <CategoryCard
+        :category="category"
+        :saveCategory="saveCategory"
+        :confirmDelete="confirmDelete"
+      />
 
       <!-- Források -->
       <div v-if="sources[category.id]">
@@ -31,12 +40,15 @@
           <li v-for="source in sources[category.id]" :key="source.id">
             <a :href="source.sourceLink" target="_blank">{{
               source.sourceLink
-              }}</a>
+            }}</a>
             <p>{{ source.note }}</p>
           </li>
         </ul>
       </div>
     </div>
+
+    <!-- Modal beillesztése -->
+    <TopicModal @addTopic="addNewTopic" />
   </div>
 </template>
 
@@ -55,15 +67,15 @@ export default {
       sources: {},
       selectedLevel: "",
       store: useAuthStore(),
-      showModal: false,
     };
   },
   computed: {
     filteredCategories() {
-      if (!this.selectedLevel) return this.categories;
-      return this.categories.filter(
-        (category) => category.level === this.selectedLevel
-      );
+      return this.selectedLevel
+        ? this.categories.filter(
+            (category) => category.level === this.selectedLevel
+          )
+        : this.categories;
     },
   },
   async created() {
@@ -73,18 +85,17 @@ export default {
   methods: {
     async addNewTopic(newTopic) {
       try {
-        // Extra ellenőrzés a szintre
         if (!["közép", "emelt"].includes(newTopic.level)) {
           alert("Érvénytelen szint érték!");
           return;
         }
 
-        const response = await axios.post(
+        await axios.post(
           `${BASE_URL}/categories`,
           {
             category: newTopic.category.trim(),
-            level: newTopic.level, // Itt már biztos helyes az érték
-            text: newTopic.text.trim(),
+            level: newTopic.level,
+            text: newTopic.text?.trim() || "",
           },
           {
             headers: {
@@ -96,12 +107,7 @@ export default {
 
         alert("Sikeres létrehozás!");
         await this.fetchCategories();
-        this.showModal = false;
       } catch (error) {
-        console.error("Hiba részletei:", {
-          request: error.config,
-          response: error.response,
-        });
         alert(`Hiba: ${error.response?.data?.message || error.message}`);
       }
     },
@@ -112,13 +118,8 @@ export default {
           headers: { Authorization: `Bearer ${this.store.token}` },
         });
 
-        this.categories = response.data.data.map((category) => ({
-          ...category,
-          expanded: false,
-          editing: false,
-        }));
+        this.categories = response.data.data;
       } catch (error) {
-        console.error("Hiba a kategóriák lekérésekor:", error);
         alert("Kategóriák betöltése sikertelen.");
       }
     },
@@ -135,7 +136,6 @@ export default {
           return acc;
         }, {});
       } catch (error) {
-        console.error("Hiba a források lekérésekor:", error);
         alert("Források betöltése sikertelen.");
       }
     },
@@ -183,6 +183,7 @@ export default {
   },
 };
 </script>
+
 
 <style scoped>
 /* Opcionális stílusok a jobb megjelenítéshez */
