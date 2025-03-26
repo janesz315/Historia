@@ -77,11 +77,13 @@ export default {
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
-  min-height: auto;
+  height: 100vh;
+  width: 100vw;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 20px;
+  margin: 0;
+  padding: 0;
 }
 
 .admin-container {
@@ -91,6 +93,7 @@ export default {
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   border: 2px solid #8b5a2b;
+  transform: translateY(-10%);
 }
 
 .title {
