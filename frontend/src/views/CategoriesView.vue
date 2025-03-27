@@ -21,7 +21,7 @@
         </div>
         <div v-if="expandedCategories.includes(category.id)">
           <p>Szint: {{ category.level }}</p>
-          <p>{{ category.text }}</p>
+          <p v-html="category.text"></p>
           <div v-if="sources[category.id]">
             <h6>Források:</h6>
             <ul>

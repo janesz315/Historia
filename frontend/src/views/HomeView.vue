@@ -21,7 +21,10 @@
             Üdvözlünk, <strong>{{ user }}</strong
             >! Itt találhatod a személyes információidat.
           </p>
-          <router-link to="/temakorok" class="btn">Témakörök</router-link>
+          <div class="btn-group">
+            <router-link to="/temakorok" class="btn">Témakörök</router-link>
+            <router-link to="/profil" class="btn">Profil</router-link>
+          </div>
         </div>
 
         <div v-else-if="roleId === 1" class="card">
@@ -36,9 +39,7 @@
             <router-link to="/tesztekadmin" class="btn"
               >Admin Tesztek</router-link
             >
-             <router-link to="/admin" class="btn"
-              >Admin Felület</router-link
-            >
+            <router-link to="/admin" class="btn">Admin Felület</router-link>
           </div>
         </div>
       </div>
@@ -106,7 +107,6 @@ export default {
   display: flex;
   justify-content: center;
   gap: 8px; /* Kisebb rés a gombok között */
-  margin-top: 15px;
   flex-wrap: wrap; /* Ha szükséges, sortörés */
 }
 
@@ -122,7 +122,6 @@ export default {
   white-space: nowrap; /* Megakadályozza a sortörést */
 }
 
-
 .btn:hover {
   background: #5a3e1b;
   transform: scale(1.05);
@@ -134,12 +133,12 @@ export default {
     max-width: 95%;
     padding: 15px;
   }
-  
+
   .btn-group {
     flex-direction: column; /* Gombok egymás alatt */
     gap: 10px;
   }
-  
+
   .btn {
     width: 100%;
   }
