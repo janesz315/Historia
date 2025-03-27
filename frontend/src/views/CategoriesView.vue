@@ -12,26 +12,14 @@
         </select>
       </div>
 
-      <div v-for="category in filteredCategories" :key="category.id" class="card mb-3 p-3">
-        <div class="d-flex justify-content-between align-items-center">
-          <h5>{{ category.category }}</h5>
-          <button class="btn btn-outline-secondary" @click="toggleCategory(category.id)">
-            {{ expandedCategories.includes(category.id) ? '▲' : '▼' }}
-          </button>
-        </div>
-        <div v-if="expandedCategories.includes(category.id)">
-          <p>Szint: {{ category.level }}</p>
-          <p v-html="category.text"></p>
-          <div v-if="sources[category.id]">
-            <h6>Források:</h6>
-            <ul>
-              <li v-for="source in sources[category.id]" :key="source.id">
-                <a :href="source.sourceLink" target="_blank">{{ source.sourceLink }}</a>
-                <p>{{ source.note }}</p>
-              </li>
-            </ul>
-          </div>
-        </div>
+      <div
+        v-for="category in filteredCategories"
+        :key="category.id"
+      >
+        <CategoryCard
+          :category="category"
+          :sources="sources[category.id] || []"
+        />
       </div>
     </div>
   </div>
@@ -41,8 +29,10 @@
 import axios from "axios";
 import { BASE_URL } from "../helpers/baseUrls";
 import { useAuthStore } from "../stores/useAuthStore";
+import CategoryCard from "../components/Cards/CategoryCard.vue";
 
 export default {
+  components: { CategoryCard },
   data() {
     return {
       categories: [],

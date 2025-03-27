@@ -10,7 +10,7 @@
             "
           ></i>
         </button>
-        <button
+        <button  v-if="stateAuth.roleId === 1" 
           class="btn btn-outline-danger"
           @click="confirmDelete(category.id)"
         >
@@ -24,7 +24,7 @@
         <p><strong>Szint:</strong> {{ category.level }}</p>
         <p v-html="category.text"></p>
 
-        <button @click="openEditModal" class="btn btn-outline-primary btn-sm">
+        <button v-if="stateAuth.roleId === 1"  @click="openEditModal" class="btn btn-outline-primary btn-sm">
           Szerkesztés
         </button>
 
@@ -53,9 +53,15 @@
 
 <script>
 import CategoryEditModal from "@/components/Modals/CategoryEditModal.vue";
+import { useAuthStore } from "@/stores/useAuthStore.js";
 
 export default {
   components: { CategoryEditModal },
+  data() {
+    return {
+      stateAuth: useAuthStore(),
+    };
+  },
   props: ["category", "saveCategory", "confirmDelete", "sources"],
   methods: {
     toggleExpand() {

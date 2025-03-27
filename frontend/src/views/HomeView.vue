@@ -19,11 +19,12 @@
         <div v-else-if="roleId === 2" class="card">
           <p>
             Üdvözlünk, <strong>{{ user }}</strong
-            >! Itt találhatod a személyes információidat.
+            >! Választhatsz az alábbi menüpontokból:
           </p>
           <div class="btn-group">
             <router-link to="/temakorok" class="btn">Témakörök</router-link>
             <router-link to="/profil" class="btn">Profil</router-link>
+            <router-link to="/tesztek" class="btn">Tesztek</router-link>
           </div>
         </div>
 
