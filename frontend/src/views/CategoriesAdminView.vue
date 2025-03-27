@@ -2,19 +2,34 @@
   <div class="my-container">
     <div class="container">
       <h1>Témakörök kezelése</h1>
-      <div class="mb-3">
-        <label for="levelFilter">Szűrés szint szerint:</label>
-        <select v-model="selectedLevel" class="form-select">
-          <option value="">Mindegyik</option>
-          <option value="közép">Közép</option>
-          <option value="emelt">Emelt</option>
-        </select>
+
+      <!-- Szűrés és gomb egy sorban -->
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <div class="filter-container">
+          <label for="levelFilter" class="me-2">Szűrés szint szerint:</label>
+          <select
+            v-model="selectedLevel"
+            class="form-select"
+            style="width: auto; display: inline-block"
+          >
+            <option value="">Mindegyik</option>
+            <option value="közép">Közép</option>
+            <option value="emelt">Emelt</option>
+          </select>
+        </div>
+
+        <!-- Új témakör gomb -->
+        <button
+          class="btn btn-success"
+          data-bs-toggle="modal"
+          data-bs-target="#topicModal"
+        >
+          Új témakör
+        </button>
       </div>
 
-      <div
-        v-for="category in filteredCategories"
-        :key="category.id"
-      >
+      <!-- Témakörök listája -->
+      <div v-for="category in filteredCategories" :key="category.id">
         <CategoryCard
           :category="category"
           :saveCategory="saveCategory"
@@ -23,6 +38,9 @@
         />
       </div>
     </div>
+
+    <!-- Témakör hozzáadása modal -->
+    <TopicModal @addTopic="addCategory" />
   </div>
 </template>
 
@@ -31,9 +49,11 @@ import axios from "axios";
 import { BASE_URL } from "../helpers/baseUrls";
 import { useAuthStore } from "../stores/useAuthStore";
 import CategoryCard from "../components/Cards/CategoryCard.vue";
+import TopicModal from "../components/Modals/TopicModal.vue";
+import bootstrap from "bootstrap/dist/js/bootstrap.bundle.min.js";
 
 export default {
-  components: { CategoryCard },
+  components: { CategoryCard, TopicModal },
   data() {
     return {
       categories: [],
@@ -78,7 +98,6 @@ export default {
           headers: { Authorization: `Bearer ${this.store.token}` },
         });
 
-        // A sources objektumban kategória ID szerint csoportosítjuk a forrásokat
         this.sources = response.data.data.reduce((acc, source) => {
           if (!acc[source.categoryId]) acc[source.categoryId] = [];
           acc[source.categoryId].push(source);
@@ -87,6 +106,37 @@ export default {
       } catch (error) {
         console.error("Hiba a források lekérésekor:", error);
         alert("Források betöltése sikertelen.");
+      }
+    },
+
+    async addCategory(newCategory) {
+      if (!newCategory.category || !newCategory.level) {
+        alert("A témakör neve és szintje kötelező!");
+        return;
+      }
+
+      try {
+        await axios.post(
+          `${BASE_URL}/categories`,
+          {
+            category: newCategory.category,
+            level: newCategory.level,
+            text: newCategory.text || "", // Leírás opcionális
+          },
+          { headers: { Authorization: `Bearer ${this.store.token}` } }
+        );
+
+        alert("Új témakör sikeresen létrehozva!");
+        await this.fetchCategories();
+
+        // Bezárjuk a modált programozottan
+        const modal = bootstrap.Modal.getInstance(
+          document.getElementById("topicModal")
+        );
+        if (modal) modal.hide();
+      } catch (error) {
+        console.error("Hiba az új kategória létrehozásakor:", error);
+        alert("Létrehozás sikertelen.");
       }
     },
 
@@ -148,22 +198,8 @@ export default {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-h1 {
-  font-size: 2.8rem;
-  margin-bottom: 30px;
-  color: #5a3e1b;
-  font-weight: bold;
-}
-
-.mb-3 {
-  margin-bottom: 30px;
-}
-
-.form-select {
-  background-color: rgba(255, 248, 220, 0.8);
-  border: 2px solid #8b5a2b;
-  color: #5a3e1b;
-  padding: 10px;
-  border-radius: 8px;
+.filter-container {
+  display: flex;
+  align-items: center;
 }
 </style>
