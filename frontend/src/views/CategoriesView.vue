@@ -1,7 +1,7 @@
 <template>
-  <div class="my-container">
+  <div class="my-container ">
 
-    <div class="container">
+    <div class="container my-container-height">
       <h1>Témakörök</h1>
       <div class="mb-3">
         <label for="levelFilter">Szűrés szint szerint:</label>
@@ -92,6 +92,10 @@ export default {
 </script>
 
 <style scoped>
+
+.my-container-height{
+  min-height: 100vh;
+}
 .my-container {
   background-image: url("/images/parchment-texture.jpg");
   background-size: cover;
