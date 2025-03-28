@@ -29,37 +29,85 @@
       </div>
 
       <!-- Témakörök listája -->
-      <div v-for="category in filteredCategories" :key="category.id">
-        <CategoryCard
-          :category="category"
-          :saveCategory="saveCategory"
-          :confirmDelete="confirmDelete"
-          :sources="sources[category.id] || []"
+      <div
+        v-for="category in filteredCategories"
+        :key="category.id"
+        :class="{ active: category.id === selectedRowId }"
+        >
+        <OperationsCrud
+          :category = "category"
+          @onClickDeleteButton="onClickDeleteButton"
+          @onClickUpdate="onClickUpdate"
+          @onClickCreate="onClickCreate"
         />
-      </div>
+      <CategoryCard
+      :category="category"
+      :saveCategory="saveCategory"
+      :sources="sources[category.id] || []"
+      />
+    </div>
+    
+    
     </div>
 
     <!-- Témakör hozzáadása modal -->
-    <TopicModal @addTopic="addCategory" />
+    <Modal
+      :title="title"
+      :yes="yes"
+      :no="no"
+      :size="size"
+      @yesEvent="yesEventHandler"
+    >
+      <div v-if="state == 'Delete'">
+        {{ messageYesNo }}
+      </div>
+
+      <CategoryForm
+        v-if="state == 'Create' || state == 'Update'"
+        :itemForm="item"
+        :debug="debug"
+        @saveItem="saveItemHandler"
+      />
+    </Modal>
   </div>
 </template>
 
 <script>
+class Category {
+  constructor(id = null, category = null, level = null, text = null) {
+    this.id = id;
+    this.category = category;
+    this.level = level;
+    this.text = text;
+  }
+}
 import axios from "axios";
 import { BASE_URL } from "../helpers/baseUrls";
 import { useAuthStore } from "../stores/useAuthStore";
 import CategoryCard from "../components/Cards/CategoryCard.vue";
-import TopicModal from "../components/Modals/TopicModal.vue";
+// import TopicModal from "../components/Modals/CategoryForm.vue";
+import CategoryForm from "@/components/Forms/CategoryForm.vue";
+import OperationsCrud from "@/components/Modals/OperationsCrud.vue";
 import bootstrap from "bootstrap/dist/js/bootstrap.bundle.min.js";
 
 export default {
-  components: { CategoryCard, TopicModal },
+  components: { CategoryCard, CategoryForm, OperationsCrud },
   data() {
     return {
+      urlApiCategory: `${BASE_URL}/categories`,
       categories: [],
       sources: {},
       selectedLevel: "",
       store: useAuthStore(),
+      selectedRowId: null,
+      messageYesNo: null,
+      state: "Read", //CRUD: Create, Read, Update, Delete
+      title: null,
+      yes: null,
+      no: null,
+      size: null,
+      errorMessages: null,
+      category: new Category(),
     };
   },
   computed: {
@@ -160,30 +208,120 @@ export default {
       }
     },
 
-    async deleteCategory(categoryId) {
+    // async deleteCategory(categoryId) {
+    //   try {
+    //     await axios.delete(`${BASE_URL}/categories/${categoryId}`, {
+    //       headers: { Authorization: `Bearer ${this.store.token}` },
+    //     });
+    //     alert("Kategória sikeresen törölve!");
+    //     await this.fetchCategories();
+    //   } catch (error) {
+    //     alert("Törlés sikertelen.");
+    //   }
+    // },
+
+    // confirmDelete(categoryId) {
+    //   if (confirm("Biztosan törölni szeretnéd ezt a kategóriát?")) {
+    //     this.deleteCategory(categoryId);
+    //   }
+    // },
+
+    // async deleteItemById() {
+    //   const id = this.selectedRowId;
+    //   const token = this.store.token;
+
+    //   const url = `${this.urlApi}/${id}`;
+    //   const headers = {
+    //     Accept: "application/json",
+    //     "Content-Type": "application/json",
+    //     Authorization: `Bearer ${token}`,
+    //   };
+
+    //   try {
+    //     const response = await axios.delete(url, { headers });
+    //     // this.items = this.items.filter((sport) => sport.id !== id);
+    //     this.fetchCategories();
+    //   } catch (error) {
+    //     this.errorMessages =
+    //       "A diák nem törölhető";
+    //   }
+    // },
+
+    // A törlés végrehajtása
+    async deleteCategoryById() {
       try {
-        await axios.delete(`${BASE_URL}/categories/${categoryId}`, {
+        const id = this.selectedRowId;
+        const response = await axios.delete(`${BASE_URL}/categories/${id}`, {
           headers: { Authorization: `Bearer ${this.store.token}` },
         });
-        alert("Kategória sikeresen törölve!");
+
+        // A sikeres törlés után frissíteni kell a kategóriák listáját
         await this.fetchCategories();
+
+        alert("A kategória sikeresen törölve!");
       } catch (error) {
-        alert("Törlés sikertelen.");
+        console.error("Törlés hiba:", error);
+        alert("A kategória törlése nem sikerült!");
       }
     },
 
-    confirmDelete(categoryId) {
-      if (confirm("Biztosan törölni szeretnéd ezt a kategóriát?")) {
-        this.deleteCategory(categoryId);
+    yesEventHandler() {
+      if (this.state == "Delete") {
+        this.deleteCategoryById();
       }
+    },
+
+    onClickDeleteButton(category) {
+      console.log("onClickDeleteButton - Kategória:", category);
+      if (!category) {
+        console.error("A kategória nem található.");
+        return; // Ha nincs kategória, ne folytasd a törlést
+      }
+      this.state = "Delete";
+      this.title = "Törlés";
+      this.messageYesNo = `Valóban törölni akarod a(z) ${category.category} nevű témakört?`;
+      this.yes = "Igen";
+      this.no = "Nem";
+      this.size = null;
+      this.selectedRowId = category.id;
+    },
+
+    onClickUpdate(category) {
+      this.state = "Update";
+      this.title = "Diák módosítása";
+      this.yes = null;
+      this.no = "Mégsem";
+      this.size = "lg";
+      this.item = { ...category };
+    },
+
+    onClickCreate() {
+      this.title = "Új diák bevitele";
+      this.yes = null;
+      this.no = "Mégsem";
+      this.size = "lg";
+      this.state = "Create";
+      this.item = new Item();
+    },
+    saveItemHandler() {
+      if (this.state === "Update") {
+        this.updateItem();
+      } else if (this.state === "Create") {
+        this.createItem();
+      }
+
+      this.modal.hide();
+    },
+
+    goToPage(page) {
+      this.currentPage = page;
     },
   },
 };
 </script>
 
 <style scoped>
-
-.my-container-height{
+.my-container-height {
   min-height: 100vh;
 }
 .my-container {

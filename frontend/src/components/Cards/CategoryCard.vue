@@ -11,12 +11,12 @@
             "
           ></i>
         </button>
-        <button  v-if="stateAuth.roleId === 1" 
+        <!-- <button  v-if="stateAuth.roleId === 1" 
           class="btn btn-outline-danger"
           @click="confirmDelete(category.id)"
         >
           <i class="bi bi-trash"></i>
-        </button>
+        </button> -->
       </div>
     </div>
 
@@ -65,7 +65,7 @@ export default {
       stateAuth: useAuthStore(),
     };
   },
-  props: ["category", "saveCategory", "confirmDelete", "sources"],
+  props: ["category", "saveCategory", "sources"],
   methods: {
     toggleExpand() {
       this.category.expanded = !this.category.expanded;
