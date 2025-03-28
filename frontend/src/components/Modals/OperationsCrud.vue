@@ -6,7 +6,7 @@
       class="btn btn-outline-danger btn-sm"
       data-bs-toggle="modal"
       data-bs-target="#modal"
-      @click="onClickDeleteButton(dataLine)"
+      @click="onClickDeleteButton(category)"
     >
       <i class="bi bi-trash3"></i>
     </button>
@@ -16,7 +16,7 @@
       class="btn btn-outline-primary btn-sm ms-2"
       data-bs-toggle="modal"
       data-bs-target="#modal"
-      @click="onClickUpdate(dataLine)"
+      @click="onClickUpdate(category)"
     >
       <i class="bi bi-pencil"></i>
     </button>
@@ -32,17 +32,17 @@
     </button>
   </div>
 </template>
-  
+
 <script>
 export default {
-  props: ["dataLine"],
+  props: { category: Object }, // Ezt már jól adod át
   emits: ["onClickDeleteButton", "onClickUpdate", "onClickCreate"],
   methods: {
-    onClickDeleteButton(dataLine) {
-      this.$emit("onClickDeleteButton", dataLine);
+    onClickDeleteButton() {
+      this.$emit("onClickDeleteButton", this.category);
     },
-    onClickUpdate(dataLine) {
-      this.$emit("onClickUpdate", dataLine);
+    onClickUpdate() {
+      this.$emit("onClickUpdate", this.category);
     },
     onClickCreate() {
       this.$emit("onClickCreate");
@@ -50,6 +50,3 @@ export default {
   },
 };
 </script>
-  
-  <style>
-</style>

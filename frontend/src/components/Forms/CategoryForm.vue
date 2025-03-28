@@ -3,7 +3,7 @@
     @submit.prevent="onClickSubmit"
     class="row g-3 needs-validation was-validated"
   >
-    <p v-if="debug">{{ itemForm }}</p>
+    <!-- <p v-if="debug">{{ itemForm }}</p> -->
     <div class="col-md-4 position-relative">
       <label for="category" class="form-label">A témakör neve:</label>
       <input
@@ -34,15 +34,11 @@
 
 <script>
 export default {
-  data() {
-    return {
-      newTopic: { category: "", level: "", text: "" },
-    };
-  },
+  props: ["itemForm"],
+  emits: ["saveItem"],
   methods: {
-    handleSubmit() {
-      this.$emit("addTopic", { ...this.newTopic });
-      this.newTopic = { category: "", level: "", text: "" };
+    onClickSubmit() {
+      this.$emit("saveItem", this.itemForm);
     },
   },
 };

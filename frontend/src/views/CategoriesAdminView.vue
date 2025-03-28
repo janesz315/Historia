@@ -17,15 +17,6 @@
             <option value="emelt">Emelt</option>
           </select>
         </div>
-
-        <!-- Új témakör gomb -->
-        <button
-          class="btn btn-success"
-          data-bs-toggle="modal"
-          data-bs-target="#topicModal"
-        >
-          Új témakör
-        </button>
       </div>
 
       <!-- Témakörök listája -->
@@ -33,21 +24,19 @@
         v-for="category in filteredCategories"
         :key="category.id"
         :class="{ active: category.id === selectedRowId }"
-        >
+      >
         <OperationsCrud
-          :category = "category"
+          :category="category"
           @onClickDeleteButton="onClickDeleteButton"
           @onClickUpdate="onClickUpdate"
           @onClickCreate="onClickCreate"
         />
-      <CategoryCard
-      :category="category"
-      :saveCategory="saveCategory"
-      :sources="sources[category.id] || []"
-      />
-    </div>
-    
-    
+        <CategoryCard
+          :category="category"
+          :saveCategory="saveCategory"
+          :sources="sources[category.id] || []"
+        />
+      </div>
     </div>
 
     <!-- Témakör hozzáadása modal -->
@@ -64,8 +53,8 @@
 
       <CategoryForm
         v-if="state == 'Create' || state == 'Update'"
-        :itemForm="item"
-        :debug="debug"
+        :itemForm="category"
+        
         @saveItem="saveItemHandler"
       />
     </Modal>
@@ -157,36 +146,36 @@ export default {
       }
     },
 
-    async addCategory(newCategory) {
-      if (!newCategory.category || !newCategory.level) {
-        alert("A témakör neve és szintje kötelező!");
-        return;
-      }
+    // async addCategory(newCategory) {
+    //   if (!newCategory.category || !newCategory.level) {
+    //     alert("A témakör neve és szintje kötelező!");
+    //     return;
+    //   }
 
-      try {
-        await axios.post(
-          `${BASE_URL}/categories`,
-          {
-            category: newCategory.category,
-            level: newCategory.level,
-            text: newCategory.text || "", // Leírás opcionális
-          },
-          { headers: { Authorization: `Bearer ${this.store.token}` } }
-        );
+    //   try {
+    //     await axios.post(
+    //       `${BASE_URL}/categories`,
+    //       {
+    //         category: newCategory.category,
+    //         level: newCategory.level,
+    //         text: newCategory.text || "", // Leírás opcionális
+    //       },
+    //       { headers: { Authorization: `Bearer ${this.store.token}` } }
+    //     );
 
-        alert("Új témakör sikeresen létrehozva!");
-        await this.fetchCategories();
+    //     alert("Új témakör sikeresen létrehozva!");
+    //     await this.fetchCategories();
 
-        // Bezárjuk a modált programozottan
-        const modal = bootstrap.Modal.getInstance(
-          document.getElementById("topicModal")
-        );
-        if (modal) modal.hide();
-      } catch (error) {
-        console.error("Hiba az új kategória létrehozásakor:", error);
-        alert("Létrehozás sikertelen.");
-      }
-    },
+    //     // Bezárjuk a modált programozottan
+    //     const modal = bootstrap.Modal.getInstance(
+    //       document.getElementById("topicModal")
+    //     );
+    //     if (modal) modal.hide();
+    //   } catch (error) {
+    //     console.error("Hiba az új kategória létrehozásakor:", error);
+    //     alert("Létrehozás sikertelen.");
+    //   }
+    // },
 
     async saveCategory(category) {
       try {
@@ -272,10 +261,10 @@ export default {
     },
 
     onClickDeleteButton(category) {
-      console.log("onClickDeleteButton - Kategória:", category);
-      if (!category) {
+      if (!category || !category.id) {
         console.error("A kategória nem található.");
-        return; // Ha nincs kategória, ne folytasd a törlést
+        alert("Hiba: A kategória nem található.");
+        return;
       }
       this.state = "Delete";
       this.title = "Törlés";
@@ -285,7 +274,6 @@ export default {
       this.size = null;
       this.selectedRowId = category.id;
     },
-
     onClickUpdate(category) {
       this.state = "Update";
       this.title = "Diák módosítása";
@@ -293,6 +281,7 @@ export default {
       this.no = "Mégsem";
       this.size = "lg";
       this.item = { ...category };
+      this.selectedRowId = category.id;
     },
 
     onClickCreate() {
@@ -301,7 +290,7 @@ export default {
       this.no = "Mégsem";
       this.size = "lg";
       this.state = "Create";
-      this.item = new Item();
+      this.item = new Category();
     },
     saveItemHandler() {
       if (this.state === "Update") {
