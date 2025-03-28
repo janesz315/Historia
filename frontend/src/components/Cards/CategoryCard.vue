@@ -3,7 +3,7 @@
     <div class="d-flex justify-content-between align-items-center">
       <h5  v-if="category.level === 'közép'" class="category-title">{{ category.category }} <img :src="'/images/' + imageLevelK" alt="Kép leírása" height="35"></h5>
       <h5  v-else class="category-title">{{ category.category }} <img :src="'/images/' + imageLevelE" alt="Kép leírása" height="35"></h5>
-      <div>
+      <div class="d-flex justify-content-between align-items-center">
         <button class="btn btn-outline-secondary me-2" @click="toggleExpand">
           <i
             :class="
