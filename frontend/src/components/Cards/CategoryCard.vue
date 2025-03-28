@@ -1,7 +1,8 @@
 <template>
   <div class="card p-3">
     <div class="d-flex justify-content-between align-items-center">
-      <h5 class="category-title">{{ category.category }}</h5>
+      <h5  v-if="category.level === 'közép'" class="category-title">{{ category.category }} <img :src="'/images/' + imageLevelK" alt="Kép leírása" height="35"></h5>
+      <h5  v-else class="category-title">{{ category.category }} <img :src="'/images/' + imageLevelE" alt="Kép leírása" height="35"></h5>
       <div>
         <button class="btn btn-outline-secondary me-2" @click="toggleExpand">
           <i
@@ -59,6 +60,8 @@ export default {
   components: { CategoryEditModal },
   data() {
     return {
+      imageLevelK: 'letter-k.svg',
+      imageLevelE: 'letter-e.svg',
       stateAuth: useAuthStore(),
     };
   },
