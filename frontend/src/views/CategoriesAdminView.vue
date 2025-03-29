@@ -41,6 +41,7 @@
 
     <!-- Témakör hozzáadása modal -->
     <Modal
+      
       :title="title"
       :yes="yes"
       :no="no"
@@ -54,7 +55,6 @@
       <CategoryForm
         v-if="state == 'Create' || state == 'Update'"
         :itemForm="category"
-        
         @saveItem="saveItemHandler"
       />
     </Modal>
@@ -77,7 +77,8 @@ import CategoryCard from "../components/Cards/CategoryCard.vue";
 // import TopicModal from "../components/Modals/CategoryForm.vue";
 import CategoryForm from "@/components/Forms/CategoryForm.vue";
 import OperationsCrud from "@/components/Modals/OperationsCrud.vue";
-import bootstrap from "bootstrap/dist/js/bootstrap.bundle.min.js";
+// import bootstrap from "bootstrap/dist/js/bootstrap.bundle.min.js";
+import * as bootstrap from "bootstrap";
 
 export default {
   components: { CategoryCard, CategoryForm, OperationsCrud },
@@ -107,10 +108,15 @@ export default {
       );
     },
   },
-  async created() {
+
+  async mounted(){
     await this.fetchCategories();
     await this.fetchSources();
+    this.modal = new bootstrap.Modal("#modal", {
+      keyboard: false,
+    });
   },
+
   methods: {
     async fetchCategories() {
       try {
@@ -146,37 +152,6 @@ export default {
       }
     },
 
-    // async addCategory(newCategory) {
-    //   if (!newCategory.category || !newCategory.level) {
-    //     alert("A témakör neve és szintje kötelező!");
-    //     return;
-    //   }
-
-    //   try {
-    //     await axios.post(
-    //       `${BASE_URL}/categories`,
-    //       {
-    //         category: newCategory.category,
-    //         level: newCategory.level,
-    //         text: newCategory.text || "", // Leírás opcionális
-    //       },
-    //       { headers: { Authorization: `Bearer ${this.store.token}` } }
-    //     );
-
-    //     alert("Új témakör sikeresen létrehozva!");
-    //     await this.fetchCategories();
-
-    //     // Bezárjuk a modált programozottan
-    //     const modal = bootstrap.Modal.getInstance(
-    //       document.getElementById("topicModal")
-    //     );
-    //     if (modal) modal.hide();
-    //   } catch (error) {
-    //     console.error("Hiba az új kategória létrehozásakor:", error);
-    //     alert("Létrehozás sikertelen.");
-    //   }
-    // },
-
     async saveCategory(category) {
       try {
         await axios.patch(
@@ -196,45 +171,6 @@ export default {
         alert("Mentés sikertelen.");
       }
     },
-
-    // async deleteCategory(categoryId) {
-    //   try {
-    //     await axios.delete(`${BASE_URL}/categories/${categoryId}`, {
-    //       headers: { Authorization: `Bearer ${this.store.token}` },
-    //     });
-    //     alert("Kategória sikeresen törölve!");
-    //     await this.fetchCategories();
-    //   } catch (error) {
-    //     alert("Törlés sikertelen.");
-    //   }
-    // },
-
-    // confirmDelete(categoryId) {
-    //   if (confirm("Biztosan törölni szeretnéd ezt a kategóriát?")) {
-    //     this.deleteCategory(categoryId);
-    //   }
-    // },
-
-    // async deleteItemById() {
-    //   const id = this.selectedRowId;
-    //   const token = this.store.token;
-
-    //   const url = `${this.urlApi}/${id}`;
-    //   const headers = {
-    //     Accept: "application/json",
-    //     "Content-Type": "application/json",
-    //     Authorization: `Bearer ${token}`,
-    //   };
-
-    //   try {
-    //     const response = await axios.delete(url, { headers });
-    //     // this.items = this.items.filter((sport) => sport.id !== id);
-    //     this.fetchCategories();
-    //   } catch (error) {
-    //     this.errorMessages =
-    //       "A diák nem törölhető";
-    //   }
-    // },
 
     // A törlés végrehajtása
     async deleteCategoryById() {
@@ -260,6 +196,31 @@ export default {
       }
     },
 
+    async updateCategory() {
+      this.loading = true;
+      const id = this.selectedRowId;
+      const url = `${this.urlApiCategory}/${id}`;
+      const headers = {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${this.store.token}`,
+      };
+
+      const data = {
+        category: this.category.category,
+        level: this.category.level,
+        text: this.category.text,
+      };
+      try {
+        const response = await axios.patch(url, data, { headers });
+        this.fetchCategories();
+      } catch (error) {
+        this.errorMessages = "A módosítás nem sikerült.";
+      }
+      this.state = "Read";
+    },
+
+
     onClickDeleteButton(category) {
       if (!category || !category.id) {
         console.error("A kategória nem található.");
@@ -276,30 +237,32 @@ export default {
     },
     onClickUpdate(category) {
       this.state = "Update";
-      this.title = "Diák módosítása";
+      this.title = "Témakör módosítása";
       this.yes = null;
       this.no = "Mégsem";
       this.size = "lg";
-      this.item = { ...category };
+      this.category = { ...category }; // Beállítjuk a category-t, nem item
       this.selectedRowId = category.id;
     },
 
     onClickCreate() {
-      this.title = "Új diák bevitele";
+      this.title = "Új témakör bevitele";
       this.yes = null;
       this.no = "Mégsem";
       this.size = "lg";
       this.state = "Create";
-      this.item = new Category();
+      this.category = new Category();
     },
     saveItemHandler() {
       if (this.state === "Update") {
-        this.updateItem();
+        this.updateCategory();
       } else if (this.state === "Create") {
-        this.createItem();
+        this.createCategory();
       }
 
-      this.modal.hide();
+      
+        this.modal.hide(); // Ha a modalnak van hide() metódusa
+      
     },
 
     goToPage(page) {
