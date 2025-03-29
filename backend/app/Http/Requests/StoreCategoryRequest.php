@@ -25,7 +25,7 @@ class StoreCategoryRequest extends FormRequest
             //
             'category' => "required|string",
             'level' => 'required|string',
-            'text' => 'required|string'
+            'text' => 'nullable|string'
         ];
     }
 }

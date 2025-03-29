@@ -4,7 +4,7 @@
     class="row g-3 needs-validation was-validated"
   >
     <!-- <p v-if="debug">{{ itemForm }}</p> -->
-    <div class="col-md-4 position-relative">
+    <div class=" mb-3">
       <label for="category" class="form-label">A témakör neve:</label>
       <input
         type="text"
@@ -15,7 +15,7 @@
       />
     </div>
 
-    <div class="mb-3">
+    <div class="col-md-4 position-relative">
       <label for="Level" class="form-label">Szint</label>
       <select
         v-model="itemForm.level"

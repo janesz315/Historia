@@ -24,7 +24,7 @@ class UpdateCategoryRequest extends FormRequest
         return [
             'category' => "required|string",
             'level' => 'required|string',
-            'text' => 'required|string'
+            'text' => 'nullable|string'
         ];
     }
 }

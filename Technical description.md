@@ -30,13 +30,13 @@ Funkciók:
     - id: a témakör azonosítója, int(10), autoIncrement
     - category (témakör): a témakör neve, string(60), notNull
     - level (szint): közép vagy emelt szint, string(15), notNull
-    - text (szöveg): maga a témakör tartalma, text, notNull
+    - text (szöveg): maga a témakör tartalma, text, nullable
 
 - sources (források):
     - id: a forrás azonosítója, int(10), autoIncrement
     - categoryId (témakörId): itt kapcsolódunk a témakörhöz, ez adja meg, melyik témakörbe kell,  int(10), autoIncrement
-    - sourceLink (forrásLink): maga a hivatkozás, string(255)
-    - note (megjegyzés): ha a forrás egy pdf-ben van, akkor itt adjuk meg az oldalszámot például, string(255), notNull
+    - sourceLink (forrásLink): maga a hivatkozás, string(255), nullable
+    - note (megjegyzés): ha a forrás egy pdf-ben van, akkor itt adjuk meg az oldalszámot például, string(255), nullable
 
 - questions (kérdések):
     - id: a kérdés azonosítója, int(10), autoIncrement

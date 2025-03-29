@@ -41,7 +41,6 @@
 
     <!-- Témakör hozzáadása modal -->
     <Modal
-      
       :title="title"
       :yes="yes"
       :no="no"
@@ -109,7 +108,7 @@ export default {
     },
   },
 
-  async mounted(){
+  async mounted() {
     await this.fetchCategories();
     await this.fetchSources();
     this.modal = new bootstrap.Modal("#modal", {
@@ -193,6 +192,7 @@ export default {
     yesEventHandler() {
       if (this.state == "Delete") {
         this.deleteCategoryById();
+        this.modal.hide(); // A modal bezárása a törlés után
       }
     },
 
@@ -214,19 +214,44 @@ export default {
       try {
         const response = await axios.patch(url, data, { headers });
         this.fetchCategories();
+        alert("A kategória sikeresen módosítva!");
       } catch (error) {
         this.errorMessages = "A módosítás nem sikerült.";
       }
       this.state = "Read";
     },
 
+    async createCategory() {
+      const token = this.store.token;
+      const url = this.urlApiCategory;
+      const headers = {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      };
+
+      const data = {
+        category: this.category.category,
+        level: this.category.level,
+        text: null,
+      };
+      try {
+        const response = await axios.post(url, data, { headers });
+        // this.items.push(response.data.data);
+        this.fetchCategories();
+        alert("A kategória sikeresen létrehozva!");
+      } catch (error) {
+        this.errorMessages = "A bővítés nem sikerült.";
+      }
+      this.state = "Read";
+    },
 
     onClickDeleteButton(category) {
-      if (!category || !category.id) {
-        console.error("A kategória nem található.");
-        alert("Hiba: A kategória nem található.");
-        return;
-      }
+      // if (!category || !category.id) {
+      //   console.error("A kategória nem található.");
+      //   alert("Hiba: A kategória nem található.");
+      //   return;
+      // }
       this.state = "Delete";
       this.title = "Törlés";
       this.messageYesNo = `Valóban törölni akarod a(z) ${category.category} nevű témakört?`;
@@ -260,9 +285,7 @@ export default {
         this.createCategory();
       }
 
-      
-        this.modal.hide(); // Ha a modalnak van hide() metódusa
-      
+      this.modal.hide(); // Ha a modalnak van hide() metódusa
     },
 
     goToPage(page) {

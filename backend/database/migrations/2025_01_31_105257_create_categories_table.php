@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->integer('id')->autoIncrement();
             $table->string('category', 255);
             $table->string('level', 10);
-            $table->text('text');
+            $table->text('text')->nullable();
             $table->timestamps();
 
         });
