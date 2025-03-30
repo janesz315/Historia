@@ -13,12 +13,14 @@
         <button class="btn btn-outline-secondary me-2" @click="toggleExpand">
           <i :class="category.expanded ? 'bi bi-chevron-up' : 'bi bi-chevron-down'"></i>
         </button>
+        <div v-if="stateAuth.roleId == 1">
 
         <OperationsCrud 
           :category="category"
           @onClickDeleteButton="onClickDeleteButton"
           @onClickUpdateButton="onClickUpdateButton"
         />
+        </div>
       </div>
     </div>
 

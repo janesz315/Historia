@@ -3,13 +3,19 @@
 
     <div class="container my-container-height">
       <h1>Témakörök</h1>
-      <div class="mb-3">
-        <label for="levelFilter">Szűrés szint szerint:</label>
-        <select v-model="selectedLevel" class="form-select">
-          <option value="">Mindegyik</option>
-          <option value="közép">Közép</option>
-          <option value="emelt">Emelt</option>
-        </select>
+       <div class="d-flex justify-content-between align-items-center mb-3">
+        <div class="filter-container">
+          <label for="levelFilter" class="me-2">Szűrés szint szerint:</label>
+          <select
+            v-model="selectedLevel"
+            class="form-select"
+            style="width: 150px; display: inline-block"
+          >
+            <option value="">Mindegyik</option>
+            <option value="közép">Közép</option>
+            <option value="emelt">Emelt</option>
+          </select>
+        </div>
       </div>
 
       <div
@@ -92,6 +98,11 @@ export default {
 </script>
 
 <style scoped>
+
+.filter-container {
+  display: flex;
+  align-items: center;
+}
 
 .my-container-height{
   min-height: 100vh;

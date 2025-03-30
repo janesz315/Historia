@@ -6,6 +6,13 @@
 ### teszt
 get {{host}}/api/
 
+
+# ------------  lekérdezések ---------
+### get users
+get {{host}}/api/getQuestionsWithTypesAndAnswers
+Accept: application/json
+
+
 # ----------------- login -------------------
 ### login
 # @name login

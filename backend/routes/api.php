@@ -12,7 +12,7 @@ use App\Http\Controllers\TestQuestionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\UserRoleController;
-
+use App\Http\Controllers\QueryController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -20,6 +20,12 @@ Route::get('/user', function (Request $request) {
 Route::get('/', function () {
     return 'API';
 });
+
+//QUERIES
+Route::get('/getQuestionsWithTypesAndAnswers', [QueryController::class, 'getQuestionsWithTypesAndAnswers']);
+
+
+
 
 Route::post('/users/login', [UserController::class, 'login']);
 Route::post('/users/logout', [UserController::class, 'logout']);
