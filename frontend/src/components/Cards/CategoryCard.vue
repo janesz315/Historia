@@ -1,22 +1,24 @@
 <template>
   <div class="card p-3">
     <div class="d-flex justify-content-between align-items-center">
-      <h5  v-if="category.level === 'közép'" class="category-title">{{ category.category }} <img :src="'/images/' + imageLevelK" alt="Kép leírása" height="35"></h5>
-      <h5  v-else class="category-title">{{ category.category }} <img :src="'/images/' + imageLevelE" alt="Kép leírása" height="35"></h5>
+      <h5 v-if="category.level === 'közép'" class="category-title">
+        {{ category.category }} 
+        <img :src="'/images/' + imageLevelK" alt="Kép leírása" height="35">
+      </h5>
+      <h5 v-else class="category-title">
+        {{ category.category }} 
+        <img :src="'/images/' + imageLevelE" alt="Kép leírása" height="35">
+      </h5>
       <div class="d-flex justify-content-between align-items-center">
         <button class="btn btn-outline-secondary me-2" @click="toggleExpand">
-          <i
-            :class="
-              category.expanded ? 'bi bi-chevron-up' : 'bi bi-chevron-down'
-            "
-          ></i>
+          <i :class="category.expanded ? 'bi bi-chevron-up' : 'bi bi-chevron-down'"></i>
         </button>
-        <!-- <button  v-if="stateAuth.roleId === 1" 
-          class="btn btn-outline-danger"
-          @click="confirmDelete(category.id)"
-        >
-          <i class="bi bi-trash"></i>
-        </button> -->
+
+        <OperationsCrud 
+          :category="category"
+          @onClickDeleteButton="onClickDeleteButton"
+          @onClickUpdateButton="onClickUpdateButton"
+        />
       </div>
     </div>
 
@@ -25,7 +27,7 @@
         <p><strong>Szint:</strong> {{ category.level }}</p>
         <p v-html="category.text"></p>
 
-        <button v-if="stateAuth.roleId === 1"  @click="openEditModal" class="btn btn-outline-primary btn-sm">
+        <button v-if="stateAuth.roleId === 1" @click="openEditModal" class="btn btn-outline-primary btn-sm">
           Szerkesztés
         </button>
 
@@ -34,9 +36,7 @@
           <h6>Források:</h6>
           <ul>
             <li v-for="source in sources" :key="source.id">
-              <a :href="source.sourceLink" target="_blank">{{
-                source.sourceLink
-              }}</a>
+              <a :href="source.sourceLink" target="_blank">{{ source.sourceLink }}</a>
               <p>{{ source.note }}</p>
             </li>
           </ul>
@@ -52,12 +52,14 @@
   </div>
 </template>
 
+
 <script>
 import CategoryEditModal from "@/components/Modals/CategoryEditModal.vue";
 import { useAuthStore } from "@/stores/useAuthStore.js";
+import OperationsCrud from '../Modals/OperationsCrud.vue';
 
 export default {
-  components: { CategoryEditModal },
+  components: { CategoryEditModal, OperationsCrud},
   data() {
     return {
       imageLevelK: 'letter-k.svg',
@@ -65,7 +67,7 @@ export default {
       stateAuth: useAuthStore(),
     };
   },
-  props: ["category", "saveCategory", "sources"],
+  props: ["category", "saveCategory", "sources", "onClickDeleteButton","onClickUpdateButton"],
   methods: {
     toggleExpand() {
       this.category.expanded = !this.category.expanded;

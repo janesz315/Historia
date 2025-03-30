@@ -17,6 +17,10 @@
             <option value="emelt">Emelt</option>
           </select>
         </div>
+        <!-- Create gomb -->
+        <OperationsCrud
+          @onClickCreateButton="onClickCreateButton"
+        />
       </div>
 
       <!-- Témakörök listája -->
@@ -25,20 +29,16 @@
         :key="category.id"
         :class="{ active: category.id === selectedRowId }"
       >
-        <OperationsCrud
-          :category="category"
-          @onClickDeleteButton="onClickDeleteButton"
-          @onClickUpdate="onClickUpdate"
-          @onClickCreate="onClickCreate"
-        />
         <CategoryCard
           :category="category"
           :saveCategory="saveCategory"
           :sources="sources[category.id] || []"
+          :onClickDeleteButton="onClickDeleteButton"
+          :onClickUpdateButton="onClickUpdateButton"
         />
       </div>
     </div>
-
+    
     <!-- Témakör hozzáadása modal -->
     <Modal
       :title="title"
@@ -59,6 +59,7 @@
     </Modal>
   </div>
 </template>
+
 
 <script>
 class Category {
@@ -260,7 +261,7 @@ export default {
       this.size = null;
       this.selectedRowId = category.id;
     },
-    onClickUpdate(category) {
+    onClickUpdateButton(category) {
       this.state = "Update";
       this.title = "Témakör módosítása";
       this.yes = null;
@@ -270,7 +271,7 @@ export default {
       this.selectedRowId = category.id;
     },
 
-    onClickCreate() {
+    onClickCreateButton() {
       this.title = "Új témakör bevitele";
       this.yes = null;
       this.no = "Mégsem";
