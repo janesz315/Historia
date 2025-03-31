@@ -11,7 +11,7 @@
         <!-- Navigációs menü -->
         <nav
           class="navbar navbar-expand-lg navbar-dark"
-          style="background-color: #8b5a2b;"
+          style="background-color: #8b5a2b"
         >
           <button
             class="navbar-toggler"
@@ -74,6 +74,14 @@
               >
                 <RouterLink to="/admin" class="nav-link"
                   >Admin Felület</RouterLink
+                >
+              </li>
+              <li
+                v-if="stateAuth.user && stateAuth.roleId === 1"
+                class="nav-item"
+              >
+                <RouterLink to="/kerdesek" class="nav-link"
+                  >Kérdésbank</RouterLink
                 >
               </li>
               <!-- Bejelentkezés és Regisztráció csak akkor jelenik meg, ha nincs bejelentkezve -->

@@ -58,7 +58,7 @@
 <script>
 import CategoryEditModal from "@/components/Modals/CategoryEditModal.vue";
 import { useAuthStore } from "@/stores/useAuthStore.js";
-import OperationsCrud from '../Modals/OperationsCrud.vue';
+import OperationsCrud from '../Modals/OperationsCrudCategories.vue';
 
 export default {
   components: { CategoryEditModal, OperationsCrud},

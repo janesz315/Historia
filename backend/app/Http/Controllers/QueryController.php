@@ -9,7 +9,7 @@ class QueryController extends Controller
 {
     public function getQuestionsWithTypesAndAnswers()
 {
-    $query = "SELECT questions.id AS questionId, questions.question, question_types.questionCategory, answers.id AS answerId, answers.answer, answers.rightAnswer
+    $query = "SELECT questions.id AS questionId, questions.question, questions.categoryId, question_types.questionCategory, answers.id AS answerId, answers.answer, answers.rightAnswer
               FROM questions
               JOIN question_types ON questions.questionTypeId = question_types.id
               JOIN answers ON questions.id = answers.questionId";
@@ -25,6 +25,7 @@ class QueryController extends Controller
             $groupedQuestions[] = [
                 'questionId' => $row->questionId,
                 'question' => $row->question,
+                'categoryId' => $row->categoryId,
                 'questionCategory' => $row->questionCategory,
                 'answers' => [],
             ];

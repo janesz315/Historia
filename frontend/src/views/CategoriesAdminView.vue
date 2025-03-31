@@ -76,7 +76,7 @@ import { useAuthStore } from "../stores/useAuthStore";
 import CategoryCard from "../components/Cards/CategoryCard.vue";
 // import TopicModal from "../components/Modals/CategoryForm.vue";
 import CategoryForm from "@/components/Forms/CategoryForm.vue";
-import OperationsCrud from "@/components/Modals/OperationsCrud.vue";
+import OperationsCrud from "@/components/Modals/OperationsCrudCategories.vue";
 // import bootstrap from "bootstrap/dist/js/bootstrap.bundle.min.js";
 import * as bootstrap from "bootstrap";
 
@@ -96,7 +96,6 @@ export default {
       yes: null,
       no: null,
       size: null,
-      errorMessages: null,
       category: new Category(),
     };
   },
