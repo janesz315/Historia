@@ -29,11 +29,41 @@
         </tbody>
       </table>
     </div>
+    <div class="admin-container">
+      <h2 class="title">Kérdések kezelése</h2>
+      <table class="table table-hover user-table">
+      <thead>
+        <tr>
+          <th scope="col">Kérdés</th>
+          <th scope="col">Kérdéstípus</th>
+          <th scope="col">Válaszlehetőségek</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="questionAnswer in questionsAnswers" :key="questionAnswer.questionId">
+          <td>{{ questionAnswer.question }}</td>
+          <td>{{ questionAnswer.questionCategory }}</td>
+          <td>
+            <div v-for="answer in questionAnswer.answers" :key="answer.answerId" class="answer-item">
+              <i v-if="answer.rightAnswer === 1" class="bi bi-check-lg right-answer-icon"></i>
+              {{ answer.answer }}
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    </div>
+    <div>
+
+    </div>
   </div>
 </template>
 
 <script>
 import axios from 'axios';
+import { BASE_URL } from "../helpers/baseUrls";
+import { useAuthStore } from "../stores/useAuthStore";
 
 export default {
   data() {
@@ -42,7 +72,9 @@ export default {
       roles: [
         { id: 1, role: 'admin' },
         { id: 2, role: 'user' }
-      ]
+      ],
+      store: useAuthStore(),
+      questionsAnswers: []
     };
   },
   methods: {
@@ -63,15 +95,32 @@ export default {
       } catch (error) {
         console.error('Hiba a szerepkör frissítésekor:', error);
       }
+    },
+    async fetchQuestionsAnswers() {
+      try {
+        const response = await axios.get(`${BASE_URL}/getQuestionsWithTypesAndAnswers`, {
+          headers: { Authorization: `Bearer ${this.store.token}` },
+        });
+
+        this.questionsAnswers = response.data.data.map((category) => ({
+          ...category,
+        }));
+      } catch (error) {
+        console.error("Hiba a kategóriák lekérésekor:", error);
+        alert("Kategóriák betöltése sikertelen.");
+      }
     }
   },
   mounted() {
     this.fetchUsers();
+    this.fetchQuestionsAnswers();
   }
 };
 </script>
 
 <style scoped>
+
+
 .my-container {
   background-image: url("/images/parchment-texture.jpg");
   background-size: cover;
@@ -141,5 +190,14 @@ export default {
 
 .save-btn:hover {
   background: #5a3e1b;
+}
+
+.answer-item {
+  margin-bottom: 5px;
+}
+
+.right-answer-icon {
+  margin-right: 5px;
+  color: green;
 }
 </style>
