@@ -33,11 +33,12 @@
                 </div>
               </td>
               <td>
-                <OperationsCrud 
-                :questionAnswer="questionAnswer" 
-                @onClickDeleteButton="onClickDeleteButton"
-                @onClickUpdateButton="onClickUpdateButton"
-                @onClickCreateButton="onClickCreateButton"/>
+                <OperationsCrudQuestionsAnswers
+                  :questionAnswer="questionAnswer"
+                  @onClickDeleteButton="onClickDeleteButton"
+                  @onClickUpdateButton="onClickUpdateButton"
+                  @onClickCreateButton="onClickCreateButton"
+                />
               </td>
             </tr>
           </tbody>
@@ -69,10 +70,12 @@ import axios from "axios";
 import { BASE_URL } from "../helpers/baseUrls";
 import { useAuthStore } from "../stores/useAuthStore";
 import QuestionsAnswersForm from "@/components/Forms/QuestionsAnswersForm.vue";
-import OperationsCrud from "@/components/Modals/OperationsCrudQuestionsAnswers.vue";
+import OperationsCrudQuestionsAnswers from "@/components/Modals/OperationsCrudQuestionsAnswers.vue";
+
+
 
 export default {
-  components: [QuestionsAnswersForm, OperationsCrud],
+  components: { QuestionsAnswersForm, OperationsCrudQuestionsAnswers },
   data() {
     return {
       store: useAuthStore(),
@@ -104,38 +107,38 @@ export default {
       }
     },
 
-    // onClickDeleteButton(questionAnswer) {
-    //   // if (!category || !category.id) {
-    //   //   console.error("A kategória nem található.");
-    //   //   alert("Hiba: A kategória nem található.");
-    //   //   return;
-    //   // }
-    //   this.state = "Delete";
-    //   this.title = "Törlés";
-    //   this.messageYesNo = `Valóban törölni akarod a(z) ${questionAnswer.question} nevű témakört?`;
-    //   this.yes = "Igen";
-    //   this.no = "Nem";
-    //   this.size = null;
-    //   this.selectedRowId = category.id;
-    // },
-    // onClickUpdateButton(category) {
-    //   this.state = "Update";
-    //   this.title = "Témakör módosítása";
-    //   this.yes = null;
-    //   this.no = "Mégsem";
-    //   this.size = "lg";
-    //   this.category = { ...category }; // Beállítjuk a category-t, nem item
-    //   this.selectedRowId = category.id;
-    // },
+    onClickDeleteButton(questionAnswer) {
+      // if (!category || !category.id) {
+      //   console.error("A kategória nem található.");
+      //   alert("Hiba: A kategória nem található.");
+      //   return;
+      // }
+      this.state = "Delete";
+      this.title = "Törlés";
+      this.messageYesNo = `Valóban törölni akarod a(z) ${questionAnswer.question} nevű kérdést?`;
+      this.yes = "Igen";
+      this.no = "Nem";
+      this.size = null;
+      this.selectedRowId = questionAnswer.id;
+    },
+    onClickUpdateButton(questionAnswer) {
+      this.state = "Update";
+      this.title = "Kérdés módosítása";
+      this.yes = null;
+      this.no = "Mégsem";
+      this.size = "lg";
+      this.questionAnswer = { ...questionAnswer }; // Beállítjuk a category-t, nem item
+      this.selectedRowId = questionAnswer.id;
+    },
 
-    // onClickCreateButton() {
-    //   this.title = "Új témakör bevitele";
-    //   this.yes = null;
-    //   this.no = "Mégsem";
-    //   this.size = "lg";
-    //   this.state = "Create";
-    //   this.category = new Category();
-    // },
+    onClickCreateButton() {
+      this.title = "Új kérdés bevitele";
+      this.yes = null;
+      this.no = "Mégsem";
+      this.size = "lg";
+      this.state = "Create";
+      this.questionAnswer = new QuestionAnswer();
+    },
   },
   mounted() {
     this.fetchQuestionsAnswers();

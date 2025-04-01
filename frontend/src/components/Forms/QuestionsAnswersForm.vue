@@ -1,6 +1,5 @@
 <template>
   <div class="form-container">
-    <h2>Adatok bevitel</h2>
     <form @submit.prevent="submitForm">
       <div class="form-group">
         <label for="question">Kérdés:</label>

@@ -31,7 +31,7 @@
         data-bs-target="#modal"
         @click="onClickCreateButton"
       >
-        <i class="bi bi-plus-lg"></i> Új témakör létrehozása
+        <i class="bi bi-plus-lg"></i> Új kérdés létrehozása
       </button>
     </div>
   </div>
