@@ -2,18 +2,17 @@
   <div class="my-container">
     <!-- Fő fejléc -->
     <header>
-      <div class="wrapper container-fluid ">
+      <div class="wrapper container-fluid">
         <!-- Logo / Weboldal neve -->
-        
 
         <!-- Navigációs menü -->
         <nav
           class="navbar navbar-expand-lg navbar-dark fixed-top"
           style="background-color: #8b5a2b"
         >
-        <div class="logo">
-          <RouterLink to="/">Historia</RouterLink>
-        </div>
+          <div class="logo">
+            <RouterLink to="/">Historia</RouterLink>
+          </div>
           <button
             class="navbar-toggler"
             type="button"
@@ -25,15 +24,15 @@
           >
             <span class="navbar-toggler-icon"></span>
           </button>
-          <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
+          <div class="collapse navbar-collapse">
+            <ul class="navbar-nav ms-auto d-flex justify-content-end">
               <li class="nav-item">
                 <RouterLink to="/" class="nav-link">Kezdőlap</RouterLink>
               </li>
               <li class="nav-item">
                 <RouterLink to="/rolunk" class="nav-link">Rólunk</RouterLink>
               </li>
-              <!-- Témakörök és Tesztelés menüpontok csak akkor jelennek meg, ha a felhasználó be van jelentkezve -->
+
               <!-- Admin -->
               <li
                 v-if="stateAuth.user && stateAuth.roleId === 1"
@@ -51,6 +50,7 @@
                   >Tesztelés</RouterLink
                 >
               </li>
+
               <!-- User -->
               <li
                 v-if="stateAuth.user && stateAuth.roleId === 2"
@@ -68,24 +68,8 @@
                   >Tesztelés</RouterLink
                 >
               </li>
-              <!-- Admin menüpontok -->
-              <li
-                v-if="stateAuth.user && stateAuth.roleId === 1"
-                class="nav-item"
-              >
-                <RouterLink to="/admin" class="nav-link"
-                  >Admin Felület</RouterLink
-                >
-              </li>
-              <li
-                v-if="stateAuth.user && stateAuth.roleId === 1"
-                class="nav-item"
-              >
-                <RouterLink to="/kerdesek" class="nav-link"
-                  >Kérdésbank</RouterLink
-                >
-              </li>
-              <!-- Bejelentkezés és Regisztráció csak akkor jelenik meg, ha nincs bejelentkezve -->
+
+              <!-- Bejelentkezés és regisztráció -->
               <li v-if="!stateAuth.user" class="nav-item">
                 <RouterLink to="/bejelentkezes" class="nav-link"
                   >Bejelentkezés</RouterLink
@@ -96,19 +80,34 @@
                   >Regisztráció</RouterLink
                 >
               </li>
-              <!-- Kijelentkezés csak akkor jelenik meg, ha be van jelentkezve a felhasználó -->
-              <li v-if="stateAuth.user" class="nav-item">
-                <RouterLink class="nav-link" to="/" @click="Logout()"
-                  >Kijelentkezés</RouterLink
+
+              <!-- Dropdown menü a felhasználónévvel -->
+              <li v-if="stateAuth.user" class="nav-item dropdown">
+                <a
+                  class="nav-link dropdown-toggle"
+                  href="#"
+                  id="userDropdown"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
                 >
-              </li>
-              <!-- Saját profil -->
-              <li v-if="stateAuth.user" class="nav-item">
-                <RouterLink class="nav-link" to="/profil">Profil</RouterLink>
-              </li>
-              <li v-if="stateAuth.user" class="nav-item nav-link">
-                <i class="bi bi-person"></i>
-                <span v-if="stateAuth.user"> {{ stateAuth.user }}</span>
+                  <i class="bi bi-person"></i> {{ stateAuth.user }}
+                </a>
+                <ul
+                  class="dropdown-menu dropdown-menu-end"
+                  aria-labelledby="userDropdown"
+                >
+                  <li>
+                    <RouterLink class="dropdown-item" to="/profil"
+                      >Profil</RouterLink
+                    >
+                  </li>
+                  <li>
+                    <RouterLink class="dropdown-item" to="/" @click="Logout()"
+                      >Kijelentkezés</RouterLink
+                    >
+                  </li>
+                </ul>
               </li>
             </ul>
           </div>
@@ -164,6 +163,32 @@ export default {
   box-sizing: border-box;
 }
 
+/* Dropdown menü testreszabása */
+.dropdown-menu {
+  background-color: #8b5a2b; /* Az oldal háttérszíne */
+  border: 2px solid white;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Dropdown menüpontok stílusa */
+.dropdown-item {
+  color: #ffffff; /* Fehér szöveg */
+  font-size: 16px;
+  padding: 10px 15px;
+  transition: background-color 0.3s ease;
+}
+
+/* Hover hatás a menüpontokon */
+.dropdown-item:hover {
+  background-color: #a06b3c; /* Egy világosabb barna az egér fölé vitelekor */
+  color: white;
+}
+
+/* A dropdown nyílának (caret) testreszabása */
+.navbar .dropdown-toggle::after {
+  border-top-color: white; /* Fehér nyíl */
+}
+
 .my-container {
   height: 100%;
   overflow: hidden;
@@ -184,6 +209,7 @@ export default {
   color: #fff;
   text-decoration: none;
   font-weight: bold;
+  margin-left: 15px;
 }
 
 /* A Bootstrap navbar osztályok most biztosítják a menü megjelenését és rejtését */

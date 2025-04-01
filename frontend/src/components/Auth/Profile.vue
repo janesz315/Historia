@@ -152,6 +152,7 @@ export default {
   border-radius: 12px;
   border: 2px solid #8b5a2b;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+  transform: translateY(25%);
 }
 
 .my-container {
