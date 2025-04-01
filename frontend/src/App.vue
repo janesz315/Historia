@@ -69,6 +69,24 @@
                 >
               </li>
 
+              <li
+                v-if="stateAuth.user && stateAuth.roleId === 1"
+                class="nav-item"
+              >
+                <RouterLink to="/admin" class="nav-link"
+                  >Admin</RouterLink
+                >
+              </li>
+
+              <li
+                v-if="stateAuth.user && stateAuth.roleId === 1"
+                class="nav-item"
+              >
+                <RouterLink to="/kerdesek" class="nav-link"
+                  >Kérdésbank</RouterLink
+                >
+              </li>
+
               <!-- Bejelentkezés és regisztráció -->
               <li v-if="!stateAuth.user" class="nav-item">
                 <RouterLink to="/bejelentkezes" class="nav-link"

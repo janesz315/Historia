@@ -51,8 +51,23 @@
       </select>
     </div>
 
+    <button
+      type="submit"
+      class="btn btn-success"
+      @click="onClickSaveQuestionButton"
+      :disabled="
+        !formData.question || !formData.categoryId || !questionTypeId
+      "
+    >
+      Mentés
+    </button>
+
     <!-- Válaszok -->
-    <div v-for="(answer, index) in formData.answers" :key="answer.answerId" class="mb-3">
+    <div
+      v-for="(answer, index) in formData.answers"
+      :key="answer.answerId"
+      class="mb-3"
+    >
       <label class="form-label">Válasz {{ index + 1 }}:</label>
       <div class="input-group">
         <input
@@ -62,10 +77,7 @@
           required
         />
         <div class="input-group-text">
-          <input
-            type="checkbox"
-            v-model="answer.rightAnswer"
-          />
+          <input type="checkbox" v-model="answer.rightAnswer" />
         </div>
       </div>
     </div>
@@ -82,15 +94,13 @@
       <button
         type="submit"
         class="btn btn-success"
-        :disabled="!formData.question || !formData.categoryId || !formData.answers.length"
+        :disabled="
+          !formData.question || !formData.categoryId || !formData.answers.length
+        "
       >
         Mentés
       </button>
-      <button
-        type="button"
-        class="btn btn-danger"
-        @click="resetForm"
-      >
+      <button type="button" class="btn btn-danger" @click="resetForm">
         Törlés
       </button>
     </div>
@@ -101,7 +111,11 @@
         type="button"
         class="btn btn-primary"
         @click="submitAll"
-        :disabled="!formData.question || !formData.categoryId || !formData.answers.some(answer => answer.rightAnswer)"
+        :disabled="
+          !formData.question ||
+          !formData.categoryId ||
+          !formData.answers.some((answer) => answer.rightAnswer)
+        "
       >
         Véglegesítés
       </button>
@@ -128,7 +142,11 @@ export default {
 
   methods: {
     addAnswer() {
-      this.formData.answers.push({ answerId: Date.now(), answer: "", rightAnswer: 0 });
+      this.formData.answers.push({
+        answerId: Date.now(),
+        answer: "",
+        rightAnswer: 0,
+      });
     },
 
     resetForm() {
@@ -137,7 +155,11 @@ export default {
 
     onClickSubmit() {
       // Ellenőrizzük, hogy van-e kérdés és válaszok
-      if (!this.formData.question || !this.formData.categoryId || !this.formData.answers.length) {
+      if (
+        !this.formData.question ||
+        !this.formData.categoryId ||
+        !this.formData.answers.length
+      ) {
         alert("Kérlek, töltsd ki az összes mezőt!");
         return;
       }
@@ -145,7 +167,11 @@ export default {
     },
 
     submitAll() {
-      if (!this.formData.question || !this.formData.categoryId || !this.formData.answers.some(a => a.rightAnswer === 1)) {
+      if (
+        !this.formData.question ||
+        !this.formData.categoryId ||
+        !this.formData.answers.some((a) => a.rightAnswer === 1)
+      ) {
         alert("Legalább egy válasznak helyesnek kell lennie!");
         return;
       }
