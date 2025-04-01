@@ -2,17 +2,18 @@
   <div class="my-container">
     <!-- Fő fejléc -->
     <header>
-      <div class="wrapper container-fluid">
+      <div class="wrapper container-fluid ">
         <!-- Logo / Weboldal neve -->
-        <div class="logo">
-          <RouterLink to="/">Historia</RouterLink>
-        </div>
+        
 
         <!-- Navigációs menü -->
         <nav
-          class="navbar navbar-expand-lg navbar-dark"
+          class="navbar navbar-expand-lg navbar-dark fixed-top"
           style="background-color: #8b5a2b"
         >
+        <div class="logo">
+          <RouterLink to="/">Historia</RouterLink>
+        </div>
           <button
             class="navbar-toggler"
             type="button"

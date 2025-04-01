@@ -58,7 +58,7 @@
 
       <QuestionsAnswersForm
         v-if="state == 'Create' || state == 'Update'"
-        :formData="questionsAnswers"
+        :formData="questionAnswer"
         @saveItem="saveItemHandler"
       />
     </Modal>
@@ -150,9 +150,9 @@ export default {
 .my-container {
   background-image: url("/images/parchment-texture.jpg");
   background-size: cover;
-  background-position: center;
+  /* background-position: center; */
   background-attachment: fixed;
-  height: 100vh;
+  height: calc(100vh - 0);
   width: 100vw;
   display: flex;
   justify-content: center;
@@ -168,7 +168,8 @@ export default {
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   border: 2px solid #8b5a2b;
-  transform: translateY(-10%);
+  margin-top: 100px;
+  /* transform: translateY(-10%); */
 }
 
 .title {
