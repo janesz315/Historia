@@ -18,9 +18,7 @@
           </select>
         </div>
         <!-- Create gomb -->
-        <OperationsCrud
-          @onClickCreateButton="onClickCreateButton"
-        />
+        <OperationsCrud @onClickCreateButton="onClickCreateButton" />
       </div>
 
       <!-- Témakörök listája -->
@@ -38,7 +36,7 @@
         />
       </div>
     </div>
-    
+
     <!-- Témakör hozzáadása modal -->
     <Modal
       :title="title"
