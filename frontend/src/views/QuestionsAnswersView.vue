@@ -1,20 +1,40 @@
 <template>
   <div>
     <div class="my-container">
-      <div class="admin-container">
+      <div class="category col-3 category-container">
+        <h2 class="title">Témakörök</h2>
+        <table class="table table-hover user-table">
+          <thead>
+            <!-- <tr>
+              <th scope="col">Témakörök</th>
+            </tr> -->
+          </thead>
+          <tbody>
+            <tr
+              v-for="category in categories"
+              :key="category.id"
+              @click="selectCategory(category.id)"
+              :class="{'selected-category': selectedCategoryId === category.id,}"
+            >
+              <td>{{ category.category }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="admin-container col-9">
         <h2 class="title">Kérdések kezelése</h2>
         <table class="table table-hover user-table">
           <thead>
             <tr>
               <th scope="col">Kérdés</th>
-              <th scope="col">Kérdéstípus</th>
-              <th scope="col">Válaszlehetőségek</th>
+              <th scope="col">Típus</th>
+              <th scope="col">Válaszok</th>
               <th scope="col">Műveletek</th>
             </tr>
           </thead>
           <tbody>
             <tr
-              v-for="questionAnswer in questionsAnswers"
+              v-for="questionAnswer in filteredQuestions"
               :key="questionAnswer.questionId"
             >
               <td>{{ questionAnswer.question }}</td>
@@ -23,7 +43,6 @@
                 <div
                   v-for="answer in questionAnswer.answers"
                   :key="answer.answerId"
-                  class="answer-item"
                 >
                   <i
                     v-if="answer.rightAnswer === 1"
@@ -59,6 +78,8 @@
       <QuestionsAnswersForm
         v-if="state == 'Create' || state == 'Update'"
         :formData="questionAnswer"
+        :categories="categories"
+        :questionTypes="questionTypes"
         @saveItem="saveItemHandler"
       />
     </Modal>
@@ -72,14 +93,15 @@ import { useAuthStore } from "../stores/useAuthStore";
 import QuestionsAnswersForm from "@/components/Forms/QuestionsAnswersForm.vue";
 import OperationsCrudQuestionsAnswers from "@/components/Modals/OperationsCrudQuestionsAnswers.vue";
 
-
-
 export default {
   components: { QuestionsAnswersForm, OperationsCrudQuestionsAnswers },
   data() {
     return {
       store: useAuthStore(),
       questionsAnswers: [],
+      categories: [],
+      questionTypes:[],
+      selectedCategoryId: null,
       messageYesNo: null,
       state: "Read", //CRUD: Create, Read, Update, Delete
       title: null,
@@ -87,6 +109,17 @@ export default {
       no: null,
       size: null,
     };
+  },
+  computed:{
+    // Szűrt kérdések
+    filteredQuestions() {
+      if (this.selectedCategoryId) {
+        return this.questionsAnswers.filter(
+          (question) => question.categoryId === this.selectedCategoryId
+        );
+      }
+      return this.questionsAnswers;
+    },
   },
   methods: {
     async fetchQuestionsAnswers() {
@@ -102,10 +135,48 @@ export default {
           ...category,
         }));
       } catch (error) {
+        console.error("Hiba a kérdések és válaszok lekérésekor:", error);
+        alert("A kérdések és válaszok betöltése sikertelen.");
+      }
+    },
+
+    async fetchCategories() {
+      try {
+        const response = await axios.get(`${BASE_URL}/categories`, {
+          headers: { Authorization: `Bearer ${this.store.token}` },
+        });
+
+        this.categories = response.data.data.map((category) => ({
+          ...category,
+        }));
+      } catch (error) {
         console.error("Hiba a kategóriák lekérésekor:", error);
         alert("Kategóriák betöltése sikertelen.");
       }
     },
+    
+    async fetchQuestionTypes(){
+      try {
+        const response = await axios.get(`${BASE_URL}/questionTypes`, {
+          headers: { Authorization: `Bearer ${this.store.token}` },
+        });
+
+        this.questionTypes = response.data.data.map((questionType) => ({
+          ...questionType,
+        }));
+      } catch (error) {
+        console.error("Hiba a kérdéstípusok lekérésekor:", error);
+        alert("Kérdéstípusok betöltése sikertelen.");
+      }
+
+    },
+
+    // Kategória kiválasztás
+    selectCategory(categoryId) {
+      this.selectedCategoryId = categoryId;
+    },
+
+    
 
     onClickDeleteButton(questionAnswer) {
       // if (!category || !category.id) {
@@ -142,18 +213,20 @@ export default {
   },
   mounted() {
     this.fetchQuestionsAnswers();
+    this.fetchCategories();
+    this.fetchQuestionTypes();
   },
 };
 </script>
   
-  <style scoped>
+<style scoped>
 .my-container {
   background-image: url("/images/parchment-texture.jpg");
   background-size: cover;
   /* background-position: center; */
   background-attachment: fixed;
-  height: calc(100vh - 0);
-  width: 100vw;
+  /* height: 100vh; */
+  /* width: 100vw; */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -162,13 +235,15 @@ export default {
 }
 
 .admin-container {
-  max-width: 900px;
+  max-height: 600px;
+  max-width: 1000px;
   background: rgba(255, 248, 220, 0.9);
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   border: 2px solid #8b5a2b;
   margin-top: 100px;
+  margin-bottom: 200px;
   /* transform: translateY(-10%); */
 }
 
@@ -190,19 +265,38 @@ export default {
   padding: 10px;
   border: 2px solid #8b5a2b;
   text-align: center;
-  color: #5a3e1b;
+  /* color: #5a3e1b; */
 }
 
 .user-table th {
   background-color: #8b5a2b;
   color: white;
 }
-.answer-item {
-  margin-bottom: 5px;
-}
-
 .right-answer-icon {
   margin-right: 5px;
   color: green;
+}
+
+.category-container {
+  max-height: 600px;
+  max-width: 1000px;
+  background: rgba(255, 248, 220, 0.9);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 2px solid #8b5a2b;
+  margin-top: 100px;
+  margin-bottom: 200px;
+  overflow: auto;
+  margin-right: 10px;
+}
+
+.selected-category {
+  background-color: #b8a618 !important;   /* Világos sárga háttér a kiválasztott kategóriához */
+  cursor: pointer;
+}
+
+.selected-category:hover {
+  background-color: #d63215;   /* Kattintásra sötétebb árnyalat */
 }
 </style>
