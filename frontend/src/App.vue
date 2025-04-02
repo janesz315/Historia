@@ -69,6 +69,7 @@
                 >
               </li>
 
+              <!-- Admin -->
               <li
                 v-if="stateAuth.user && stateAuth.roleId === 1"
                 class="nav-item"
