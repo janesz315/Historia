@@ -1,6 +1,7 @@
 <template>
   <form @submit.prevent="onClickSubmit" class="needs-validation" novalidate>
     <!-- Kérdés -->
+   
     <div class="mb-3">
       <label for="question" class="form-label">Kérdés:</label>
       <input
@@ -133,6 +134,11 @@ export default {
 //     deep: true, // Mivel komplex objektum, érdemes deep watch-ot alkalmazni
 //   },
 // }, 
+
+mounted(){
+    console.log("Formdata:", this.formData);
+    
+},
   methods: {
     addAnswer() {
       this.formData.answers.push({

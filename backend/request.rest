@@ -12,6 +12,10 @@ get {{host}}/api/
 get {{host}}/api/getQuestionsWithTypesAndAnswers
 Accept: application/json
 
+### get questions and answersbyId
+get {{host}}/api/getQuestionsWithTypesAndAnswers/1
+Accept: application/json
+
 
 # ----------------- login -------------------
 ### login

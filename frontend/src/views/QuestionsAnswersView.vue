@@ -3,6 +3,7 @@
     <div class="my-container">
       <div class="category col-3 category-container">
         <h2 class="title">Témakörök</h2>
+        <!--#region Témakörök -->
         <table class="table table-hover user-table">
           <thead>
             <!-- <tr>
@@ -10,16 +11,18 @@
             </tr> -->
           </thead>
           <tbody>
-            <tr
+            <tr class="my-cursor"
               v-for="category in categories"
               :key="category.id"
               @click="selectCategory(category.id)"
-              :class="{'selected-category': selectedCategoryId === category.id,}"
+              :class="{'table-danger': selectedCategoryId === category.id,}"
             >
               <td>{{ category.category }}</td>
             </tr>
           </tbody>
         </table>
+        <!--#endregion /Témakörök -->
+
       </div>
       <div class="admin-container col-9">
         <h2 class="title">Kérdések kezelése</h2>
@@ -45,7 +48,7 @@
                   :key="answer.answerId"
                 >
                   <i
-                    v-if="answer.rightAnswer === 1"
+                    v-if="answer.rightAnswer === true"
                     class="bi bi-check-lg right-answer-icon"
                   ></i>
                   {{ answer.answer }}
@@ -77,11 +80,11 @@
 
       <QuestionsAnswersForm
         v-if="state === 'Create' || state === 'Update'"
-        :formData="questionAnswer"
+        :formData="questionAnswers"
         :categories="categories"
         :questionTypes="questionTypes"
-        @saveItem="saveItemHandler"
-/>
+        />
+        <!-- @saveItem="saveItemHandler" -->
     </Modal>
   </div>
 </template>
@@ -99,6 +102,7 @@ export default {
     return {
       store: useAuthStore(),
       questionsAnswers: [],
+      questionAnswers: [],
       categories: [],
       questionTypes:[],
       selectedCategoryId: null,
@@ -134,6 +138,24 @@ export default {
         this.questionsAnswers = response.data.data.map((category) => ({
           ...category,
         }));
+      } catch (error) {
+        console.error("Hiba a kérdések és válaszok lekérésekor:", error);
+        alert("A kérdések és válaszok betöltése sikertelen.");
+      }
+    },
+
+    async fetchQuestionsAnswersById(id) {
+      try {
+        const response = await axios.get(
+          `${BASE_URL}/getQuestionsWithTypesAndAnswers/${id}`,
+          {
+            headers: { Authorization: `Bearer ${this.store.token}` },
+          }
+        );
+
+        this.questionAnswers=  response.data.data[0];
+        console.log("Adatok: ", this.questionAnswers);
+        
       } catch (error) {
         console.error("Hiba a kérdések és válaszok lekérésekor:", error);
         alert("A kérdések és válaszok betöltése sikertelen.");
@@ -191,7 +213,7 @@ export default {
       this.no = "Nem";
       this.size = null;
       // this.selectedRowId = questionAnswer.id;
-      // console.log(this.selectedRowId);
+      console.log(this.selectedRowId);
     },
     onClickUpdateButton(questionAnswer) {
       this.state = "Update";
@@ -199,9 +221,14 @@ export default {
       this.yes = null;
       this.no = "Mégsem";
       this.size = "lg";
-      this.questionAnswer = { ...questionAnswer };
-      // this.selectedRowId = questionAnswer.questionId;
-      
+      this.selectedRowId = questionAnswer.questionId;
+      this.questionAnswer = this.fetchQuestionsAnswersById(this.selectedRowId);
+  //     this.fetchQuestionsAnswersById(this.selectedRowId).then((data) => {
+  //   this.questionAnswer = data; // Frissítjük a questionAnswer-t
+  //   console.log(this.questionAnswer); // Ellenőrzés, hogy valóban bejönnek az adatok
+  // });
+      // this.questionAnswer = {...questionAnswer}
+      console.log(this.selectedRowId);
       
     },
 
@@ -299,7 +326,11 @@ export default {
 
 .selected-category {
   background-color: #b8a618 !important;   /* Világos sárga háttér a kiválasztott kategóriához */
+}
+
+.my-cursor{
   cursor: pointer;
+  
 }
 
 .selected-category:hover {

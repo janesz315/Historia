@@ -22,7 +22,8 @@ Route::get('/', function () {
 });
 
 //QUERIES
-Route::get('/getQuestionsWithTypesAndAnswers', [QueryController::class, 'getQuestionsWithTypesAndAnswers']);
+Route::get('/getQuestionsWithTypesAndAnswers', [QueryController::class, 'index']);
+Route::get('/getQuestionsWithTypesAndAnswers/{id}', [QueryController::class, 'show']);
 
 
 

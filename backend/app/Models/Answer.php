@@ -13,4 +13,12 @@ class Answer extends Model
     {
         return $this->belongsTo(Question::class, 'questionId');
     }
+
+    protected function casts(): array
+    {
+        return [
+            'rightAnswer' => 'boolean'
+                                
+        ];
+    }
 }
