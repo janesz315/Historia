@@ -56,7 +56,7 @@
       class="btn btn-success"
       @click="onClickSaveQuestionButton"
       :disabled="
-        !formData.question || !formData.categoryId || !questionTypeId
+        !formData.question || !formData.categoryId || !formData.questionTypeId
       "
     >
       Mentés
@@ -104,42 +104,35 @@
         Törlés
       </button>
     </div>
-
-    <!-- Végleges mentés -->
-    <div class="mb-3">
-      <button
-        type="button"
-        class="btn btn-primary"
-        @click="submitAll"
-        :disabled="
-          !formData.question ||
-          !formData.categoryId ||
-          !formData.answers.some((answer) => answer.rightAnswer)
-        "
-      >
-        Véglegesítés
-      </button>
-    </div>
   </form>
 </template>
 
 <script>
 export default {
-  props: ["categories", "existingData", "questionTypes"],
+  props: ["categories", "formData", "questionTypes"],
   emits: ["saveItem", "resetForm"],
 
   data() {
-    return {
-      formData: {
-        question: this.existingData?.question || "",
-        categoryId: this.existingData?.categoryId || null,
-        answers: this.existingData?.answers || [
-          { answerId: 1, answer: "", rightAnswer: 0 },
-        ],
-      },
-    };
-  },
-
+  return {
+    // formData: {
+    //   questionId: this.formData?.questionId || null,
+    //   question: this.formData?.question || "",
+    //   categoryId: this.formData?.categoryId || null,
+    //   questionTypeId: this.formData?.questionTypeId || null,
+    //   answers: this.formData?.answers || [
+    //     { answerId: 1, answer: "", rightAnswer: 0 },
+    //   ],
+    // },
+  };
+},
+// watch:{
+//   formData: {
+//     handler(newVal) {
+//       console.log("Frissített formData:", newVal);
+//     },
+//     deep: true, // Mivel komplex objektum, érdemes deep watch-ot alkalmazni
+//   },
+// }, 
   methods: {
     addAnswer() {
       this.formData.answers.push({

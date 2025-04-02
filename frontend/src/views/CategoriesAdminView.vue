@@ -285,10 +285,6 @@ export default {
 
       this.modal.hide(); // Ha a modalnak van hide() metódusa
     },
-
-    goToPage(page) {
-      this.currentPage = page;
-    },
   },
 };
 </script>

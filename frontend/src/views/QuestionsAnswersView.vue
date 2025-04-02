@@ -76,12 +76,12 @@
       </div>
 
       <QuestionsAnswersForm
-        v-if="state == 'Create' || state == 'Update'"
+        v-if="state === 'Create' || state === 'Update'"
         :formData="questionAnswer"
         :categories="categories"
         :questionTypes="questionTypes"
         @saveItem="saveItemHandler"
-      />
+/>
     </Modal>
   </div>
 </template>
@@ -190,7 +190,8 @@ export default {
       this.yes = "Igen";
       this.no = "Nem";
       this.size = null;
-      this.selectedRowId = questionAnswer.id;
+      // this.selectedRowId = questionAnswer.id;
+      // console.log(this.selectedRowId);
     },
     onClickUpdateButton(questionAnswer) {
       this.state = "Update";
@@ -198,8 +199,10 @@ export default {
       this.yes = null;
       this.no = "Mégsem";
       this.size = "lg";
-      this.questionAnswer = { ...questionAnswer }; // Beállítjuk a category-t, nem item
-      this.selectedRowId = questionAnswer.id;
+      this.questionAnswer = { ...questionAnswer };
+      // this.selectedRowId = questionAnswer.questionId;
+      
+      
     },
 
     onClickCreateButton() {
@@ -211,6 +214,9 @@ export default {
       this.questionAnswer = new QuestionAnswer();
     },
   },
+  // closeModal() {
+  //   this.questionAnswer = null; // Vagy az alapértelmezett érték, ha van
+  // },
   mounted() {
     this.fetchQuestionsAnswers();
     this.fetchCategories();
