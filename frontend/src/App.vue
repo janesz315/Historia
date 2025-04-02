@@ -69,13 +69,12 @@
                 >
               </li>
 
+              <!-- Admin -->
               <li
                 v-if="stateAuth.user && stateAuth.roleId === 1"
                 class="nav-item"
               >
-                <RouterLink to="/admin" class="nav-link"
-                  >Admin</RouterLink
-                >
+                <RouterLink to="/admin" class="nav-link">Admin</RouterLink>
               </li>
 
               <li
@@ -88,15 +87,32 @@
               </li>
 
               <!-- Bejelentkezés és regisztráció -->
-              <li v-if="!stateAuth.user" class="nav-item">
-                <RouterLink to="/bejelentkezes" class="nav-link"
-                  >Bejelentkezés</RouterLink
+              <li v-if="!stateAuth.user" class="nav-item dropdown">
+                <a
+                  class="nav-link dropdown-toggle"
+                  href="#"
+                  id="userDropdown"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
                 >
-              </li>
-              <li v-if="!stateAuth.user" class="nav-item">
-                <RouterLink to="/regisztracio" class="nav-link"
-                  >Regisztráció</RouterLink
+                  <i class="bi bi-person"></i>
+                </a>
+                <ul
+                  class="dropdown-menu dropdown-menu-end"
+                  aria-labelledby="userDropdown"
                 >
+                  <li>
+                    <RouterLink to="/bejelentkezes" class="dropdown-item"
+                      >Bejelentkezés</RouterLink
+                    >
+                  </li>
+                  <li>
+                    <RouterLink to="/regisztracio" class="dropdown-item"
+                      >Regisztráció</RouterLink
+                    >
+                  </li>
+                </ul>
               </li>
 
               <!-- Dropdown menü a felhasználónévvel -->
@@ -179,6 +195,10 @@ export default {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+.bi {
+  margin-right: 5px;
 }
 
 /* Dropdown menü testreszabása */

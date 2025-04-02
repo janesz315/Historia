@@ -54,9 +54,9 @@
               <button
                 v-if="stateAuth.roleId === 1"
                 @click="openSourceEditModal(index)"
-                class="btn btn-sm btn-outline-warning"
+                class="btn btn-sm btn-outline-primary"
               >
-                <i class="bi bi-pencil"></i> Szerkesztés
+                <i class="bi bi-pencil"></i>
               </button>
             </li>
           </ul>
@@ -83,11 +83,7 @@
     <!-- Forrás szerkesztő modal -->
     <SourceEditModal
       v-if="editingSource !== null"
-      :localSource="
-        editingSource === -1
-          ? { sourceLink: '', note: '' }
-          : sources[editingSource]
-      "
+      :localSource="editingSource"
       @saveItem="saveSource"
       @close="editingSource = null"
     />
@@ -127,34 +123,48 @@ export default {
       this.$refs.editModalRef.openModal();
     },
     openSourceEditModal(index) {
-      this.editingSource = index;
-    },
-    saveSource(updatedSource) {
-      console.log("Mentés indítása:", updatedSource); // Debugging, hogy lásd a kitöltött adatokat
+      if (index === -1) {
+        this.editingSource = { sourceLink: "", note: "", id: null }; // Új forrás inicializálása
+      } else {
+        const selectedSource = this.sources[index];
 
-      // Validáció
-      if (!updatedSource.sourceLink || !updatedSource.note) {
-        console.error("A forrás linkje és a megjegyzés nem lehet üres!");
-        return; // Ha üres, ne küldd el
+        if (!selectedSource) {
+          console.error("Hiba: Érvénytelen forrás index!", index);
+          return;
+        }
+
+        this.editingSource = { ...selectedSource }; // Másolat készítése
       }
 
-      // Küldés az API-nak
+      console.log("Modalnak átadott adat:", this.editingSource);
+    },
+    saveSource(updatedSource) {
+      console.log("📩 Fogadott adat a saveSource-ban:", updatedSource);
+
+      if (!updatedSource || !updatedSource.sourceLink || !updatedSource.note) {
+        console.error("❌ Hiba: Hiányzó adatok!", updatedSource);
+        return;
+      }
+
       axios
         .patch(`${BASE_URL}/sources/${updatedSource.id}`, updatedSource)
         .then((response) => {
-          console.log("Válasz az API-tól:", response.data);
-          // Forrás frissítése
+          console.log("✅ Válasz az API-tól:", response.data);
+
+          // Frissítjük a forráslistát
           const index = this.sources.findIndex(
             (source) => source.id === updatedSource.id
           );
           if (index !== -1) {
             this.sources[index] = { ...updatedSource };
           }
+
+          // Bezárjuk a modalt
+          this.editingSource = null;
         })
         .catch((error) => {
-          console.error("Hiba történt a forrás frissítésekor:", error);
+          console.error("❌ Hiba történt a forrás frissítésekor:", error);
         });
-        console.log("Szülő komponens saveSource:", updatedSource);
     },
   },
 };

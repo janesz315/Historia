@@ -43,7 +43,9 @@
           >
             Mégse
           </button>
-          <button type="submit" class="btn btn-success">Mentés</button>
+          <button @click="onClickSubmit" type="submit" class="btn btn-success">
+            Mentés
+          </button>
         </div>
       </div>
     </div>
@@ -54,15 +56,21 @@
 export default {
   props: ["localSource"],
   emits: ["saveItem", "close"],
-  data() {
-    return {
-      localSource: { ...this.localSource }, // Klónozva a prop, hogy ne módosítsa közvetlenül az eredetit
-    };
-  },
   methods: {
     onClickSubmit() {
-      console.log("Mentés indítása:", this.localSource); // Debugging, hogy lásd az adatokat
-      this.$emit("saveItem", this.localSource); // Esemény küldése a szülő komponensnek
+      console.log("Mentés gombra kattintottam!");
+      console.log("Küldött adat:", this.localSource);
+
+      if (!this.localSource || typeof this.localSource !== "object") {
+        console.error(
+          "Hiba: A küldött adat nem létezik vagy érvénytelen!",
+          this.localSource
+        );
+        return;
+      }
+
+      this.$emit("saveItem", { ...this.localSource }); // Esemény kibocsátása
+      console.log("saveItem esemény elküldve!");
     },
   },
 };
