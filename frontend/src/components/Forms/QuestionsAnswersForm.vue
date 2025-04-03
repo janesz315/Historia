@@ -2,16 +2,38 @@
   <form @submit.prevent="onClickSubmit" class="needs-validation" novalidate>
     <!-- Kérdés -->
    
-    <div class="mb-3">
-      <label for="question" class="form-label">Kérdés:</label>
-      <input
-        type="text"
-        id="question"
-        class="form-control"
-        v-model="formData.question"
-        required
-      />
-    </div>
+    <div class="d-flex mb-3">
+  <div class="me-2 col-8">
+    <label for="question" class="form-label">Kérdés:</label>
+    <input
+      type="text"
+      id="question"
+      class="form-control"
+      
+      v-model="formData.question"
+      required
+    />
+  </div>
+
+  <div class="col-4">
+    <label for="questionCategory" class="form-label">Típus:</label>
+    <select
+      id="category"
+      class="form-select"
+      v-model="formData.questionTypeId"
+      required
+    >
+      <option disabled value="">Válassz típust</option>
+      <option
+        v-for="questionType in questionTypes"
+        :key="questionType.id"
+        :value="questionType.id"
+      >
+        {{ questionType.questionCategory }}
+      </option>
+    </select>
+  </div>
+</div>
 
     <!-- Kategória választás -->
     <div class="mb-3">
@@ -33,24 +55,7 @@
       </select>
     </div>
 
-    <div class="mb-3">
-      <label for="questionCategory" class="form-label">Típus:</label>
-      <select
-        id="category"
-        class="form-select"
-        v-model="formData.questionTypeId"
-        required
-      >
-        <option disabled value="">Válassz típust</option>
-        <option
-          v-for="questionType in questionTypes"
-          :key="questionType.id"
-          :value="questionType.id"
-        >
-          {{ questionType.questionCategory }}
-        </option>
-      </select>
-    </div>
+    
 
     <button
       type="submit"
