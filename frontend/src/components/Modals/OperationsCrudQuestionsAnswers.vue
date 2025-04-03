@@ -1,10 +1,10 @@
 <template>
   <div>
     <!-- Csak a törlés és módosítás gombok a kártya címénél -->
-    <div v-if="questionAnswer" class="d-inline d-flex justify-content-between align-items-center" >
+    <div v-if="questionAnswer" class="d-flex flex-column">
       <button
         type="button"
-        class="btn btn-outline-danger"
+        class="btn btn-outline-danger d-block mb-2"
         data-bs-toggle="modal"
         data-bs-target="#modal"
         @click="onClickDeleteButton"
@@ -13,7 +13,7 @@
       </button>
       <button
         type="button"
-        class="btn btn-outline-primary ms-2"
+        class="btn btn-outline-primary d-block"
         data-bs-toggle="modal"
         data-bs-target="#modal"
         @click="onClickUpdateButton"

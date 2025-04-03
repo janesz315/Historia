@@ -26,7 +26,7 @@
       </div>
       <div class="admin-container col-9">
         <h2 class="title">Kérdések kezelése</h2>
-        <OperationsCrudQuestionsAnswers
+        <OperationsCrudQuestionsAnswers class="mb-2"
         @onClickCreateButton="onClickCreateButton"/>
         <table class="table table-hover user-table">
           <thead>
@@ -34,7 +34,7 @@
               <th scope="col">Kérdés</th>
               <th scope="col">Típus</th>
               <th scope="col">Válaszok</th>
-              <th scope="col">Műveletek</th>
+              <th scope="col">M</th>
             </tr>
           </thead>
           <tbody>
@@ -93,6 +93,32 @@
 </template>
   
   <script>
+
+class Question {
+  constructor(question = null, id = null, questionTypeId=null, categoryId=null) { 
+    
+    //Itt nem kell létrehozni a változót
+    //JS nem erősen típusos
+    //Dekaráció pongyola: nem is kell, csak leírjuk
+    this.id = id;
+    this.question = question;
+    this.questionTypeId = questionTypeId;
+    this.categoryId = categoryId;
+  }
+}
+
+class Answer {
+  constructor(id = null, answer = null, questionId = null, rightAnswer = null) {
+    
+    //Itt nem kell létrehozni a változót
+    //JS nem erősen típusos
+    //Dekaráció pongyola: nem is kell, csak leírjuk
+    this.id = id;
+    this.answer = answer;
+    this.questionId = questionId;
+    this.rightAnswer = rightAnswer;
+  }
+}
 import axios from "axios";
 import { BASE_URL } from "../helpers/baseUrls";
 import { useAuthStore } from "../stores/useAuthStore";
@@ -116,8 +142,12 @@ export default {
       yes: null,
       no: null,
       size: null,
+      question: new Question(),
+      answer: new Answer(),
     };
   },
+
+  
   computed:{
     // Szűrt kérdések
     filteredQuestions() {
@@ -210,6 +240,41 @@ export default {
       }
     },
 
+    async createQuestion(formData) {
+      try {
+        const response = await axios.post(
+          `${BASE_URL}/questions`,
+          formData,
+          {
+            headers: { Authorization: `Bearer ${this.store.token}` },
+          }
+        );
+        console.log("Új kérdés mentése sikeres:", response);
+        this.fetchQuestionsAnswers();
+        // this.state = "Read";
+      } catch (error) {
+        console.error("Hiba történt a kérdés mentésekor:", error);
+      }
+    },
+
+    async updateQuestion(formData) {
+      try {
+        const response = await axios.patch(
+          `${BASE_URL}/questions/${this.selectedRowId}`,
+          formData,
+          {
+            headers: { Authorization: `Bearer ${this.store.token}` },
+          }
+        );
+        console.log("Kérdés frissítése sikeres:", response);
+        this.fetchQuestionsAnswers();
+        // this.state = "Read";
+      } catch (error) {
+        console.error("Hiba történt a kérdés frissítésekor:", error);
+      }
+    },
+
+
     
 
     onClickDeleteButton(questionAnswer) {
@@ -236,11 +301,6 @@ export default {
       this.size = "lg";
       this.selectedRowId = questionAnswer.questionId;
       this.questionAnswer = this.fetchQuestionsAnswersById(this.selectedRowId);
-  //     this.fetchQuestionsAnswersById(this.selectedRowId).then((data) => {
-  //   this.questionAnswer = data; // Frissítjük a questionAnswer-t
-  //   console.log(this.questionAnswer); // Ellenőrzés, hogy valóban bejönnek az adatok
-  // });
-      // this.questionAnswer = {...questionAnswer}
       console.log(this.selectedRowId);
       
     },
@@ -252,7 +312,8 @@ export default {
       this.no = "Mégsem";
       this.size = "lg";
       this.state = "Create";
-      this.questionAnswers = { question: "", answers: [], categoryId: null, questionTypeId: null };
+      this.question= new Question();
+      this.answer= new Answer();
     },
   },
   // closeModal() {

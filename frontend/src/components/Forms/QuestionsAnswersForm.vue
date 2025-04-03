@@ -1,71 +1,68 @@
 <template>
   <form @submit.prevent="onClickSubmit" class="needs-validation" novalidate>
     <!-- Kérdés -->
-   
-    <div class="d-flex mb-3">
-  <div class="me-2 col-8">
-    <label for="question" class="form-label">Kérdés:</label>
-    <input
-      type="text"
-      id="question"
-      class="form-control"
-      
-      v-model="formData.question"
-      required
-    />
-  </div>
 
-  <div class="col-4">
-    <label for="questionCategory" class="form-label">Típus:</label>
-    <select
-      id="category"
-      class="form-select"
-      v-model="formData.questionTypeId"
-      required
-    >
-      <option disabled value="">Válassz típust</option>
-      <option
-        v-for="questionType in questionTypes"
-        :key="questionType.id"
-        :value="questionType.id"
-      >
-        {{ questionType.questionCategory }}
-      </option>
-    </select>
-  </div>
-</div>
+    <div class="d-flex mb-3">
+      <div class="me-2 col-8">
+        <label for="question" class="form-label">Kérdés:</label>
+        <input
+          type="text"
+          id="question"
+          class="form-control"
+          v-model="formData.question"
+          required
+        />
+      </div>
+
+      <div class="col-4">
+        <label for="questionCategory" class="form-label">Típus:</label>
+        <select
+          id="category"
+          class="form-select"
+          v-model="formData.questionTypeId"
+          required
+        >
+          <option disabled value="">Válassz típust</option>
+          <option
+            v-for="questionType in questionTypes"
+            :key="questionType.id"
+            :value="questionType.id"
+          >
+            {{ questionType.questionCategory }}
+          </option>
+        </select>
+      </div>
+    </div>
 
     <!-- Kategória választás -->
     <div class="mb-3">
-  <label for="category" class="form-label">Téma:</label>
-  <select
-    id="category"
-    class="form-select"
-    v-model="formData.categoryId"
-    required
-    style="max-height: 200px; overflow-y: auto;"
-  >
-    <option disabled value="">Válassz témakört!</option>
-    <option
-      v-for="category in categories"
-      :key="category.id"
-      :value="category.id"
-    >
-      {{ category.category }}
-    </option>
-  </select>
-</div>
-    
+      <label for="category" class="form-label">Téma:</label>
+      <select
+        id="category"
+        class="form-select"
+        v-model="formData.categoryId"
+        required
+        style="max-height: 200px; overflow-y: auto"
+      >
+        <option disabled value="">Válassz témakört!</option>
+        <option
+          v-for="category in categories"
+          :key="category.id"
+          :value="category.id"
+        >
+          {{ category.category }}
+        </option>
+      </select>
+    </div>
 
     <button
       type="submit"
       class="btn btn-success"
-      
       :disabled="
         !formData.question || !formData.categoryId || !formData.questionTypeId
       "
     >
-    {{ isCreate ? 'Mentés' : 'Frissítés' }}
+      {{ isCreate ? "Mentés" : "Frissítés" }}
     </button>
 
     <!-- Válaszok -->
@@ -94,48 +91,27 @@
         + Válasz hozzáadása
       </button>
     </div>
-
   </form>
 </template>
 
 <script>
 export default {
   props: ["categories", "formData", "questionTypes", "isCreate"],
-  emits: ["saveItem", "resetForm"],
+  emits: ["saveItem", "resetForm", "addAnswer"],
 
   data() {
-  return {
-    // formData: {
-    //   questionId: this.formData?.questionId || null,
-    //   question: this.formData?.question || "",
-    //   categoryId: this.formData?.categoryId || null,
-    //   questionTypeId: this.formData?.questionTypeId || null,
-    //   answers: this.formData?.answers || [
-    //     { answerId: 1, answer: "", rightAnswer: 0 },
-    //   ],
-    // },
-  };
-},
-// watch:{
-//   formData: {
-//     handler(newVal) {
-//       console.log("Frissített formData:", newVal);
-//     },
-//     deep: true, // Mivel komplex objektum, érdemes deep watch-ot alkalmazni
-//   },
-// }, 
+    return {
+    };
+  },
 
-mounted(){
-    console.log("Formdata:", this.formData);
-    
-},
   methods: {
     addAnswer() {
-      this.formData.answers.push({
-        answerId: Date.now(),
-        answer: "",
-        rightAnswer: 0,
-      });
+      this.$emit("addAnswer");
+      // this.formData.answers.push({
+      //   answerId: Date.now(),
+      //   answer: "",
+      //   rightAnswer: 0,
+      // });
     },
 
     resetForm() {
