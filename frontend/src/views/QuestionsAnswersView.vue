@@ -26,6 +26,8 @@
       </div>
       <div class="admin-container col-9">
         <h2 class="title">Kérdések kezelése</h2>
+        <OperationsCrudQuestionsAnswers
+        @onClickCreateButton="onClickCreateButton"/>
         <table class="table table-hover user-table">
           <thead>
             <tr>
@@ -59,7 +61,7 @@
                   :questionAnswer="questionAnswer"
                   @onClickDeleteButton="onClickDeleteButton"
                   @onClickUpdateButton="onClickUpdateButton"
-                  @onClickCreateButton="onClickCreateButton"
+                  
                 />
               </td>
             </tr>
@@ -80,11 +82,12 @@
 
       <QuestionsAnswersForm
         v-if="state === 'Create' || state === 'Update'"
+        :is-create="isCreate"
         :formData="questionAnswers"
         :categories="categories"
         :questionTypes="questionTypes"
+        @saveItem="saveItemHandler"
         />
-        <!-- @saveItem="saveItemHandler" -->
     </Modal>
   </div>
 </template>
@@ -105,6 +108,7 @@ export default {
       questionAnswers: [],
       categories: [],
       questionTypes:[],
+      isCreate: true,
       selectedCategoryId: null,
       messageYesNo: null,
       state: "Read", //CRUD: Create, Read, Update, Delete
@@ -198,6 +202,14 @@ export default {
       this.selectedCategoryId = categoryId;
     },
 
+    saveItemHandler(formData) {
+      if (this.state === "Create") {
+        this.createQuestion(formData);
+      } else if (this.state === "Update") {
+        this.updateQuestion(formData);
+      }
+    },
+
     
 
     onClickDeleteButton(questionAnswer) {
@@ -218,6 +230,7 @@ export default {
     onClickUpdateButton(questionAnswer) {
       this.state = "Update";
       this.title = "Kérdés módosítása";
+      this.isCreate = false;
       this.yes = null;
       this.no = "Mégsem";
       this.size = "lg";
@@ -233,12 +246,13 @@ export default {
     },
 
     onClickCreateButton() {
+      this.isCreate = true;
       this.title = "Új kérdés bevitele";
       this.yes = null;
       this.no = "Mégsem";
       this.size = "lg";
       this.state = "Create";
-      this.questionAnswer = new QuestionAnswer();
+      this.questionAnswers = { question: "", answers: [], categoryId: null, questionTypeId: null };
     },
   },
   // closeModal() {
@@ -324,16 +338,9 @@ export default {
   margin-right: 10px;
 }
 
-.selected-category {
-  background-color: #b8a618 !important;   /* Világos sárga háttér a kiválasztott kategóriához */
-}
-
 .my-cursor{
   cursor: pointer;
   
 }
 
-.selected-category:hover {
-  background-color: #d63215;   /* Kattintásra sötétebb árnyalat */
-}
 </style>

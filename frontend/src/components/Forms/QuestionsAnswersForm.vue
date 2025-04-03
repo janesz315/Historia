@@ -37,35 +37,35 @@
 
     <!-- Kategória választás -->
     <div class="mb-3">
-      <label for="category" class="form-label">Téma:</label>
-      <select
-        id="category"
-        class="form-select"
-        v-model="formData.categoryId"
-        required
-      >
-        <option disabled value="">Válassz témakört!</option>
-        <option
-          v-for="category in categories"
-          :key="category.id"
-          :value="category.id"
-        >
-          {{ category.category }}
-        </option>
-      </select>
-    </div>
-
+  <label for="category" class="form-label">Téma:</label>
+  <select
+    id="category"
+    class="form-select"
+    v-model="formData.categoryId"
+    required
+    style="max-height: 200px; overflow-y: auto;"
+  >
+    <option disabled value="">Válassz témakört!</option>
+    <option
+      v-for="category in categories"
+      :key="category.id"
+      :value="category.id"
+    >
+      {{ category.category }}
+    </option>
+  </select>
+</div>
     
 
     <button
       type="submit"
       class="btn btn-success"
-      @click="onClickSaveQuestionButton"
+      
       :disabled="
         !formData.question || !formData.categoryId || !formData.questionTypeId
       "
     >
-      Mentés
+    {{ isCreate ? 'Mentés' : 'Frissítés' }}
     </button>
 
     <!-- Válaszok -->
@@ -95,27 +95,12 @@
       </button>
     </div>
 
-    <!-- Mentés és törlés -->
-    <div class="mb-3">
-      <button
-        type="submit"
-        class="btn btn-success"
-        :disabled="
-          !formData.question || !formData.categoryId || !formData.answers.length
-        "
-      >
-        Mentés
-      </button>
-      <button type="button" class="btn btn-danger" @click="resetForm">
-        Törlés
-      </button>
-    </div>
   </form>
 </template>
 
 <script>
 export default {
-  props: ["categories", "formData", "questionTypes"],
+  props: ["categories", "formData", "questionTypes", "isCreate"],
   emits: ["saveItem", "resetForm"],
 
   data() {
@@ -162,21 +147,9 @@ mounted(){
       if (
         !this.formData.question ||
         !this.formData.categoryId ||
-        !this.formData.answers.length
+        !this.formData.questionTypeId
       ) {
         alert("Kérlek, töltsd ki az összes mezőt!");
-        return;
-      }
-      this.$emit("saveItem", this.formData);
-    },
-
-    submitAll() {
-      if (
-        !this.formData.question ||
-        !this.formData.categoryId ||
-        !this.formData.answers.some((a) => a.rightAnswer === 1)
-      ) {
-        alert("Legalább egy válasznak helyesnek kell lennie!");
         return;
       }
       this.$emit("saveItem", this.formData);
@@ -215,4 +188,10 @@ input[type="text"]:invalid {
 input[type="text"]:valid {
   border-color: green;
 }
+
+/* .form-select {
+  max-width: 300px;
+  word-wrap: break-word;
+  white-space: normal;
+} */
 </style>
