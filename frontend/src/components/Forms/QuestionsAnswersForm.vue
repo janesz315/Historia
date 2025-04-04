@@ -57,7 +57,7 @@
 
     <button
       type="submit"
-      class="btn btn-success"
+      class="btn btn-success mb-2"
       :disabled="
         !formData.question || !formData.categoryId || !formData.questionTypeId
       "
@@ -82,12 +82,21 @@
         <div class="input-group-text">
           <input type="checkbox" v-model="answer.rightAnswer" />
         </div>
+        <button
+        type="button"
+        class="btn btn-danger btn-sm"
+        @click="removeAnswer(index)"
+      >
+      <i class="bi bi-trash3"></i>
+      </button>
       </div>
     </div>
 
     <!-- Új válasz hozzáadás gomb -->
     <div class="mb-3">
-      <button type="button" class="btn btn-secondary" @click="addAnswer">
+      <button type="button" class="btn btn-secondary" @click="addAnswer" :disabled="
+        !formData.question || !formData.categoryId || !formData.questionTypeId
+      ">
         + Válasz hozzáadása
       </button>
     </div>
@@ -114,20 +123,20 @@ export default {
       // });
     },
 
+    removeAnswer(index) {
+      this.formData.answers.splice(index, 1);  // Eltávolítja a választ a tömbből
+    },
+
     resetForm() {
       this.$emit("resetForm");
     },
 
     onClickSubmit() {
       // Ellenőrizzük, hogy van-e kérdés és válaszok
-      if (
-        !this.formData.question ||
-        !this.formData.categoryId ||
-        !this.formData.questionTypeId
-      ) {
-        alert("Kérlek, töltsd ki az összes mezőt!");
-        return;
-      }
+      if (!this.formData.question || !this.formData.categoryId || !this.formData.questionTypeId) {
+    alert("Kérlek, töltsd ki az összes mezőt!");
+    return;
+  }
       this.$emit("saveItem", this.formData);
     },
   },

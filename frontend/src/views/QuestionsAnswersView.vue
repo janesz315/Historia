@@ -3,7 +3,7 @@
     <div class="my-container">
       <div class="category col-3 category-container">
         <h2 class="title">Témakörök</h2>
-        <!--#region Témakörök -->
+        <!-- Témakörök -->
         <table class="table table-hover user-table">
           <thead>
             <!-- <tr>
@@ -11,64 +11,72 @@
             </tr> -->
           </thead>
           <tbody>
-            <tr class="my-cursor"
+            <tr
+              class="my-cursor"
               v-for="category in categories"
               :key="category.id"
               @click="selectCategory(category.id)"
-              :class="{'table-danger': selectedCategoryId === category.id,}"
+              :class="{ 'table-danger': selectedCategoryId === category.id }"
             >
               <td>{{ category.category }}</td>
             </tr>
           </tbody>
         </table>
-        <!--#endregion /Témakörök -->
-
       </div>
+
       <div class="admin-container col-9">
+        <!-- Rögzített új kérdés gomb -->
         <h2 class="title">Kérdések kezelése</h2>
-        <OperationsCrudQuestionsAnswers class="mb-2"
-        @onClickCreateButton="onClickCreateButton"/>
-        <table class="table table-hover user-table">
-          <thead>
-            <tr>
-              <th scope="col">Kérdés</th>
-              <th scope="col">Típus</th>
-              <th scope="col">Válaszok</th>
-              <th scope="col">M</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr
-              v-for="questionAnswer in filteredQuestions"
-              :key="questionAnswer.questionId"
-            >
-              <td>{{ questionAnswer.question }}</td>
-              <td>{{ questionAnswer.questionCategory }}</td>
-              <td>
-                <div
-                  v-for="answer in questionAnswer.answers"
-                  :key="answer.answerId"
-                >
-                  <i
-                    v-if="answer.rightAnswer === true"
-                    class="bi bi-check-lg right-answer-icon"
-                  ></i>
-                  {{ answer.answer }}
-                </div>
-              </td>
-              <td>
-                <OperationsCrudQuestionsAnswers
-                  :questionAnswer="questionAnswer"
-                  @onClickDeleteButton="onClickDeleteButton"
-                  @onClickUpdateButton="onClickUpdateButton"
-                  
-                />
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <OperationsCrudQuestionsAnswers style="text-align:right"
+          class="mb-2 me-2"
+          @onClickCreateButton="onClickCreateButton"
+        />
+        <!-- <button class="create-question-btn" @click="onClickCreateButton">Új kérdés létrehozása</button> -->
+
+        <!-- Táblázat Wrapper, hogy a görgetés csak itt történjen -->
+        <div class="table-wrapper">
+          <table class="table table-hover user-table">
+            <thead>
+              <tr class="sticky-top">
+                <th scope="col">Kérdés</th>
+                <th scope="col">Típus</th>
+                <th scope="col">Válaszok</th>
+                <th scope="col">M</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                v-for="questionAnswer in filteredQuestions"
+                :key="questionAnswer.questionId"
+              >
+                <td>{{ questionAnswer.question }}</td>
+                <td>{{ questionAnswer.questionCategory }}</td>
+                <td>
+                  <div
+                    v-for="answer in questionAnswer.answers"
+                    :key="answer.answerId"
+                  >
+                    <i
+                      v-if="answer.rightAnswer === true"
+                      class="bi bi-check-lg right-answer-icon"
+                    ></i>
+                    {{ answer.answer }}
+                  </div>
+                </td>
+                <td>
+                  <OperationsCrudQuestionsAnswers
+                    :questionAnswer="questionAnswer"
+                    @onClickDeleteButton="onClickDeleteButton"
+                    @onClickUpdateButton="onClickUpdateButton"
+                  />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
+
     <Modal
       :title="title"
       :yes="yes"
@@ -87,16 +95,21 @@
         :categories="categories"
         :questionTypes="questionTypes"
         @saveItem="saveItemHandler"
-        />
+        @addAnswer="addAnswerHandler"
+      />
     </Modal>
   </div>
 </template>
+
   
   <script>
-
 class Question {
-  constructor(question = null, id = null, questionTypeId=null, categoryId=null) { 
-    
+  constructor(
+    question = null,
+    id = null,
+    questionTypeId = null,
+    categoryId = null
+  ) {
     //Itt nem kell létrehozni a változót
     //JS nem erősen típusos
     //Dekaráció pongyola: nem is kell, csak leírjuk
@@ -109,7 +122,6 @@ class Question {
 
 class Answer {
   constructor(id = null, answer = null, questionId = null, rightAnswer = null) {
-    
     //Itt nem kell létrehozni a változót
     //JS nem erősen típusos
     //Dekaráció pongyola: nem is kell, csak leírjuk
@@ -133,7 +145,7 @@ export default {
       questionsAnswers: [],
       questionAnswers: [],
       categories: [],
-      questionTypes:[],
+      questionTypes: [],
       isCreate: true,
       selectedCategoryId: null,
       messageYesNo: null,
@@ -147,8 +159,7 @@ export default {
     };
   },
 
-  
-  computed:{
+  computed: {
     // Szűrt kérdések
     filteredQuestions() {
       if (this.selectedCategoryId) {
@@ -187,9 +198,8 @@ export default {
           }
         );
 
-        this.questionAnswers=  response.data.data[0];
+        this.questionAnswers = response.data.data[0];
         console.log("Adatok: ", this.questionAnswers);
-        
       } catch (error) {
         console.error("Hiba a kérdések és válaszok lekérésekor:", error);
         alert("A kérdések és válaszok betöltése sikertelen.");
@@ -210,8 +220,8 @@ export default {
         alert("Kategóriák betöltése sikertelen.");
       }
     },
-    
-    async fetchQuestionTypes(){
+
+    async fetchQuestionTypes() {
       try {
         const response = await axios.get(`${BASE_URL}/questionTypes`, {
           headers: { Authorization: `Bearer ${this.store.token}` },
@@ -224,7 +234,6 @@ export default {
         console.error("Hiba a kérdéstípusok lekérésekor:", error);
         alert("Kérdéstípusok betöltése sikertelen.");
       }
-
     },
 
     // Kategória kiválasztás
@@ -242,13 +251,9 @@ export default {
 
     async createQuestion(formData) {
       try {
-        const response = await axios.post(
-          `${BASE_URL}/questions`,
-          formData,
-          {
-            headers: { Authorization: `Bearer ${this.store.token}` },
-          }
-        );
+        const response = await axios.post(`${BASE_URL}/questions`, formData, {
+          headers: { Authorization: `Bearer ${this.store.token}` },
+        });
         console.log("Új kérdés mentése sikeres:", response);
         this.fetchQuestionsAnswers();
         // this.state = "Read";
@@ -274,8 +279,38 @@ export default {
       }
     },
 
+    async addAnswerHandler() {
+      if (!this.questionAnswers || !this.questionAnswers.questionId) {
+        console.error("Nincs érvényes kérdés!");
+        return;
+      }
 
-    
+      const newAnswer = {
+        answer: "Új válasz", // alapértelmezett válasz szöveg
+        rightAnswer: 0, // alapértelmezett helyes válasz
+        questionId: this.questionAnswers.questionId, // a kérdés ID-ja
+      };
+
+      try {
+        // POST kérés küldése a válasz hozzáadásához
+        const response = await axios.post(`${BASE_URL}/answers`, newAnswer, {
+          headers: {
+            Authorization: `Bearer ${this.store.token}`,
+          },
+        });
+        // Ha a válasz hozzáadását a szűrt kérdésekben is meg szeretnéd jeleníteni,
+      // akkor frissítheted a `questionsAnswers` tömböt is, hogy a válaszok mindegyike frissüljön.
+        // this.questionAnswers.answers.push(response.data);
+      //   const question = this.questionsAnswers.find(q => q.questionId === this.questionAnswers.questionId);
+      //   if (question) {
+      //   question.answers.push(response.data); // új válasz hozzáadása az adott kérdéshez
+      // }
+      this.fetchQuestionsAnswers();
+        console.log("Új válasz mentve:", response.data);
+      } catch (error) {
+        console.error("Hiba történt a válasz mentésekor:", error);
+      }
+    },
 
     onClickDeleteButton(questionAnswer) {
       // if (!category || !category.id) {
@@ -302,18 +337,23 @@ export default {
       this.selectedRowId = questionAnswer.questionId;
       this.questionAnswer = this.fetchQuestionsAnswersById(this.selectedRowId);
       console.log(this.selectedRowId);
-      
     },
 
     onClickCreateButton() {
       this.isCreate = true;
+      this.state = "Create";
       this.title = "Új kérdés bevitele";
       this.yes = null;
       this.no = "Mégsem";
       this.size = "lg";
-      this.state = "Create";
-      this.question= new Question();
-      this.answer= new Answer();
+      this.question = new Question();
+      this.answer = new Answer();
+      this.questionAnswers = {
+        question: "", // Alapértelmezett értékek
+        categoryId: null,
+        questionTypeId: null,
+        answers: [],
+      };
     },
   },
   // closeModal() {
@@ -352,14 +392,14 @@ export default {
   border: 2px solid #8b5a2b;
   margin-top: 100px;
   margin-bottom: 200px;
-  /* transform: translateY(-10%); */
+  overflow: hidden; /* Elrejti a görgetést az admin-containeren kívül */
+  position: relative; /* A gomb pozicionálásához szükséges */
 }
 
-.title {
-  font-size: 2.5rem;
-  margin-bottom: 20px;
-  color: #5a3e1b;
-  text-align: center;
+
+.table-wrapper {
+  max-height: 500px; /* Maximális magasság a táblázathoz */
+  overflow-y: auto; /* Görgetés csak a táblázat számára */
 }
 
 .user-table {
@@ -373,17 +413,18 @@ export default {
   padding: 10px;
   border: 2px solid #8b5a2b;
   text-align: center;
-  /* color: #5a3e1b; */
 }
 
 .user-table th {
   background-color: #8b5a2b;
   color: white;
 }
+
 .right-answer-icon {
   margin-right: 5px;
   color: green;
 }
+
 
 .category-container {
   max-height: 600px;
@@ -399,9 +440,11 @@ export default {
   margin-right: 10px;
 }
 
-.my-cursor{
+.my-cursor {
   cursor: pointer;
-  
 }
 
+h2{
+  text-align: center;
+}
 </style>
