@@ -27,7 +27,8 @@
       <div class="admin-container col-9">
         <!-- Rögzített új kérdés gomb -->
         <h2 class="title">Kérdések kezelése</h2>
-        <OperationsCrudQuestionsAnswers style="text-align:right"
+        <OperationsCrudQuestionsAnswers
+          style="text-align: right"
           class="mb-2 me-2"
           @onClickCreateButton="onClickCreateButton"
         />
@@ -94,8 +95,12 @@
         :formData="questionAnswers"
         :categories="categories"
         :questionTypes="questionTypes"
+        :editing="editing"
         @saveItem="saveItemHandler"
         @addAnswer="addAnswerHandler"
+        @saveField="saveField"
+        @startEdit="startEdit"
+        @cancelEdit="cancelEdit"
       />
     </Modal>
   </div>
@@ -156,6 +161,9 @@ export default {
       size: null,
       question: new Question(),
       answer: new Answer(),
+      // updatedField: {}, // Stores the value of the field being edited
+      // isEditingField: null, // Tracks which field is being edited
+      // editing: false
     };
   },
 
@@ -299,17 +307,23 @@ export default {
           },
         });
         // Ha a válasz hozzáadását a szűrt kérdésekben is meg szeretnéd jeleníteni,
-      // akkor frissítheted a `questionsAnswers` tömböt is, hogy a válaszok mindegyike frissüljön.
+        // akkor frissítheted a `questionsAnswers` tömböt is, hogy a válaszok mindegyike frissüljön.
         // this.questionAnswers.answers.push(response.data);
-      //   const question = this.questionsAnswers.find(q => q.questionId === this.questionAnswers.questionId);
-      //   if (question) {
-      //   question.answers.push(response.data); // új válasz hozzáadása az adott kérdéshez
-      // }
-      this.fetchQuestionsAnswers();
+        //   const question = this.questionsAnswers.find(q => q.questionId === this.questionAnswers.questionId);
+        //   if (question) {
+        //   question.answers.push(response.data); // új válasz hozzáadása az adott kérdéshez
+        // }
+        this.fetchQuestionsAnswers();
         console.log("Új válasz mentve:", response.data);
       } catch (error) {
         console.error("Hiba történt a válasz mentésekor:", error);
       }
+    },
+
+    saveField(index) {
+      console.log(`Mentés az index-nél: ${index}`);
+      // Készíthetünk egy kérdésválasz frissítést itt, ha szükséges
+      // Pld. új válasz mentése az adott kérdéshez
     },
 
     onClickDeleteButton(questionAnswer) {
@@ -324,10 +338,10 @@ export default {
       this.yes = "Igen";
       this.no = "Nem";
       this.size = null;
-      // this.selectedRowId = questionAnswer.id;
-      console.log(this.selectedRowId);
+      this.selectedRowId = questionAnswer.questionId;
+      // console.log(this.selectedRowId);
     },
-    onClickUpdateButton(questionAnswer) {
+    async onClickUpdateButton(questionAnswer) {
       this.state = "Update";
       this.title = "Kérdés módosítása";
       this.isCreate = false;
@@ -335,8 +349,7 @@ export default {
       this.no = "Mégsem";
       this.size = "lg";
       this.selectedRowId = questionAnswer.questionId;
-      this.questionAnswer = this.fetchQuestionsAnswersById(this.selectedRowId);
-      console.log(this.selectedRowId);
+      await this.fetchQuestionsAnswersById(this.selectedRowId); // FONTOS
     },
 
     onClickCreateButton() {
@@ -396,7 +409,6 @@ export default {
   position: relative; /* A gomb pozicionálásához szükséges */
 }
 
-
 .table-wrapper {
   max-height: 500px; /* Maximális magasság a táblázathoz */
   overflow-y: auto; /* Görgetés csak a táblázat számára */
@@ -425,7 +437,6 @@ export default {
   color: green;
 }
 
-
 .category-container {
   max-height: 600px;
   max-width: 1000px;
@@ -444,7 +455,7 @@ export default {
   cursor: pointer;
 }
 
-h2{
+h2 {
   text-align: center;
 }
 </style>

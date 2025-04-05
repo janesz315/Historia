@@ -73,30 +73,67 @@
     >
       <label class="form-label">Válasz {{ index + 1 }}:</label>
       <div class="input-group">
-        <input
+        <div class="input-group-text">
+          <input type="checkbox" v-model="answer.rightAnswer" />
+        </div>
+        <p>
+          {{ isEditingField === answer.answerId ? "" : answer.answer }}
+        </p>
+
+        <div
+          v-if="isEditingField === answer.answerId"
+          class="d-flex align-items-center"
+        >
+          <input
+            type="text"
+            class="form-control me-2"
+            style="width: 500px"
+            v-model="answer.answer"
+            placeholder="Almás pite"
+          />
+          <button
+            class="btn btn-outline-success me-2"
+            @click="saveField(answer.answer)"
+          >
+            <i class="bi bi-save"></i>
+          </button>
+          <button class="btn btn-outline-info" @click="cancelEdit">
+            <i class="bi bi-x-circle"></i>
+          </button>
+        </div>
+        <button
+          v-else
+          class="btn btn-outline-warning"
+          @click="startEdit(answer.answerId, answer.answer)"
+        >
+          <i class="bi bi-pencil"></i>
+        </button>
+        <!-- <input
           type="text"
           class="form-control"
           v-model="answer.answer"
           required
-        />
-        <div class="input-group-text">
-          <input type="checkbox" v-model="answer.rightAnswer" />
-        </div>
+        /> -->
         <button
-        type="button"
-        class="btn btn-danger btn-sm"
-        @click="removeAnswer(index)"
-      >
-      <i class="bi bi-trash3"></i>
-      </button>
+          type="button"
+          class="btn btn-outline-danger btn-sm"
+          @click="removeAnswer(index)"
+        >
+          <i class="bi bi-trash3"></i>
+        </button>
       </div>
     </div>
 
     <!-- Új válasz hozzáadás gomb -->
     <div class="mb-3">
-      <button type="button" class="btn btn-secondary" @click="addAnswer" :disabled="
-        !formData.question || !formData.categoryId || !formData.questionTypeId
-      ">
+      <button
+        type="button"
+        class="btn btn-secondary"
+        @click="addAnswer"
+        :disabled="
+          !formData.question || !formData.categoryId || !formData.questionTypeId
+        "
+      >
         + Válasz hozzáadása
       </button>
     </div>
@@ -105,11 +142,29 @@
 
 <script>
 export default {
-  props: ["categories", "formData", "questionTypes", "isCreate"],
-  emits: ["saveItem", "resetForm", "addAnswer"],
+  props: [
+    "categories",
+    "formData",
+    "questionTypes",
+    "isCreate",
+    "isEditingField",
+    "updatedField",
+    "editing",
+  ],
+  emits: [
+    "saveItem",
+    "resetForm",
+    "addAnswer",
+    "saveField",
+    "startEdit",
+    "cancelEdit",
+  ],
 
   data() {
     return {
+      updatedField: {}, // Stores the value of the field being edited
+      isEditingField: null, // Tracks which field is being edited
+      editing: false,
     };
   },
 
@@ -124,19 +179,42 @@ export default {
     },
 
     removeAnswer(index) {
-      this.formData.answers.splice(index, 1);  // Eltávolítja a választ a tömbből
+      this.formData.answers.splice(index, 1); // Eltávolítja a választ a tömbből
     },
 
     resetForm() {
       this.$emit("resetForm");
     },
+    saveField() {
+      this.$emit("saveField");
+    },
+
+    startEdit(answerId, answer) {
+      this.isEditingField = answerId; // Az éppen szerkesztett válasz ID-ja
+      this.updatedField.index = this.formData.answers.findIndex(
+        (a) => a.answerId === answerId
+      ); // Index alapján
+      this.updatedField.answer = answer;
+      this.editing = true;
+    },
+
+    cancelEdit() {
+      this.editing = false;
+      this.isEditingField = null;
+      this.updatedField = {};
+      // this.$emit("cancelEdit");
+    },
 
     onClickSubmit() {
       // Ellenőrizzük, hogy van-e kérdés és válaszok
-      if (!this.formData.question || !this.formData.categoryId || !this.formData.questionTypeId) {
-    alert("Kérlek, töltsd ki az összes mezőt!");
-    return;
-  }
+      if (
+        !this.formData.question ||
+        !this.formData.categoryId ||
+        !this.formData.questionTypeId
+      ) {
+        alert("Kérlek, töltsd ki az összes mezőt!");
+        return;
+      }
       this.$emit("saveItem", this.formData);
     },
   },
