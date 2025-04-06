@@ -100,8 +100,7 @@
         @saveItem="saveItemHandler"
         @addAnswer="addAnswerHandler"
         @saveField="saveField"
-        @startEdit="startEdit"
-        @cancelEdit="cancelEdit"
+        @removeAnswer="deleteAnswerById"
       />
     </Modal>
   </div>
@@ -291,6 +290,8 @@ export default {
       }
     },
 
+
+
     async addAnswerHandler() {
       if (!this.questionAnswers || !this.questionAnswers.questionId) {
         console.error("Nincs érvényes kérdés!");
@@ -310,13 +311,7 @@ export default {
             Authorization: `Bearer ${this.store.token}`,
           },
         });
-        // Ha a válasz hozzáadását a szűrt kérdésekben is meg szeretnéd jeleníteni,
-        // akkor frissítheted a `questionsAnswers` tömböt is, hogy a válaszok mindegyike frissüljön.
         this.questionAnswers.answers.push(response.data);
-        //   const question = this.questionsAnswers.find(q => q.questionId === this.questionAnswers.questionId);
-        //   if (question) {
-        //   question.answers.push(response.data); // új válasz hozzáadása az adott kérdéshez
-        // }
         this.fetchQuestionsAnswers();
         this.fetchQuestionsAnswersById(this.questionAnswers.questionId);
         console.log("Új válasz mentve:", response.data);
@@ -347,12 +342,48 @@ export default {
       }
     },
 
+    async deleteAnswerById(answer, answerId){
+       console.log(answerId);
+       try {
+        const id = answerId;
+        const response = await axios.delete(`${BASE_URL}/answers/${id}`, {
+          headers: { Authorization: `Bearer ${this.store.token}` },
+        });
+
+        // A sikeres törlés után frissíteni kell a válaszok listáját
+        this.fetchQuestionsAnswers();
+        this.fetchQuestionsAnswersById(answer.questionId);
+
+        // alert("A kategória sikeresen törölve!");
+      } catch (error) {
+        console.error("Törlés hiba:", error);
+        alert("A válasz törlése nem sikerült!");
+      }
+    },
+    async deleteQuestionById(){
+        try {
+        const id = this.selectedRowId;
+        const response = await axios.delete(`${BASE_URL}/questions/${id}`, {
+          headers: { Authorization: `Bearer ${this.store.token}` },
+        });
+
+        // A sikeres törlés után frissíteni kell a kérdések listáját
+        this.fetchQuestionsAnswers();
+        
+      } catch (error) {
+        console.error("Törlés hiba:", error);
+        alert("A kérdés törlése nem sikerült!");
+      }
+
+
+    },
+      yesEventHandler() {
+          if (this.state == "Delete") {
+            this.deleteQuestionById();
+            this.modal.hide(); // A modal bezárása a törlés után
+          }
+        },
     onClickDeleteButton(questionAnswer) {
-      // if (!category || !category.id) {
-      //   console.error("A kategória nem található.");
-      //   alert("Hiba: A kategória nem található.");
-      //   return;
-      // }
       this.state = "Delete";
       this.title = "Törlés";
       this.messageYesNo = `Valóban törölni akarod a(z) ${questionAnswer.question} nevű kérdést?`;
@@ -362,6 +393,7 @@ export default {
       this.selectedRowId = questionAnswer.questionId;
       // console.log(this.selectedRowId);
     },
+
     async onClickUpdateButton(questionAnswer) {
       this.state = "Update";
       this.title = "Kérdés módosítása";
@@ -391,9 +423,8 @@ export default {
       };
     },
   },
-  // closeModal() {
-  //   this.questionAnswer = null; // Vagy az alapértelmezett érték, ha van
-  // },
+
+
   mounted() {
     this.fetchQuestionsAnswers();
     this.fetchCategories();
@@ -409,10 +440,7 @@ export default {
 .my-container {
   background-image: url("/images/parchment-texture.jpg");
   background-size: cover;
-  /* background-position: center; */
   background-attachment: fixed;
-  /* height: 100vh; */
-  /* width: 100vw; */
   display: flex;
   justify-content: center;
   align-items: center;

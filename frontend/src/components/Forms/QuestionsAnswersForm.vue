@@ -120,7 +120,7 @@
         <button
           type="button"
           class="btn btn-outline-danger btn-sm"
-          @click="removeAnswer(index)"
+          @click="removeAnswer(answer, answer.answerId)"
         >
           <i class="bi bi-trash3"></i>
         </button>
@@ -157,6 +157,7 @@ export default {
     "resetForm",
     "addAnswer",
     "saveField",
+    "removeAnswer"
   ],
 
   data() {
@@ -173,8 +174,9 @@ export default {
       this.$emit("addAnswer");
     },
 
-    removeAnswer(index) {
-      this.formData.answers.splice(index, 1); // Eltávolítja a választ a tömbből
+    removeAnswer(answer, answerId) {
+      this.$emit("removeAnswer", answer, answerId);
+      // this.formData.answers.splice(index, 1); // Eltávolítja a választ a tömbből
     },
 
     resetForm() {

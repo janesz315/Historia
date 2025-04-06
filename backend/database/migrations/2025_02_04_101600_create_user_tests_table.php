@@ -15,7 +15,7 @@ return new class extends Migration
             $table->integer('id')->autoIncrement();
             $table->integer('userId');
             $table->string("testName");
-            $table->double('score');
+            $table->double('score')-> nullable();
             $table->foreign('userId')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
