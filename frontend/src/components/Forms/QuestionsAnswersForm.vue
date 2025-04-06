@@ -13,7 +13,7 @@
           required
         />
       </div>
-
+      <!-- Kérdéstípus -->
       <div class="col-4">
         <label for="questionCategory" class="form-label">Típus:</label>
         <select
@@ -34,7 +34,7 @@
       </div>
     </div>
 
-    <!-- Kategória választás -->
+    <!-- Témakör kiválasztása -->
     <div class="mb-3">
       <label for="category" class="form-label">Téma:</label>
       <select
@@ -54,13 +54,11 @@
         </option>
       </select>
     </div>
-
+    <!-- A kérdés létrehozása vagy frissítése -->
     <button
       type="submit"
       class="btn btn-success mb-2"
-      :disabled="
-        !formData.question || !formData.categoryId || !formData.questionTypeId
-      "
+      v-show="formData.question && formData.categoryId && formData.questionTypeId"
     >
       {{ isCreate ? "Mentés" : "Frissítés" }}
     </button>
@@ -73,34 +71,44 @@
     >
       <label class="form-label">Válasz {{ index + 1 }}:</label>
       <div class="input-group">
-        <div class="input-group-text">
-          <input type="checkbox" v-model="answer.rightAnswer" />
+        <!-- Checkbox alaphelyzetben -->
+        <div class="input-group-text" v-show="!editing || isEditingField !== answer.answerId">
+          <input type="checkbox" v-model="answer.rightAnswer" disabled/>
         </div>
-        <p>
+        <!-- A válasz alaphelyzetben -->
+        <p class="d-flex align-items-center mb-0">
           {{ isEditingField === answer.answerId ? "" : answer.answer }}
         </p>
-
+        <!-- A módosítő mező -->
         <div
-          v-if="isEditingField === answer.answerId"
+          v-if="isEditingField === answer.answerId && editing"
           class="d-flex align-items-center"
         >
+        <!-- Checkbox -->
+        <div class="input-group-text me-2">
+          <input type="checkbox" v-model="answer.rightAnswer"/>
+        </div>
+        <!--  -->
           <input
             type="text"
             class="form-control me-2"
-            style="width: 500px"
+            style="max-width: 500px"
             v-model="answer.answer"
-            placeholder="Almás pite"
+            placeholder="Írj be egy választ!"
           />
+          <!-- Mentés gomb -->
           <button
             class="btn btn-outline-success me-2"
-            @click="saveField(answer.answer)"
+            @click="saveField(answer, answer.answerId)"
           >
             <i class="bi bi-save"></i>
           </button>
+          <!-- Szerkesztőből kilépés -->
           <button class="btn btn-outline-info" @click="cancelEdit">
             <i class="bi bi-x-circle"></i>
           </button>
         </div>
+        <!-- Módosítás gomb -->
         <button
           v-else
           class="btn btn-outline-warning"
@@ -108,12 +116,7 @@
         >
           <i class="bi bi-pencil"></i>
         </button>
-        <!-- <input
-          type="text"
-          class="form-control"
-          v-model="answer.answer"
-          required
-        /> -->
+        <!-- Válasz törlése -->
         <button
           type="button"
           class="btn btn-outline-danger btn-sm"
@@ -130,6 +133,7 @@
         type="button"
         class="btn btn-secondary"
         @click="addAnswer"
+        v-show="!isCreate"
         :disabled="
           !formData.question || !formData.categoryId || !formData.questionTypeId
         "
@@ -147,17 +151,12 @@ export default {
     "formData",
     "questionTypes",
     "isCreate",
-    "isEditingField",
-    "updatedField",
-    "editing",
   ],
   emits: [
     "saveItem",
     "resetForm",
     "addAnswer",
     "saveField",
-    "startEdit",
-    "cancelEdit",
   ],
 
   data() {
@@ -165,17 +164,13 @@ export default {
       updatedField: {}, // Stores the value of the field being edited
       isEditingField: null, // Tracks which field is being edited
       editing: false,
+      rightAnswerTempValue: false
     };
   },
 
   methods: {
     addAnswer() {
       this.$emit("addAnswer");
-      // this.formData.answers.push({
-      //   answerId: Date.now(),
-      //   answer: "",
-      //   rightAnswer: 0,
-      // });
     },
 
     removeAnswer(index) {
@@ -185,8 +180,16 @@ export default {
     resetForm() {
       this.$emit("resetForm");
     },
-    saveField() {
-      this.$emit("saveField");
+    saveField(answer, answerId) {
+      this.alma= answer.rightAnswer
+      if (answer.rightAnswer === false) {
+        answer.rightAnswer = 0;
+      } else {
+        answer.rightAnswer = 1;
+      }
+      this.$emit("saveField", answer, answerId);
+      this.editing = false;
+      answer.rightAnswer = this.alma;
     },
 
     startEdit(answerId, answer) {
@@ -251,10 +254,4 @@ input[type="text"]:invalid {
 input[type="text"]:valid {
   border-color: green;
 }
-
-/* .form-select {
-  max-width: 300px;
-  word-wrap: break-word;
-  white-space: normal;
-} */
 </style>

@@ -91,6 +91,7 @@
 
       <QuestionsAnswersForm
         v-if="state === 'Create' || state === 'Update'"
+        :key="formKey"
         :is-create="isCreate"
         :formData="questionAnswers"
         :categories="categories"
@@ -141,6 +142,7 @@ import { BASE_URL } from "../helpers/baseUrls";
 import { useAuthStore } from "../stores/useAuthStore";
 import QuestionsAnswersForm from "@/components/Forms/QuestionsAnswersForm.vue";
 import OperationsCrudQuestionsAnswers from "@/components/Modals/OperationsCrudQuestionsAnswers.vue";
+import * as bootstrap from "bootstrap";
 
 export default {
   components: { QuestionsAnswersForm, OperationsCrudQuestionsAnswers },
@@ -161,9 +163,7 @@ export default {
       size: null,
       question: new Question(),
       answer: new Answer(),
-      // updatedField: {}, // Stores the value of the field being edited
-      // isEditingField: null, // Tracks which field is being edited
-      // editing: false
+      formKey: 0,
     };
   },
 
@@ -207,6 +207,7 @@ export default {
         );
 
         this.questionAnswers = response.data.data[0];
+        this.formKey++; // kulcs növelése, hogy újrarenderelődjön
         console.log("Adatok: ", this.questionAnswers);
       } catch (error) {
         console.error("Hiba a kérdések és válaszok lekérésekor:", error);
@@ -252,6 +253,7 @@ export default {
     saveItemHandler(formData) {
       if (this.state === "Create") {
         this.createQuestion(formData);
+        this.modal.hide();
       } else if (this.state === "Update") {
         this.updateQuestion(formData);
       }
@@ -264,7 +266,8 @@ export default {
         });
         console.log("Új kérdés mentése sikeres:", response);
         this.fetchQuestionsAnswers();
-        // this.state = "Read";
+        // this.fetchQuestionsAnswersById(formData.questionid);
+        this.state = "Read";
       } catch (error) {
         console.error("Hiba történt a kérdés mentésekor:", error);
       }
@@ -281,6 +284,7 @@ export default {
         );
         console.log("Kérdés frissítése sikeres:", response);
         this.fetchQuestionsAnswers();
+        this.fetchQuestionsAnswersById(formData.questionId);
         // this.state = "Read";
       } catch (error) {
         console.error("Hiba történt a kérdés frissítésekor:", error);
@@ -308,22 +312,39 @@ export default {
         });
         // Ha a válasz hozzáadását a szűrt kérdésekben is meg szeretnéd jeleníteni,
         // akkor frissítheted a `questionsAnswers` tömböt is, hogy a válaszok mindegyike frissüljön.
-        // this.questionAnswers.answers.push(response.data);
+        this.questionAnswers.answers.push(response.data);
         //   const question = this.questionsAnswers.find(q => q.questionId === this.questionAnswers.questionId);
         //   if (question) {
         //   question.answers.push(response.data); // új válasz hozzáadása az adott kérdéshez
         // }
         this.fetchQuestionsAnswers();
+        this.fetchQuestionsAnswersById(this.questionAnswers.questionId);
         console.log("Új válasz mentve:", response.data);
       } catch (error) {
         console.error("Hiba történt a válasz mentésekor:", error);
       }
     },
 
-    saveField(index) {
-      console.log(`Mentés az index-nél: ${index}`);
-      // Készíthetünk egy kérdésválasz frissítést itt, ha szükséges
-      // Pld. új válasz mentése az adott kérdéshez
+    async saveField(questionAnswers, index) {
+      // console.log(`Mentés az index-nél: ${index}`);
+      console.log(questionAnswers);
+      console.log(index);
+      try {
+        const response = await axios.patch(
+          `${BASE_URL}/answers/${index}`,
+          questionAnswers,
+          {
+            headers: { Authorization: `Bearer ${this.store.token}` },
+          }
+        );
+        console.log("válasz frissítése sikeres:", response);
+
+        this.fetchQuestionsAnswers();
+        this.fetchQuestionsAnswersById(questionAnswers.questionId);
+        // this.state = "Read";
+      } catch (error) {
+        console.error("Hiba történt a kérdés frissítésekor:", error);
+      }
     },
 
     onClickDeleteButton(questionAnswer) {
@@ -362,6 +383,7 @@ export default {
       this.question = new Question();
       this.answer = new Answer();
       this.questionAnswers = {
+        questionId: null,
         question: "", // Alapértelmezett értékek
         categoryId: null,
         questionTypeId: null,
@@ -376,6 +398,9 @@ export default {
     this.fetchQuestionsAnswers();
     this.fetchCategories();
     this.fetchQuestionTypes();
+    this.modal = new bootstrap.Modal("#modal", {
+      keyboard: false,
+    });
   },
 };
 </script>

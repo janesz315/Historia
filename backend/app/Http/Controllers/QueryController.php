@@ -20,6 +20,7 @@ class QueryController extends Controller
     $questionMap = [];
 
     foreach ($rows as $row) {
+        // Ha még nem találkoztunk a kérdéssel, hozzuk létre
         if (!isset($questionMap[$row->questionId])) {
             $questionMap[$row->questionId] = count($groupedQuestions);
             $groupedQuestions[] = [
@@ -28,16 +29,17 @@ class QueryController extends Controller
                 'categoryId' => $row->categoryId,
                 'questionCategory' => $row->questionCategory,
                 'questionTypeId' => $row->questionTypeId,
-                'answers' => [], // Üres válaszok tömb, ha nem találunk választ
+                'answers' => [], // Üres válaszok tömb, ha nincs válasz
             ];
         }
 
-        // Ha van válasz, hozzáadjuk
+        // Ha van válasz, hozzáadjuk és beillesztjük a questionId-t
         if ($row->answerId) {
             $groupedQuestions[$questionMap[$row->questionId]]['answers'][] = [
                 'answerId' => $row->answerId,
                 'answer' => $row->answer,
                 'rightAnswer' => $row->rightAnswer == 1 ? true : false,
+                'questionId' => $row->questionId, // Hozzáadjuk a questionId-t
             ];
         }
     }
@@ -67,7 +69,7 @@ public function show(int $id)
     $questionMap = [];
 
     foreach ($rows as $row) {
-        // Ha még nem találkoztunk a kérdéssel, hozzáadjuk
+        // Ha még nem találkoztunk a kérdéssel, hozzuk létre
         if (!isset($questionMap[$row->questionId])) {
             $questionMap[$row->questionId] = count($groupedQuestions);
             $groupedQuestions[] = [
@@ -76,16 +78,17 @@ public function show(int $id)
                 'categoryId' => $row->categoryId,
                 'questionCategory' => $row->questionCategory,
                 'questionTypeId' => $row->questionTypeId,
-                'answers' => [], // Üres válaszok tömb, ha nincsenek válaszok
+                'answers' => [], // Üres válaszok tömb, ha nincs válasz
             ];
         }
 
-        // Ha van válasz, hozzáadjuk a válaszokat
+        // Ha van válasz, hozzáadjuk és beillesztjük a questionId-t
         if ($row->answerId) {
             $groupedQuestions[$questionMap[$row->questionId]]['answers'][] = [
                 'answerId' => $row->answerId,
                 'answer' => $row->answer,
                 'rightAnswer' => $row->rightAnswer == 1 ? true : false,
+                'questionId' => $row->questionId, // Hozzáadjuk a questionId-t
             ];
         }
     }
