@@ -43,18 +43,25 @@
         <!-- Források megjelenítése -->
         <div v-if="sources.length" class="sources mt-3">
           <h6>Források:</h6>
-          <ul>
-            <li v-for="(source, index) in sources" :key="source.id">
-              <a :href="source.sourceLink" target="_blank">{{
-                source.sourceLink
-              }}</a>
-              <p>{{ source.note }}</p>
-
-              <!-- Szerkesztés gomb csak adminoknak -->
+          <ul class="source-list">
+            <li
+              v-for="(source, index) in sources"
+              :key="source.id"
+              class="source-item"
+            >
+              <div class="source-content">
+                <a
+                  :href="source.sourceLink"
+                  target="_blank"
+                  class="source-link"
+                  >{{ source.sourceLink }}</a
+                >
+                <p class="source-note">{{ source.note }}</p>
+              </div>
               <button
                 v-if="stateAuth.roleId === 1"
                 @click="openSourceEditModal(index)"
-                class="btn btn-sm btn-outline-primary"
+                class="btn btn-sm btn-outline-primary edit-button"
               >
                 <i class="bi bi-pencil"></i>
               </button>
@@ -124,7 +131,7 @@ export default {
     },
     openSourceEditModal(index) {
       if (index === -1) {
-        this.editingSource = { sourceLink: "", note: "", id: null }; // Új forrás inicializálása
+        this.editingSource = { sourceLink: "", note: ""}; 
       } else {
         const selectedSource = this.sources[index];
 
@@ -139,17 +146,19 @@ export default {
       console.log("Modalnak átadott adat:", this.editingSource);
     },
     saveSource(updatedSource) {
-      console.log("📩 Fogadott adat a saveSource-ban:", updatedSource);
+      console.log("Fogadott adat a saveSource-ban:", updatedSource);
 
-      if (!updatedSource || !updatedSource.sourceLink || !updatedSource.note) {
-        console.error("❌ Hiba: Hiányzó adatok!", updatedSource);
+      if (!updatedSource.sourceLink || !updatedSource.note) {
+        console.error("Hiba: Hiányzó adatok!", updatedSource);
         return;
       }
 
       axios
-        .patch(`${BASE_URL}/sources/${updatedSource.id}`, updatedSource)
+        .post(`${BASE_URL}/sources/`, updatedSource,
+        { headers: { Authorization: `Bearer ${this.stateAuth.token}` } }
+        )
         .then((response) => {
-          console.log("✅ Válasz az API-tól:", response.data);
+          console.log("Válasz az API-tól:", response.data);
 
           // Frissítjük a forráslistát
           const index = this.sources.findIndex(
@@ -163,7 +172,7 @@ export default {
           this.editingSource = null;
         })
         .catch((error) => {
-          console.error("❌ Hiba történt a forrás frissítésekor:", error);
+          console.error("Hiba történt a forrás frissítésekor:", error);
         });
     },
   },
@@ -238,5 +247,43 @@ export default {
 
 .sources li a:hover {
   text-decoration: underline;
+}
+
+.source-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.source-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* A forrás és a szerkesztés gomb egy sorban lesz */
+  margin-bottom: 10px;
+  border-bottom: 1px solid #8b5a2b; /* Elválasztás */
+  padding-bottom: 5px;
+}
+
+.source-content {
+  flex: 1; /* A szöveg kitölti a rendelkezésre álló helyet */
+}
+
+.source-link {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.source-link:hover {
+  text-decoration: underline;
+}
+
+.source-note {
+  font-size: 0.9rem;
+  color: #555;
+  margin: 0;
+}
+
+.edit-button {
+  margin-left: 10px;
 }
 </style>

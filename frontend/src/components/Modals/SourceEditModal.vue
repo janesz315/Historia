@@ -7,7 +7,7 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Forrás szerkesztése</h5>
+          <h5 class="modal-title">Forrás hozzáadása</h5>
           <button
             type="button"
             class="btn-close"
@@ -22,7 +22,6 @@
               id="sourceLink"
               class="form-control"
               v-model="localSource.sourceLink"
-              required
             />
           </div>
           <div class="mb-3">
@@ -31,7 +30,6 @@
               id="note"
               v-model="localSource.note"
               class="form-control"
-              required
             ></textarea>
           </div>
         </div>
