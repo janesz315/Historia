@@ -1,56 +1,9 @@
 <template>
   <div>
-    <div class="my-container">
+    <div class="my-container row">
 
-      <div class="category col-3 category-container">
-        <h2 class="title">Kérdéstípusok</h2>
-        <OperationsCrudQuestionTypes style="text-align: right" class="mb-2 me-2"
-          @onClickCreateButton="onClickCreateButton" />
-        <!-- Témakörök -->
-        <table class="table table-hover user-table">
-          <thead>
-            <tr>
-              <th scope="col">Kérdéstípusok</th>
-              <th scope="col">+</th>
 
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="my-cursor" v-for="questionType in questionTypes" :key="questionType.id"
-              @click="selectQuestionType(questionType.id)"
-              :class="{ 'table-danger': selectedQuestionTypeId === questionType.id }">
-              <td>{{ questionType.questionCategory }}
-              </td>
-
-              <td>
-                <OperationsCrudQuestionTypes :questionType="questionType"
-                  @onClickDeleteButton="onClickDeleteQuestionTypeButton"
-                  @onClickUpdateButton="onClickUpdateQuestionTypeButton" />
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="category col-3 category-container">
-        <h2 class="title">Témakörök</h2>
-        <!-- Témakörök -->
-        <table class="table table-hover user-table">
-          <thead>
-            <!-- <tr>
-              <th scope="col">Témakörök</th>
-            </tr> -->
-          </thead>
-          <tbody>
-            <tr class="my-cursor" v-for="category in categories" :key="category.id" @click="selectCategory(category.id)"
-              :class="{ 'table-danger': selectedCategoryId === category.id }">
-              <td>{{ category.category }}</td>
-
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div class="admin-container col-9">
+      <div class="admin-container col-12 col-md-12 col-xl-12 col-xxl-5">
         <!-- Rögzített új kérdés gomb -->
         <h2 class="title">Kérdések kezelése</h2>
         <OperationsCrudQuestionsAnswers style="text-align: right" class="mb-2 me-2"
@@ -58,7 +11,7 @@
         <!-- <button class="create-question-btn" @click="onClickCreateButton">Új kérdés létrehozása</button> -->
 
         <!-- Táblázat Wrapper, hogy a görgetés csak itt történjen -->
-        <div class="table-wrapper">
+        <div class="table-wrapper table-responsive">
           <table class="table table-hover user-table">
             <thead>
               <tr class="sticky-top">
@@ -87,6 +40,56 @@
           </table>
         </div>
       </div>
+
+      <div class="col-12 col-md-4 col-xxl-2 category-container">
+        <h2 class="title">Kérdéstípusok</h2>
+        <OperationsCrudQuestionTypes style="text-align: right" class="mb-2 me-2"
+          @onClickCreateButton="onClickCreateButton" />
+        <!-- Témakörök -->
+        <table class="table table-hover user-table">
+          <thead>
+            <tr>
+              <th scope="col">Kérdéstípusok</th>
+              <th scope="col">+</th>
+
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="my-cursor" v-for="questionType in questionTypes" :key="questionType.id"
+              @click="selectQuestionType(questionType.id)"
+              :class="{ 'table-danger': selectedQuestionTypeId === questionType.id }">
+              <td>{{ questionType.questionCategory }}
+              </td>
+
+              <td style="width: 50px;">
+                <OperationsCrudQuestionTypes :questionType="questionType"
+                  @onClickDeleteButton="onClickDeleteQuestionTypeButton"
+                  @onClickUpdateButton="onClickUpdateQuestionTypeButton" />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col-12 category-container col-md-4 col-xxl-4">
+        <h2 class="title">Témakörök</h2>
+        <!-- Témakörök -->
+        <table class="table table-hover user-table">
+          <thead>
+            <!-- <tr>
+              <th scope="col">Témakörök</th>
+            </tr> -->
+          </thead>
+          <tbody>
+            <tr class="my-cursor" v-for="category in categories" :key="category.id" @click="selectCategory(category.id)"
+              :class="{ 'table-danger': selectedCategoryId === category.id }">
+              <td>{{ category.category }}</td>
+
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      
     </div>
 
     <Modal :title="title" :yes="yes" :no="no" :size="size" @yesEvent="yesEventHandler">
