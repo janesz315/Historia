@@ -26,6 +26,7 @@
         v-for="category in filteredCategories"
         :key="category.id"
         :class="{ active: category.id === selectedRowId }"
+        @click="selectCategory(category.id)"
       >
         <CategoryCard
           :category="category"
@@ -33,6 +34,9 @@
           :sources="sources[category.id] || []"
           :onClickDeleteButton="onClickDeleteButton"
           :onClickUpdateButton="onClickUpdateButton"
+          :onClickDeleteSourceButton="onClickDeleteSourceButton"
+          :onClickUpdateSourceButton="onClickUpdateSourceButton"
+          :onClickCreateSourceButton="onClickCreateSourceButton"
         />
       </div>
     </div>
@@ -45,7 +49,7 @@
       :size="size"
       @yesEvent="yesEventHandler"
     >
-      <div v-if="state == 'Delete'">
+      <div v-if="state == 'Delete' || state == 'Delete2'">
         {{ messageYesNo }}
       </div>
 
@@ -53,6 +57,12 @@
         v-if="state == 'Create' || state == 'Update'"
         :itemForm="category"
         @saveItem="saveItemHandler"
+      />
+
+      <SourceForm
+        v-if="state == 'Create2' || state == 'Update2'"
+        :itemForm="source"
+        @saveItem="saveSourceHandler"
       />
     </Modal>
   </div>
@@ -68,6 +78,16 @@ class Category {
     this.text = text;
   }
 }
+
+class Source {
+  constructor(sourceLink = null, note = null, id = null, categoryId = null) {
+    this.sourceLink = sourceLink;
+    this.note = note;
+    this.id = id;
+    this.categoryId = categoryId;
+  }
+}
+
 import axios from "axios";
 import { BASE_URL } from "../helpers/baseUrls";
 import { useAuthStore } from "../stores/useAuthStore";
@@ -77,13 +97,16 @@ import CategoryForm from "@/components/Forms/CategoryForm.vue";
 import OperationsCrud from "@/components/Modals/OperationsCrudCategories.vue";
 // import bootstrap from "bootstrap/dist/js/bootstrap.bundle.min.js";
 import * as bootstrap from "bootstrap";
+import SourceForm from "@/components/Forms/SourceForm.vue";
 
 export default {
-  components: { CategoryCard, CategoryForm, OperationsCrud },
+  components: { CategoryCard, CategoryForm, OperationsCrud, SourceForm },
   data() {
     return {
       urlApiCategory: `${BASE_URL}/categories`,
+      urlApiSource: `${BASE_URL}/sources`,
       categories: [],
+      categoryById: [],
       sources: {},
       selectedLevel: "",
       store: useAuthStore(),
@@ -95,6 +118,8 @@ export default {
       no: null,
       size: null,
       category: new Category(),
+      source: new Source(),
+      selectedCategoryId: null,
     };
   },
   computed: {
@@ -129,6 +154,27 @@ export default {
       } catch (error) {
         console.error("Hiba a kategóriák lekérésekor:", error);
         alert("Kategóriák betöltése sikertelen.");
+      }
+    },
+
+    selectCategory(categoryId){
+      this.selectedCategoryId = categoryId;
+    },
+
+    async fetchCategoryById(id) {
+      try {
+        const response = await axios.get(
+          `${BASE_URL}/categories/${id}`,
+          {
+            headers: { Authorization: `Bearer ${this.store.token}` },
+          }
+        );
+
+        this.categoryById = response.data.data[0];
+        console.log("Adatok: ", this.categoryById);
+      } catch (error) {
+        console.error("Hiba a kérdések és válaszok lekérésekor:", error);
+        alert("A kérdések és válaszok betöltése sikertelen.");
       }
     },
 
@@ -187,10 +233,27 @@ export default {
       }
     },
 
+    async deleteSourceById() {
+      try {
+        const id = this.selectedRowId;
+        const response = await axios.delete(`${BASE_URL}/sources/${id}`, {
+          headers: { Authorization: `Bearer ${this.store.token}` },
+        });
+        // A sikeres törlés után frissíteni kell a kategóriák listáját
+        await this.fetchSources();
+      } catch (error) {
+        console.error("Törlés hiba:", error);
+      }
+    },
+
     yesEventHandler() {
       if (this.state == "Delete") {
         this.deleteCategoryById();
         this.modal.hide(); // A modal bezárása a törlés után
+      }
+      else if (this.state == "Delete2") {
+        this.deleteSourceById();
+        this.modal.hide();
       }
     },
 
@@ -218,7 +281,6 @@ export default {
       }
       this.state = "Read";
     },
-
     async createCategory() {
       const token = this.store.token;
       const url = this.urlApiCategory;
@@ -240,6 +302,54 @@ export default {
         alert("A kategória sikeresen létrehozva!");
       } catch (error) {
         this.errorMessages = "A bővítés nem sikerült.";
+      }
+      this.state = "Read";
+    },
+
+    async updateSource() {
+      this.loading = true;
+      const id = this.selectedRowId;
+      const url = `${this.urlApiSource}/${id}`;
+      const headers = {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${this.store.token}`,
+      };
+
+      const data = {
+        sourceLink: this.source.sourceLink,
+        note: this.source.note,
+        categoryId: this.source.categoryId,
+      };
+      try {
+        const response = await axios.patch(url, data, { headers });
+        this.fetchSources();
+      } catch (error) {
+        console.error("Nem sikerült a forrás frissítése:", error);
+      }
+      this.state = "Read";
+    },
+
+    async createSource() {
+      const token = this.store.token;
+      const url = this.urlApiSource;
+      const headers = {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      };
+
+      const data = {
+        sourceLink: this.source.sourceLink,
+        note: this.source.note,
+        categoryId: this.selectedCategoryId,
+      };
+      try {
+        const response = await axios.post(url, data, { headers });
+        // this.items.push(response.data.data);
+        this.fetchSources();
+      } catch (error) {
+        console.error("Nem sikerült a forrás létrehozása:", error);
       }
       this.state = "Read";
     },
@@ -267,7 +377,6 @@ export default {
       this.category = { ...category }; // Beállítjuk a category-t, nem item
       this.selectedRowId = category.id;
     },
-
     onClickCreateButton() {
       this.title = "Új témakör bevitele";
       this.yes = null;
@@ -276,11 +385,46 @@ export default {
       this.state = "Create";
       this.category = new Category();
     },
+    onClickDeleteSourceButton(source) {
+      this.state = "Delete2";
+      this.title = "Törlés";
+      this.messageYesNo = `Valóban törölni akarod a(z) "${source.sourceLink}" nevű forrást?`;
+      this.yes = "Igen";
+      this.no = "Nem";
+      this.size = null;
+      this.selectedRowId = source.id;
+    },
+    onClickUpdateSourceButton (source) {
+      this.state = "Update2";
+      this.title = "Forrás módosítása";
+      this.yes = null;
+      this.no = "Mégsem";
+      this.size = "lg";
+      this.source = { ...source }; // Beállítjuk a source-t, nem item
+      this.selectedRowId = source.id;
+    },
+    onClickCreateSourceButton() {
+      this.title = "Új forrás bevitele";
+      this.yes = null;
+      this.no = "Mégsem";
+      this.size = "lg";
+      this.state = "Create2";
+      this.source = new Source();
+    },
     saveItemHandler() {
       if (this.state === "Update") {
         this.updateCategory();
       } else if (this.state === "Create") {
         this.createCategory();
+      }
+
+      this.modal.hide(); // Ha a modalnak van hide() metódusa
+    },
+    saveSourceHandler() {
+      if (this.state === "Update2") {
+        this.updateSource();
+      } else if (this.state === "Create2") {
+        this.createSource();
       }
 
       this.modal.hide(); // Ha a modalnak van hide() metódusa

@@ -24,7 +24,7 @@
           >
             <span class="navbar-toggler-icon"></span>
           </button>
-          <div class="collapse navbar-collapse">
+          <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto d-flex justify-content-end">
               <li class="nav-item">
                 <RouterLink to="/" class="nav-link">Kezdőlap</RouterLink>
@@ -195,10 +195,6 @@ export default {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-}
-
-.bi {
-  margin-right: 5px;
 }
 
 /* Dropdown menü testreszabása */
