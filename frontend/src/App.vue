@@ -197,10 +197,6 @@ export default {
   box-sizing: border-box;
 }
 
-.bi {
-  margin-right: 5px;
-}
-
 /* Dropdown menü testreszabása */
 .dropdown-menu {
   background-color: #8b5a2b; /* Az oldal háttérszíne */
