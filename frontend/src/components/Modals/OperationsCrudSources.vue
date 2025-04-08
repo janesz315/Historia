@@ -1,7 +1,8 @@
 <template>
     <div>
+      <!-- class="d-inline d-flex justify-content-between align-items-center" -->
       <!-- Csak a törlés és módosítás gombok a kártya címénél -->
-      <div v-if="category" class="d-inline d-flex justify-content-between align-items-center" >
+      <div v-if="source">
         <button
           type="button"
           class="btn btn-outline-danger"
@@ -31,21 +32,21 @@
           data-bs-target="#modal"
           @click="onClickCreateButton"
         >
-          <i class="bi bi-plus-lg"></i> Új forrás létrehozása
+          <i class="bi bi-plus-lg"></i> Forrás hozzáadása
         </button>
       </div>
     </div>
   </template>
   <script>
   export default {
-    props: { category: Object }, // Ezt már jól adod át
+    props: { source: Object }, // Ezt már jól adod át
     emits: ["onClickDeleteButton", "onClickUpdateButton", "onClickCreateButton"],
     methods: {
       onClickDeleteButton() {
-        this.$emit("onClickDeleteButton", this.category);
+        this.$emit("onClickDeleteButton", this.source);
       },
       onClickUpdateButton() {
-        this.$emit("onClickUpdateButton", this.category);
+        this.$emit("onClickUpdateButton", this.source);
       },
       onClickCreateButton() {
         this.$emit("onClickCreateButton");
@@ -53,4 +54,7 @@
     },
   };
   </script>
+
+<style> 
+</style>
   

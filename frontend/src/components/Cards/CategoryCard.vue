@@ -41,14 +41,15 @@
         </button>
 
         <!-- Források megjelenítése -->
-        <div v-if="sources.length" class="sources mt-3">
-          <h6>Források:</h6>
+        <div class="sources mt-3">
+          <div class="source-item">
+            <h6>Források:</h6>
+            <OperationsCrudSources
+              @onClickCreateButton="onClickCreateSourceButton"
+            />
+          </div>
           <ul class="source-list">
-            <li
-              v-for="(source, index) in sources"
-              :key="source.id"
-              class="source-item"
-            >
+            <li v-for="source in sources" :key="source.id" class="source-item">
               <div class="source-content">
                 <a
                   :href="source.sourceLink"
@@ -57,25 +58,14 @@
                   >{{ source.sourceLink }}</a
                 >
                 <p class="source-note">{{ source.note }}</p>
+                  <OperationsCrudSources
+                    :source="source"
+                    @onClickDeleteButton="onClickDeleteSourceButton"
+                    @onClickUpdateButton="onClickUpdateSourceButton"
+                  />
               </div>
-              <button
-                v-if="stateAuth.roleId === 1"
-                @click="openSourceEditModal(index)"
-                class="btn btn-sm btn-outline-primary edit-button"
-              >
-                <i class="bi bi-pencil"></i>
-              </button>
             </li>
           </ul>
-        </div>
-        <!-- Ha nincs forrás, akkor is jelenjen meg a szerkesztés gomb -->
-        <div v-if="stateAuth.roleId === 1 && !sources.length" class="mt-3">
-          <button
-            @click="openSourceEditModal(-1)"
-            class="btn btn-outline-info btn-sm"
-          >
-            <i class="bi bi-plus-circle"></i> Forrás hozzáadása
-          </button>
         </div>
       </div>
     </transition>
@@ -86,14 +76,6 @@
       :saveCategory="saveCategory"
       ref="editModalRef"
     />
-
-    <!-- Forrás szerkesztő modal -->
-    <SourceEditModal
-      v-if="editingSource !== null"
-      :localSource="editingSource"
-      @saveItem="saveSource"
-      @close="editingSource = null"
-    />
   </div>
 </template>
 
@@ -101,18 +83,21 @@
 import axios from "axios";
 import { BASE_URL } from "@/helpers/baseUrls";
 import CategoryEditModal from "@/components/Modals/CategoryEditModal.vue";
-import SourceEditModal from "@/components/Modals/SourceEditModal.vue";
 import { useAuthStore } from "@/stores/useAuthStore.js";
 import OperationsCrud from "../Modals/OperationsCrudCategories.vue";
+import OperationsCrudSources from "../Modals/OperationsCrudSources.vue";
 
 export default {
-  components: { CategoryEditModal, SourceEditModal, OperationsCrud },
+  components: {
+    CategoryEditModal,
+    OperationsCrud,
+    OperationsCrudSources,
+  },
   data() {
     return {
       imageLevelK: "letter-k.svg",
       imageLevelE: "letter-e.svg",
       stateAuth: useAuthStore(),
-      editingSource: null,
     };
   },
   props: [
@@ -121,6 +106,9 @@ export default {
     "sources",
     "onClickDeleteButton",
     "onClickUpdateButton",
+    "onClickDeleteSourceButton",
+    "onClickUpdateSourceButton",
+    "onClickCreateSourceButton",
   ],
   methods: {
     toggleExpand() {
@@ -128,52 +116,6 @@ export default {
     },
     openEditModal() {
       this.$refs.editModalRef.openModal();
-    },
-    openSourceEditModal(index) {
-      if (index === -1) {
-        this.editingSource = { sourceLink: "", note: ""}; 
-      } else {
-        const selectedSource = this.sources[index];
-
-        if (!selectedSource) {
-          console.error("Hiba: Érvénytelen forrás index!", index);
-          return;
-        }
-
-        this.editingSource = { ...selectedSource }; // Másolat készítése
-      }
-
-      console.log("Modalnak átadott adat:", this.editingSource);
-    },
-    saveSource(updatedSource) {
-      console.log("Fogadott adat a saveSource-ban:", updatedSource);
-
-      if (!updatedSource.sourceLink || !updatedSource.note) {
-        console.error("Hiba: Hiányzó adatok!", updatedSource);
-        return;
-      }
-
-      axios
-        .post(`${BASE_URL}/sources/`, updatedSource,
-        { headers: { Authorization: `Bearer ${this.stateAuth.token}` } }
-        )
-        .then((response) => {
-          console.log("Válasz az API-tól:", response.data);
-
-          // Frissítjük a forráslistát
-          const index = this.sources.findIndex(
-            (source) => source.id === updatedSource.id
-          );
-          if (index !== -1) {
-            this.sources[index] = { ...updatedSource };
-          }
-
-          // Bezárjuk a modalt
-          this.editingSource = null;
-        })
-        .catch((error) => {
-          console.error("Hiba történt a forrás frissítésekor:", error);
-        });
     },
   },
 };
