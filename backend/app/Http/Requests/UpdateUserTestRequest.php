@@ -24,7 +24,7 @@ class UpdateUserTestRequest extends FormRequest
         return [
             'userId' => 'required|exists:users,id',
             'testName' => 'required|string',
-            'score' => 'required|double'
+            'score' => 'nullable|double'
         ];
     }
 }

@@ -1,6 +1,8 @@
 <template>
   <div class="container">
 
+     <OperationsCrudUserTests style="margin-top:100px;" @onClickCreateButton="onClickCreateButton" />
+
     <div class="d-flex justify-content-end align-items-end" style="min-height: 100vh;">
       <div class="col-12 col-md-8 col-xxl-6">
         <h2 class="title">Eddigi tesztek</h2>
@@ -10,34 +12,72 @@
             <tr>
               <th scope="col">Név</th>
             <th scope="col">%</th>
+            <th scope="col">+</th>
           </tr>
         </thead>
         <tbody>
           <tr class="my-cursor" v-for="userTest in userTests" :key="userTest.id">
             <td>{{ userTest.testName }}</td>
             <td style="width: 50px;">{{ userTest.score }}</td>
+            <td><OperationsCrudUserTests :userTest="userTest"
+                  @onClickDeleteButton="onClickDeleteQuestionTypeButton"
+                  @onClickUpdateButton="onClickUpdateQuestionTypeButton" /></td>
           </tr>
         </tbody>
       </table>
     </div>
   </div>
+  <Modal :title="title" :yes="yes" :no="no" :size="size" @yesEvent="yesEventHandler">
+      <div v-if="state == 'Delete'">
+        {{ messageYesNo }}
+      </div>
+
+      <UserTestForm v-if="state === 'Create' || state === 'Update'" :itemForm="userTest"
+        @saveItem="saveItemHandler" :categories="categories" />
+    </Modal>
 </div>
 </template>
 
 <script>
+class UserTest {
+  constructor(id = null, userId = null, testName = null, score = null) {
+    this.id = id;
+    this.userId = userId;
+    this.testName = testName;
+    this.score = score;
+  }
+}
+
 import axios from 'axios';
 import { BASE_URL } from "../helpers/baseUrls";
 import { useAuthStore } from "../stores/useAuthStore";
+import UserTestForm from "@/components/Forms/UserTestForm.vue";
+import OperationsCrudUserTests from "@/components/Modals/OperationsCrudUserTests.vue";
+import * as bootstrap from "bootstrap";
+
 
 export default {
+  components:{UserTestForm, OperationsCrudUserTests},
   data() {
     return {
       store: useAuthStore(),
+      urlApiUserTest: `${BASE_URL}/userTests`,
       userTests: [],
+      categories: [],
+      state: "Read", //CRUD: Create, Read, Update, Delete
+      title: null,
+      yes: null,
+      no: null,
+      size: null,
+      userTest: new UserTest(),
     };
   },
   mounted() {
     this.fetchUserTests();
+    this.fetchCategories();
+    this.modal = new bootstrap.Modal("#modal", {
+      keyboard: false,
+    });
   },
   methods: {
     async fetchUserTests() {
@@ -53,9 +93,66 @@ export default {
         console.error("Hiba a kérdéstípusok lekérésekor:", error);
         alert("Kérdéstípusok betöltése sikertelen.");
       }
-    }
-  }
-};
+    },
+
+    async fetchCategories() {
+      try {
+        const response = await axios.get(`${BASE_URL}/categories`, {
+          headers: { Authorization: `Bearer ${this.store.token}` },
+        });
+
+        this.categories = response.data.data.map((category) => ({
+          ...category,
+        }));
+      } catch (error) {
+        console.error("Hiba a kategóriák lekérésekor:", error);
+        alert("Kategóriák betöltése sikertelen.");
+      }
+    },
+
+    async createUserTest() {
+      const token = this.store.token;
+      const url = this.urlApiUserTest;
+      const headers = {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      };
+
+      const data = {
+        userId: this.store.id,
+        testName: this.userTest.testName,
+        score: 0,
+      };
+      try {
+        const response = await axios.post(url, data, { headers });
+        this.fetchUserTests();
+      } catch (error) {
+        console.error("Nem sikerült a teszt létrehozása:", error);
+      }
+      this.state = "Read";
+    },
+
+     onClickCreateButton() {
+      this.state = "Create";
+      this.title = "Új teszt bevitele";
+      this.yes = null;
+      this.no = "Mégsem";
+      this.size = "lg";
+      this.userTest = new UserTest();
+  },
+
+  saveItemHandler() {
+      if (this.state === "Update") {
+        this.updatUserTest();
+      } else if (this.state === "Create") {
+        this.createUserTest();
+      }
+
+      this.modal.hide(); // Ha a modalnak van hide() metódusa
+    },
+}
+}
 </script>
 
 <style>
