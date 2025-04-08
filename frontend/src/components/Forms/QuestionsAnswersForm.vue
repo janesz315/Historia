@@ -69,7 +69,7 @@
       :key="answer.answerId"
       class="mb-3"
     >
-      <label class="form-label">Válasz {{ index + 1 }}:</label>
+      <label class="form-label">Válasz {{ index + 1 }}: </label>
       <div class="input-group">
         <!-- Checkbox alaphelyzetben -->
         <div class="input-group-text" v-show="!editing || isEditingField !== answer.answerId">

@@ -6,8 +6,11 @@
       <div class="admin-container col-12 col-md-12 col-xl-12 col-xxl-5">
         <!-- Rögzített új kérdés gomb -->
         <h2 class="title">Kérdések kezelése</h2>
-        <OperationsCrudQuestionsAnswers style="text-align: right" class="mb-2 me-2"
-          @onClickCreateButton="onClickCreateButton" />
+        <div class="justify-content-between">
+          <h6>Témakör:{{ selectedCategoryName }}</h6>
+          <OperationsCrudQuestionsAnswers style="text-align: right" class="mb-2 me-2"
+            @onClickCreateButton="onClickCreateButton" />
+        </div>
         <!-- <button class="create-question-btn" @click="onClickCreateButton">Új kérdés létrehozása</button> -->
 
         <!-- Táblázat Wrapper, hogy a görgetés csak itt történjen -->
@@ -80,7 +83,7 @@
             </tr> -->
           </thead>
           <tbody>
-            <tr class="my-cursor" v-for="category in categories" :key="category.id" @click="selectCategory(category.id)"
+            <tr class="my-cursor" v-for="category in categories" :key="category.id" @click="selectCategory(category.id, category.category)"
               :class="{ 'table-danger': selectedCategoryId === category.id }">
               <td>{{ category.category }}</td>
 
@@ -169,6 +172,7 @@ export default {
       isCreate: true,
       selectedCategoryId: null,
       selectedQuestionTypeId: null,
+      selectedCategoryName: null,
       messageYesNo: null,
       state: "Read", //CRUD: Create, Read, Update, Delete
       title: null,
@@ -261,8 +265,9 @@ export default {
     },
 
     // Kategória kiválasztás
-    selectCategory(categoryId) {
+    selectCategory(categoryId, categoryName) {
       this.selectedCategoryId = categoryId;
+      this.selectedCategoryName = categoryName;
     },
 
     selectQuestionType(questionTypeId) {
@@ -544,7 +549,7 @@ export default {
       // console.log(this.selectedRowId);
     },
 
-    onClickCreateButton() {
+    onClickCreateQuestionTypeButton() {
       this.state = "Create2";
       this.title = "Új kérdéstípus bevitele";
       this.yes = null;
