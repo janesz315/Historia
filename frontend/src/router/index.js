@@ -119,6 +119,16 @@ const router = createRouter({
       meta: {title: (route) => 'Admin felület', requiresAdmin: true,}
     },
     {
+      path: '/kerdestipusok',
+      name: 'questionTypes',
+      // route level code-splitting
+      // this generates a separate chunk (About.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import('../views/QuestionTypesView.vue'),
+      beforeEnter: [checkIfNotLogged],
+      meta: {title: (route) => 'Kérdéstípusok', requiresAdmin: true,}
+    },
+    {
       path: '/kerdesek',
       name: 'kerdesek',
       // route level code-splitting

@@ -77,6 +77,13 @@
                 <RouterLink to="/admin" class="nav-link">Admin</RouterLink>
               </li>
 
+               <li
+                v-if="stateAuth.user && stateAuth.roleId === 1"
+                class="nav-item"
+              >
+                <RouterLink to="/kerdestipusok" class="nav-link">Kérdéstípusok</RouterLink>
+              </li>
+
               <li
                 v-if="stateAuth.user && stateAuth.roleId === 1"
                 class="nav-item"

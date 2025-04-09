@@ -21,7 +21,7 @@
                 <th scope="col">Kérdés</th>
                 <th scope="col">Típus</th>
                 <th scope="col">Válaszok</th>
-                <th scope="col">M</th>
+                <th scope="col">+</th>
               </tr>
             </thead>
             <tbody>
@@ -44,35 +44,6 @@
         </div>
       </div>
 
-      <div class="col-12 col-md-4 col-xxl-2 category-container">
-        <h2 class="title">Kérdéstípusok</h2>
-        <OperationsCrudQuestionTypes style="text-align: right" class="mb-2 me-2"
-          @onClickCreateButton="onClickCreateButton" />
-        <!-- Témakörök -->
-        <table class="table table-hover user-table">
-          <thead>
-            <tr>
-              <th scope="col">Kérdéstípusok</th>
-              <th scope="col">+</th>
-
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="my-cursor" v-for="questionType in questionTypes" :key="questionType.id"
-              @click="selectQuestionType(questionType.id)"
-              :class="{ 'table-danger': selectedQuestionTypeId === questionType.id }">
-              <td>{{ questionType.questionCategory }}
-              </td>
-
-              <td style="width: 50px;">
-                <OperationsCrudQuestionTypes :questionType="questionType"
-                  @onClickDeleteButton="onClickDeleteQuestionTypeButton"
-                  @onClickUpdateButton="onClickUpdateQuestionTypeButton" />
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
       <div class="col-12 category-container col-md-4 col-xxl-4">
         <h2 class="title">Témakörök</h2>
         <!-- Témakörök -->
@@ -96,7 +67,7 @@
     </div>
 
     <Modal :title="title" :yes="yes" :no="no" :size="size" @yesEvent="yesEventHandler">
-      <div v-if="state == 'Delete' || state == 'Delete2'">
+      <div v-if="state == 'Delete'">
         {{ messageYesNo }}
       </div>
 
@@ -106,8 +77,6 @@
         :formData="questionAnswers" :categories="categories" :questionTypes="questionTypes" @saveItem="saveItemHandler"
         @addAnswer="addAnswerHandler" @saveField="saveField" @removeAnswer="deleteAnswerById" />
 
-      <QuestionTypesForm v-if="state === 'Create2' || state === 'Update2'" :itemForm="questionType"
-        @saveItem="saveQuestionTypeHandler" />
     </Modal>
 
   </div>
@@ -161,17 +130,15 @@ import * as bootstrap from "bootstrap";
 
 export default {
   components: { QuestionsAnswersForm, QuestionTypesForm, OperationsCrudQuestionsAnswers, OperationsCrudQuestionTypes },
-  data() {
+   data() {
     return {
       store: useAuthStore(),
-      urlApiQuestionType: `${BASE_URL}/questionTypes`,
       questionsAnswers: [],
       questionAnswers: [],
       categories: [],
       questionTypes: [],
       isCreate: true,
       selectedCategoryId: null,
-      selectedQuestionTypeId: null,
       selectedCategoryName: null,
       messageYesNo: null,
       state: "Read", //CRUD: Create, Read, Update, Delete
@@ -181,11 +148,9 @@ export default {
       size: null,
       question: new Question(),
       answer: new Answer(),
-      questionType: new QuestionType(),
       formKey: 0,
     };
   },
-
   computed: {
     // Szűrt kérdések
     filteredQuestions() {
@@ -270,10 +235,6 @@ export default {
       this.selectedCategoryName = categoryName;
     },
 
-    selectQuestionType(questionTypeId) {
-      this.selectedQuestionTypeId = questionTypeId;
-    },
-
     saveItemHandler(formData) {
       if (this.state === "Create") {
         this.createQuestion(formData);
@@ -283,64 +244,6 @@ export default {
       }
     },
 
-    saveQuestionTypeHandler() {
-      if (this.state === "Create2") {
-        this.createQuestionType();
-      } else if (this.state === "Update2") {
-        this.updateQuestionType();
-      }
-
-      this.modal.hide();
-    },
-
-    async createQuestionType() {
-      const token = this.store.token;
-      const url = this.urlApiQuestionType;
-      const headers = {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      };
-
-      const data = {
-        questionCategory: this.questionType.questionCategory,
-      };
-      try {
-        const response = await axios.post(url, data, { headers });
-        this.fetchQuestionTypes();
-        this.fetchQuestionsAnswers();
-        // alert("A kérdéstípus sikeresen létrehozva!");
-      } catch (error) {
-        console.error("Hiba történt a kérdéstípus mentésekor:", error);
-      }
-      this.state = "Read";
-
-    },
-
-    async updateQuestionType() {
-      this.loading = true;
-      const id = this.selectedRowId;
-      const url = `${this.urlApiQuestionType}/${id}`;
-      const headers = {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${this.store.token}`,
-      };
-
-      const data = {
-        questionCategory: this.questionType.questionCategory,
-      };
-      try {
-        const response = await axios.patch(url, data, { headers });
-        this.fetchQuestionTypes();
-        this.fetchQuestionsAnswers();
-        // alert("A kérdéstípus sikeresen módosítva!");
-      } catch (error) {
-        console.error("Hiba történt a kérdéstípus frissítésekor:", error);
-      }
-      this.state = "Read";
-
-    },
     async createQuestion(formData) {
       try {
         const response = await axios.post(`${BASE_URL}/questions`, formData, {
@@ -372,6 +275,7 @@ export default {
         console.error("Hiba történt a kérdés frissítésekor:", error);
       }
     },
+
 
 
 
@@ -460,29 +364,11 @@ export default {
 
 
     },
-    async deleteQuestionTypeById() {
-      try {
-        const id = this.selectedRowId;
-        const response = await axios.delete(`${BASE_URL}/questionTypes/${id}`, {
-          headers: { Authorization: `Bearer ${this.store.token}` },
-        });
 
-        // A sikeres törlés után frissíteni kell a kérdések listáját
-        this.fetchQuestionTypes();
-
-      } catch (error) {
-        console.error("Törlés hiba:", error);
-        alert("A kérdés törlése nem sikerült!");
-      }
-    },
     yesEventHandler() {
       if (this.state == "Delete") {
         this.deleteQuestionById();
         this.modal.hide(); // A modal bezárása a törlés után
-      }
-      else if (this.state == "Delete2") {
-        this.deleteQuestionTypeById();
-        this.modal.hide();
       }
     },
 
@@ -527,36 +413,6 @@ export default {
       };
     },
 
-    onClickDeleteQuestionTypeButton(questionType) {
-      this.state = "Delete2";
-      this.title = "Törlés";
-      this.messageYesNo = `Valóban törölni akarod a(z) ${questionType.questionCategory} nevű kérdéstípust?`;
-      this.yes = "Igen";
-      this.no = "Nem";
-      this.size = null;
-      this.selectedRowId = questionType.id;
-      // console.log(this.selectedRowId);
-    },
-
-    onClickUpdateQuestionTypeButton(questionType) {
-      this.state = "Update2";
-      this.title = "Kérdéstípus módosítása";
-      this.yes = null;
-      this.no = "Mégsem";
-      this.size = "lg";
-      this.questionType = { ...questionType };
-      this.selectedRowId = questionType.id;
-      // console.log(this.selectedRowId);
-    },
-
-    onClickCreateQuestionTypeButton() {
-      this.state = "Create2";
-      this.title = "Új kérdéstípus bevitele";
-      this.yes = null;
-      this.no = "Mégsem";
-      this.size = "lg";
-      this.questionType = new QuestionType();
-    },
   },
 
 
