@@ -9,15 +9,15 @@
         {{ category.category }}
         <img :src="'/images/' + imageLevelE" alt="Kép leírása" height="35" />
       </h5>
-      <div class="d-flex justify-content-between align-items-center">
-        <button class="btn btn-outline-secondary me-2" @click="toggleExpand">
+      <div class="d-flex flex-wrap justify-content-end align-items-center ms-2 gap-2">
+        <button class="btn btn-outline-secondary" @click="toggleExpand">
           <i
             :class="
               category.expanded ? 'bi bi-chevron-up' : 'bi bi-chevron-down'
             "
           ></i>
         </button>
-        <div v-if="stateAuth.roleId == 1">
+        <div v-if="stateAuth.roleId == 1" class="btn d-flex flex-wrap justify-content-end">
           <OperationsCrud
             :category="category"
             @onClickDeleteButton="onClickDeleteButton"
@@ -227,5 +227,20 @@ export default {
 
 .edit-button {
   margin-left: 10px;
+}
+
+@media (max-width: 768px) {
+  .category-title {
+    font-size: 1.2rem;
+  }
+
+  .btn {
+    max-width: fit-content;
+  }
+
+  .source-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
 </style>

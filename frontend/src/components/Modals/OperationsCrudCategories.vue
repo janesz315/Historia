@@ -1,7 +1,10 @@
 <template>
   <div>
     <!-- Csak a törlés és módosítás gombok a kártya címénél -->
-    <div v-if="category" class="d-inline d-flex justify-content-between align-items-center" >
+    <div
+      v-if="category"
+      class="d-inline d-flex justify-content-between align-items-center crud-buttons"
+    >
       <button
         type="button"
         class="btn btn-outline-danger"
@@ -13,7 +16,7 @@
       </button>
       <button
         type="button"
-        class="btn btn-outline-primary ms-2"
+        class="btn btn-outline-primary"
         data-bs-toggle="modal"
         data-bs-target="#modal"
         @click="onClickUpdateButton"
@@ -53,3 +56,18 @@ export default {
   },
 };
 </script>
+
+<style>
+@media (max-width: 768px) {
+  .crud-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    max-width: max-content;
+  }
+
+  .crud-buttons .btn {
+    max-width: fit-content;
+  }
+}
+</style>
