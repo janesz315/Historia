@@ -20,8 +20,8 @@
             <td>{{ userTest.testName }}</td>
             <td style="width: 50px;">{{ userTest.score }}</td>
             <td><OperationsCrudUserTests :userTest="userTest"
-                  @onClickDeleteButton="onClickDeleteQuestionTypeButton"
-                  @onClickUpdateButton="onClickUpdateQuestionTypeButton" /></td>
+                  @onClickDeleteButton="onClickDeleteButton"
+                  @onClickUpdateButton="onClickUpdateButton" /></td>
           </tr>
         </tbody>
       </table>
@@ -64,6 +64,7 @@ export default {
       urlApiUserTest: `${BASE_URL}/userTests`,
       userTests: [],
       categories: [],
+      selectedRowId: null,
       state: "Read", //CRUD: Create, Read, Update, Delete
       title: null,
       yes: null,
@@ -133,6 +134,62 @@ export default {
       this.state = "Read";
     },
 
+    async updateUserTest() {
+      const id = this.selectedRowId;
+      const url = `${this.urlApiUserTest}/${id}`;
+      const headers = {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${this.store.token}`,
+      };
+
+      const data = {
+        userId: this.store.id,
+        testName: this.userTest.testName,
+        // score: this.userTest.score,
+      };
+      try {
+        const response = await axios.patch(url, data, { headers });
+        this.fetchUserTests();
+      } catch (error) {
+        console.error("Nem sikerült a teszt frissítése:", error);
+      }
+      this.state = "Read";
+    },
+
+    async deleteUserTestById(){
+      try {
+        const id = this.selectedRowId;
+        const url = `${this.urlApiUserTest}/${id}`;
+        const response = await axios.delete(url, {
+          headers: { Authorization: `Bearer ${this.store.token}` },
+        });
+        await this.fetchUserTests();
+      } catch (error) {
+        console.error("Nem sikerült a teszt törlése:", error);
+      }
+    },
+
+
+    onClickDeleteButton(userTest) {
+      this.state = "Delete";
+      this.title = "Törlés";
+      this.messageYesNo = `Valóban törölni akarod a(z) ${userTest.testName} nevű tesztet?`;
+      this.yes = "Igen";
+      this.no = "Nem";
+      this.size = null;
+      this.selectedRowId = userTest.id;
+    },
+    onClickUpdateButton(userTest) {
+      this.state = "Update";
+      this.title = "Teszt módosítása";
+      this.yes = null;
+      this.no = "Mégsem";
+      this.size = "lg";
+      this.userTest = { ...userTest };
+      this.selectedRowId = userTest.id;
+    },
+
      onClickCreateButton() {
       this.state = "Create";
       this.title = "Új teszt bevitele";
@@ -144,13 +201,20 @@ export default {
 
   saveItemHandler() {
       if (this.state === "Update") {
-        this.updatUserTest();
+        this.updateUserTest();
       } else if (this.state === "Create") {
         this.createUserTest();
       }
 
       this.modal.hide(); // Ha a modalnak van hide() metódusa
     },
+
+    yesEventHandler() {
+      if (this.state == "Delete") {
+        this.deleteUserTestById();
+        this.modal.hide(); // A modal bezárása a törlés után
+      }
+    }
 }
 }
 </script>
