@@ -4,8 +4,10 @@
       <h1>Témakörök kezelése</h1>
 
       <!-- Szűrés és gomb egy sorban -->
-      <div class="d-flex justify-content-between align-items-center mb-3">
-        <div class="filter-container">
+      <div
+        class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3"
+      >
+        <div class="filter-container flex-grow-1">
           <label for="levelFilter" class="me-2">Szűrés szint szerint:</label>
           <select
             v-model="selectedLevel"
@@ -18,7 +20,9 @@
           </select>
         </div>
         <!-- Create gomb -->
-        <OperationsCrud @onClickCreateButton="onClickCreateButton" />
+        <div class="flex-shrink-0">
+          <OperationsCrud @onClickCreateButton="onClickCreateButton" />
+        </div>
       </div>
 
       <!-- Témakörök listája -->
@@ -157,18 +161,15 @@ export default {
       }
     },
 
-    selectCategory(categoryId){
+    selectCategory(categoryId) {
       this.selectedCategoryId = categoryId;
     },
 
     async fetchCategoryById(id) {
       try {
-        const response = await axios.get(
-          `${BASE_URL}/categories/${id}`,
-          {
-            headers: { Authorization: `Bearer ${this.store.token}` },
-          }
-        );
+        const response = await axios.get(`${BASE_URL}/categories/${id}`, {
+          headers: { Authorization: `Bearer ${this.store.token}` },
+        });
 
         this.categoryById = response.data.data[0];
         console.log("Adatok: ", this.categoryById);
@@ -250,8 +251,7 @@ export default {
       if (this.state == "Delete") {
         this.deleteCategoryById();
         this.modal.hide(); // A modal bezárása a törlés után
-      }
-      else if (this.state == "Delete2") {
+      } else if (this.state == "Delete2") {
         this.deleteSourceById();
         this.modal.hide();
       }
@@ -394,7 +394,7 @@ export default {
       this.size = null;
       this.selectedRowId = source.id;
     },
-    onClickUpdateSourceButton (source) {
+    onClickUpdateSourceButton(source) {
       this.state = "Update2";
       this.title = "Forrás módosítása";
       this.yes = null;
@@ -456,5 +456,17 @@ export default {
 .filter-container {
   display: flex;
   align-items: center;
+}
+
+@media (max-width: 768px) {
+  .filter-container,
+  .filter-container select,
+  .flex-shrink-0 {
+    width: 100%;
+  }
+
+  .filter-container {
+    margin-bottom: 10px;
+  }
 }
 </style>
