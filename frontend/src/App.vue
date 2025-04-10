@@ -157,7 +157,7 @@
     </header>
 
     <!-- Dinamikus tartalom megjelenítése -->
-    <RouterView style="margin-top:64px"/>
+    <RouterView />
   </div>
 </template>
 

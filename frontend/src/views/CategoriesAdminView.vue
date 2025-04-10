@@ -157,7 +157,6 @@ export default {
         }));
       } catch (error) {
         console.error("Hiba a kategóriák lekérésekor:", error);
-        alert("Kategóriák betöltése sikertelen.");
       }
     },
 
@@ -175,7 +174,6 @@ export default {
         console.log("Adatok: ", this.categoryById);
       } catch (error) {
         console.error("Hiba a kérdések és válaszok lekérésekor:", error);
-        alert("A kérdések és válaszok betöltése sikertelen.");
       }
     },
 
@@ -192,7 +190,6 @@ export default {
         }, {});
       } catch (error) {
         console.error("Hiba a források lekérésekor:", error);
-        alert("Források betöltése sikertelen.");
       }
     },
 
@@ -208,7 +205,6 @@ export default {
           { headers: { Authorization: `Bearer ${this.store.token}` } }
         );
 
-        alert("Sikeres mentés!");
         await this.fetchCategories();
       } catch (error) {
         console.error("Hiba mentéskor:", error);
@@ -227,10 +223,8 @@ export default {
         // A sikeres törlés után frissíteni kell a kategóriák listáját
         await this.fetchCategories();
 
-        alert("A kategória sikeresen törölve!");
       } catch (error) {
         console.error("Törlés hiba:", error);
-        alert("A kategória törlése nem sikerült!");
       }
     },
 
@@ -275,7 +269,6 @@ export default {
       try {
         const response = await axios.patch(url, data, { headers });
         this.fetchCategories();
-        alert("A kategória sikeresen módosítva!");
       } catch (error) {
         this.errorMessages = "A módosítás nem sikerült.";
       }
@@ -299,7 +292,6 @@ export default {
         const response = await axios.post(url, data, { headers });
         // this.items.push(response.data.data);
         this.fetchCategories();
-        alert("A kategória sikeresen létrehozva!");
       } catch (error) {
         this.errorMessages = "A bővítés nem sikerült.";
       }
@@ -436,7 +428,8 @@ export default {
 <style scoped>
 .my-container-height {
   min-height: 100vh;
-}
+} 
+
 .my-container {
   background-image: url("/images/parchment-texture.jpg");
   background-size: cover;

@@ -3,14 +3,14 @@
 
      <OperationsCrudUserTests @onClickCreateButton="onClickCreateButton" />
 
-    <div class="d-flex justify-content-center align-items-end" style="min-height: 100vh;">
+    <div class="d-flex justify-content-center" style="min-height: 100vh;">
       <div class="col-12 col-md-8 col-xxl-3">
         <h2 class="title">Eddigi tesztek</h2>
         <!-- Témakörök -->
         <table class="table table-hover user-table">
           <thead>
             <tr>
-              <th scope="col">Név</th>
+            <th scope="col">Név</th>
             <th scope="col">%</th>
             <th scope="col">+</th>
           </tr>
@@ -224,6 +224,13 @@ export default {
   background-image: url("/images/parchment-texture.jpg");
   background-size: cover;
   background-attachment: fixed;
+}
+
+.container {
+  max-width: auto;
+  margin: auto;
+  padding: 40px;
+  transform: translateY(2%);
 }
 
 h2 {
