@@ -42,15 +42,8 @@
 
 <script>
 export default {
-  props: ["itemForm", "categories", "categoryId"],
+  props: ["itemForm", "categories"],
   emits: ["saveItem"],
-  data(){
-    return{
-        category: {
-          id: this.categoryId || ''
-        }
-    };
-  },
   methods: {
     onClickSubmit() {
       this.$emit("saveItem", this.itemForm);

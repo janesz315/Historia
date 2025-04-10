@@ -40,11 +40,12 @@
 
 <script>
 class UserTest {
-  constructor(id = null, userId = null, testName = null, score = null) {
+  constructor(id = null, userId = null, testName = null, score = null, categoryId = null) {
     this.id = id;
     this.userId = userId;
     this.testName = testName;
     this.score = score;
+    this.categoryId = categoryId;
   }
 }
 
@@ -64,6 +65,7 @@ export default {
       urlApiUserTest: `${BASE_URL}/userTests`,
       userTests: [],
       categories: [],
+      category: {},
       selectedRowId: null,
       state: "Read", //CRUD: Create, Read, Update, Delete
       title: null,
