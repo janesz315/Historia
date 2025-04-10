@@ -1,10 +1,10 @@
 <template>
   <div class="container">
 
-     <OperationsCrudUserTests style="margin-top:100px;" @onClickCreateButton="onClickCreateButton" />
+     <OperationsCrudUserTests @onClickCreateButton="onClickCreateButton" />
 
-    <div class="d-flex justify-content-end align-items-end" style="min-height: 100vh;">
-      <div class="col-12 col-md-8 col-xxl-6">
+    <div class="d-flex justify-content-center align-items-end" style="min-height: 100vh;">
+      <div class="col-12 col-md-8 col-xxl-3">
         <h2 class="title">Eddigi tesztek</h2>
         <!-- Témakörök -->
         <table class="table table-hover user-table">
@@ -229,4 +229,9 @@ export default {
 h2 {
   text-align: center;
 }
+
+.my-cursor {
+  cursor: pointer;
+}
+
 </style>
