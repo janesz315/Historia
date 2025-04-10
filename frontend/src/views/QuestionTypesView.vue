@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div class="col-12 col-md-4 col-xxl-2 category-container">
+  <div class=" my-container">
+    <div class="col-10 col-md-8 col-xxl-3 category-container">
       <h2 class="title">Kérdéstípusok</h2>
       <OperationsCrudQuestionTypes
         style="text-align: right"
