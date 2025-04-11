@@ -1,46 +1,69 @@
 <template>
   <div class="container">
+    <OperationsCrudUserTests @onClickCreateButton="onClickCreateButton" />
 
-     <OperationsCrudUserTests @onClickCreateButton="onClickCreateButton" />
-
-    <div class="d-flex justify-content-center" style="min-height: 100vh;">
+    <div class="d-flex justify-content-center" style="min-height: 100vh">
       <div class="col-12 col-md-8 col-xxl-3">
         <h2 class="title">Eddigi tesztek</h2>
         <!-- Témakörök -->
         <table class="table table-hover user-table">
           <thead>
             <tr>
-            <th scope="col">Név</th>
-            <th scope="col">%</th>
-            <th scope="col">+</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr class="my-cursor" v-for="userTest in userTests" :key="userTest.id">
-            <td>{{ userTest.testName }}</td>
-            <td style="width: 50px;">{{ userTest.score }}</td>
-            <td><OperationsCrudUserTests :userTest="userTest"
+              <th scope="col">Név</th>
+              <th scope="col">%</th>
+              <th scope="col">+</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              class="my-cursor"
+              v-for="userTest in userTests"
+              :key="userTest.id"
+            >
+              <td>{{ userTest.testName }}</td>
+              <td style="width: 50px">{{ userTest.score }}</td>
+              <td>
+                <OperationsCrudUserTests
+                  :userTest="userTest"
                   @onClickDeleteButton="onClickDeleteButton"
-                  @onClickUpdateButton="onClickUpdateButton" /></td>
-          </tr>
-        </tbody>
-      </table>
+                  @onClickUpdateButton="onClickUpdateButton"
+                />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
-  </div>
-  <Modal :title="title" :yes="yes" :no="no" :size="size" @yesEvent="yesEventHandler">
+    <Modal
+      :title="title"
+      :yes="yes"
+      :no="no"
+      :size="size"
+      @yesEvent="yesEventHandler"
+    >
       <div v-if="state == 'Delete'">
         {{ messageYesNo }}
       </div>
 
-      <UserTestForm v-if="state === 'Create' || state === 'Update'" :itemForm="userTest"
-        @saveItem="saveItemHandler" :categories="categories" />
+      <UserTestForm
+        v-if="state === 'Create' || state === 'Update'"
+        :itemForm="userTest"
+        @saveItem="saveItemHandler"
+        :categories="categories"
+      />
     </Modal>
-</div>
+  </div>
 </template>
 
 <script>
 class UserTest {
-  constructor(id = null, userId = null, testName = null, score = null, categoryId = null) {
+  constructor(
+    id = null,
+    userId = null,
+    testName = null,
+    score = null,
+    categoryId = null
+  ) {
     this.id = id;
     this.userId = userId;
     this.testName = testName;
@@ -49,16 +72,15 @@ class UserTest {
   }
 }
 
-import axios from 'axios';
+import axios from "axios";
 import { BASE_URL } from "../helpers/baseUrls";
 import { useAuthStore } from "../stores/useAuthStore";
 import UserTestForm from "@/components/Forms/UserTestForm.vue";
 import OperationsCrudUserTests from "@/components/Modals/OperationsCrudUserTests.vue";
 import * as bootstrap from "bootstrap";
 
-
 export default {
-  components:{UserTestForm, OperationsCrudUserTests},
+  components: { UserTestForm, OperationsCrudUserTests },
   data() {
     return {
       store: useAuthStore(),
@@ -159,7 +181,7 @@ export default {
       this.state = "Read";
     },
 
-    async deleteUserTestById(){
+    async deleteUserTestById() {
       try {
         const id = this.selectedRowId;
         const url = `${this.urlApiUserTest}/${id}`;
@@ -171,7 +193,6 @@ export default {
         console.error("Nem sikerült a teszt törlése:", error);
       }
     },
-
 
     onClickDeleteButton(userTest) {
       this.state = "Delete";
@@ -192,16 +213,16 @@ export default {
       this.selectedRowId = userTest.id;
     },
 
-     onClickCreateButton() {
+    onClickCreateButton() {
       this.state = "Create";
       this.title = "Új teszt bevitele";
       this.yes = null;
       this.no = "Mégsem";
       this.size = "lg";
       this.userTest = new UserTest();
-  },
+    },
 
-  saveItemHandler() {
+    saveItemHandler() {
       if (this.state === "Update") {
         this.updateUserTest();
       } else if (this.state === "Create") {
@@ -216,9 +237,9 @@ export default {
         this.deleteUserTestById();
         this.modal.hide(); // A modal bezárása a törlés után
       }
-    }
-}
-}
+    },
+  },
+};
 </script>
 
 <style>
@@ -242,5 +263,4 @@ h2 {
 .my-cursor {
   cursor: pointer;
 }
-
 </style>

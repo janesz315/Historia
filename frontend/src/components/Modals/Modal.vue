@@ -1,6 +1,6 @@
 <template>
     <!-- Modal -->
-    <div class="modal fade" id="modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal" id="modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" :class="{
             'modal-xl': size == 'xl',
             'modal-lg': size == 'lg',
@@ -29,12 +29,12 @@
 
 <script>
 import { Modal } from 'bootstrap';
+
 export default {
     props: ["title", "yes", "no", "size"],
     emits: ["yesEvent"],
 
     methods: {
-    
         onClickYesButton() {
             this.$emit("yesEvent");
         },
