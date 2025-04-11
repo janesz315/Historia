@@ -60,15 +60,15 @@ class UserTest {
   constructor(
     id = null,
     userId = null,
+    categoryId = null,
     testName = null,
     score = null,
-    categoryId = null
   ) {
     this.id = id;
     this.userId = userId;
+    this.categoryId = categoryId;
     this.testName = testName;
     this.score = score;
-    this.categoryName = categoryName;
   }
 }
 
@@ -146,9 +146,9 @@ export default {
 
       const data = {
         userId: this.store.id,
+        categoryId: this.userTest.categoryId,
         testName: this.userTest.testName,
         score: 0,
-        categoryName: this.userTest.selectedCategory
       };
       try {
         const response = await axios.post(url, data, { headers });
@@ -212,7 +212,6 @@ export default {
       this.size = "lg";
       this.userTest = { ...userTest };
       this.selectedRowId = userTest.id;
-      this.userTest.selectedCategory = userTest.categoryName || '';
     },
 
     onClickCreateButton() {

@@ -21,9 +21,8 @@
       <select
         id="category"
         class="form-select"
-        v-model="itemForm.selectedCategory"
         required
-        style="max-height: 200px; overflow-y: auto"
+        v-model="itemForm.categoryId"
       >
         <option disabled value="">Válassz témakört!</option>
         <option
@@ -46,8 +45,7 @@ export default {
   emits: ["saveItem"],
   methods: {
     onClickSubmit() {
-      // this.$emit("saveItem", this.itemForm);
-      this.$emit("saveItem", { ...this.itemForm, categoryName: this.itemForm.selectedCategory });
+      this.$emit("saveItem", this.itemForm);
     },
   },
 };
@@ -60,5 +58,17 @@ export default {
 }
 .card:hover {
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.needs-validation {
+  margin-top: 20px;
+}
+
+.form-label {
+  font-weight: bold;
+}
+
+.mb-3 {
+  margin-bottom: 15px;
 }
 </style>

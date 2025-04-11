@@ -31,6 +31,7 @@
 import { Modal } from 'bootstrap';
 
 export default {
+    components: { Modal },
     props: ["title", "yes", "no", "size"],
     emits: ["yesEvent"],
 
