@@ -21,7 +21,7 @@
       <select
         id="category"
         class="form-select"
-        v-model="itemForm.categoryId"
+        v-model="itemForm.selectedCategory"
         required
         style="max-height: 200px; overflow-y: auto"
       >
@@ -46,7 +46,8 @@ export default {
   emits: ["saveItem"],
   methods: {
     onClickSubmit() {
-      this.$emit("saveItem", this.itemForm);
+      // this.$emit("saveItem", this.itemForm);
+      this.$emit("saveItem", { ...this.itemForm, categoryName: this.itemForm.selectedCategory });
     },
   },
 };

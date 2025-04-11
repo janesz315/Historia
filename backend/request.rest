@@ -329,7 +329,7 @@ Authorization: Bearer {{token}}
 {
     "userId": 1,
     "testName": "Teszt 3",
-    "score": 64.3 
+    "score": null 
 }
 
 ### get user test by id
