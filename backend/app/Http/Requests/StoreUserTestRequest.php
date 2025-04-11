@@ -24,7 +24,7 @@ class StoreUserTestRequest extends FormRequest
         return [
             'userId' => 'required|exists:users,id',
             'testName' => 'required|string',
-            'score' => 'nullable'
+            'score' => 'nullable|numeric'
         ];
     }
 }
