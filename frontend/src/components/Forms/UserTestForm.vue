@@ -16,7 +16,7 @@
     </div>
 
     <!-- Témakör kiválasztása -->
-    <div class="mb-3">
+    <!-- <div class="mb-3">
       <label for="category" class="form-label">Téma:</label>
       <select
         id="category"
@@ -33,7 +33,7 @@
           {{ category.category }}
         </option>
       </select>
-    </div>
+    </div> -->
 
     <button type="submit" class="btn btn-success">Mentés</button>
   </form>

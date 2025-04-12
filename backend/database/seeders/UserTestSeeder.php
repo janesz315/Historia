@@ -19,14 +19,12 @@ class UserTestSeeder extends Seeder
         // Hozzáadunk néhány tesztet az admin felhasználóhoz
         UserTest::create([
             'userId'    => $adminUserId, // Az admin felhasználó id-ja
-            'categoryId' => 1, // Kategória id-je
             'testName'  => 'Teszt 1', // Teszt neve
             'score'     => 85.5, // Teszt eredménye
         ]);
 
         UserTest::create([
             'userId'    => $adminUserId, // Az admin felhasználó id-ja
-            'categoryId' => 2, // Kategória id-je
             'testName'  => 'Teszt 2', // Teszt neve
             'score'     => 92.3, // Teszt eredménye
         ]);

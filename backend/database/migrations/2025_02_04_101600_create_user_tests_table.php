@@ -14,12 +14,9 @@ return new class extends Migration
         Schema::create('user_tests', function (Blueprint $table) {
             $table->integer('id')->autoIncrement();
             $table->integer('userId');
-            $table->integer('categoryId');
             $table->string("testName");
             $table->double('score')-> nullable();
-            $table->foreign('userId')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('categoryId')->references('id')->on('categories')->onDelete('cascade');
-            $table->timestamps();
+            $table->foreign('userId')->references('id')->on('users')->onDelete('cascade');            $table->timestamps();
         });
     }
 
