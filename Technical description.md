@@ -67,7 +67,7 @@ Funkciók:
     - id: a felhasználói tesztek azonosítója, int(10), autoIncrement
     - userId (felhasználóId): itt határozzuk meg, hogy a teszt melyik felhasználóhoz tartozik az azonosító segítségével, int(10), autoIncrement
     - testName (tesztNév): itt adjuk meg a teszt nevét, string(30), notNull
-    - percentage (százalék): Itt adjuk meg a teszt eredményét, double(5,2), notNull
+    - percentage (százalék): Itt adjuk meg a teszt eredményét, double(5,2), nullable
 
 - testQuestions (tesztKérdések):
     - id: a tesztkérdés azonosítója, int(10), autoIncrement
