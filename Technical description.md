@@ -73,7 +73,7 @@ Funkciók:
     - id: a tesztkérdés azonosítója, int(10), autoIncrement
     - QuestionsId (KérdésekId): a tesztben megtalálható véletlenszerűen generált kérdés azonosítója, int(10), autoIncrement
     - answerId (válaszId): Itt adjuk meg a tesztben található kérdésnek a helyes válaszát az azonosító segítségével, int(10), autoIncrement
-    - userTestId (userTesztId): Itt adjuk meg, hogy a tesztkérdés melyik felhasználó tesztjében jelenik meg az azonosító segítségével, int(10), autoIncrement
+    - userTestId (userTesztId): Itt adjuk meg, hogy a tesztkérdés melyik felhasználói tesztben jelenik meg az azonosító segítségével, int(10), autoIncrement
 
 
 
