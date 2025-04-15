@@ -1,93 +1,69 @@
 <template>
   <div class="container">
-    <OperationsCrudUserTests @onClickCreateButton="onClickCreateButton" />
 
-    <div class="d-flex justify-content-center" style="min-height: 100vh">
-      <div class="col-12 col-md-8 col-xxl-3">
+     <OperationsCrudUserTests style="margin-top:100px;" @onClickCreateButton="onClickCreateButton" />
+
+    <div class="d-flex justify-content-center align-items-end" style="min-height: 100vh;">
+      <div class="col-12 col-md-8 col-xxl-6">
         <h2 class="title">Eddigi tesztek</h2>
         <!-- Témakörök -->
         <table class="table table-hover user-table">
           <thead>
             <tr>
               <th scope="col">Név</th>
-              <th scope="col">%</th>
-              <th scope="col">+</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr
-              class="my-cursor"
-              v-for="userTest in userTests"
-              :key="userTest.id"
-            >
-              <td>{{ userTest.testName }}</td>
-              <td style="width: 50px">{{ userTest.score }}</td>
-              <td>
-                <OperationsCrudUserTests
-                  :userTest="userTest"
+            <th scope="col">%</th>
+            <th scope="col">+</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="my-cursor" v-for="userTest in userTests" :key="userTest.id">
+            <td>{{ userTest.testName }}</td>
+            <td style="width: 50px;">{{ userTest.score }}</td>
+            <td><OperationsCrudUserTests :userTest="userTest"
                   @onClickDeleteButton="onClickDeleteButton"
-                  @onClickUpdateButton="onClickUpdateButton"
-                />
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+                  @onClickUpdateButton="onClickUpdateButton" /></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-    <Modal
-      :title="title"
-      :yes="yes"
-      :no="no"
-      :size="size"
-      @yesEvent="yesEventHandler"
-    >
+  </div>
+  <Modal :title="title" :yes="yes" :no="no" :size="size" @yesEvent="yesEventHandler">
       <div v-if="state == 'Delete'">
         {{ messageYesNo }}
       </div>
 
-      <UserTestForm
-        v-if="state === 'Create' || state === 'Update'"
-        :itemForm="userTest"
-        @saveItem="saveItemHandler"
-        :categories="categories"
-      />
+      <UserTestForm v-if="state === 'Create' || state === 'Update'" :itemForm="userTest"
+        @saveItem="saveItemHandler" :categories="categories" />
     </Modal>
-  </div>
+</div>
 </template>
 
 <script>
 class UserTest {
-  constructor(
-    id = null,
-    userId = null,
-    categoryId = null,
-    testName = null,
-    score = null,
-  ) {
+  constructor(id = null, userId = null, testName = null, score = null) {
     this.id = id;
     this.userId = userId;
-    this.categoryId = categoryId;
     this.testName = testName;
     this.score = score;
   }
 }
 
-import axios from "axios";
+import axios from 'axios';
 import { BASE_URL } from "../helpers/baseUrls";
 import { useAuthStore } from "../stores/useAuthStore";
 import UserTestForm from "@/components/Forms/UserTestForm.vue";
 import OperationsCrudUserTests from "@/components/Modals/OperationsCrudUserTests.vue";
 import * as bootstrap from "bootstrap";
 
+
 export default {
-  components: { UserTestForm, OperationsCrudUserTests },
+  components:{UserTestForm, OperationsCrudUserTests},
   data() {
     return {
       store: useAuthStore(),
       urlApiUserTest: `${BASE_URL}/userTests`,
       userTests: [],
       categories: [],
-      category: {},
       selectedRowId: null,
       state: "Read", //CRUD: Create, Read, Update, Delete
       title: null,
@@ -99,7 +75,6 @@ export default {
   },
   mounted() {
     this.fetchUserTests();
-    this.fetchCategories();
     this.modal = new bootstrap.Modal("#modal", {
       keyboard: false,
     });
@@ -120,20 +95,6 @@ export default {
       }
     },
 
-    async fetchCategories() {
-      try {
-        const response = await axios.get(`${BASE_URL}/categories`, {
-          headers: { Authorization: `Bearer ${this.store.token}` },
-        });
-
-        this.categories = response.data.data.map((category) => ({
-          ...category,
-        }));
-      } catch (error) {
-        console.error("Hiba a kategóriák lekérésekor:", error);
-        alert("Kategóriák betöltése sikertelen.");
-      }
-    },
 
     async createUserTest() {
       const token = this.store.token;
@@ -146,9 +107,8 @@ export default {
 
       const data = {
         userId: this.store.id,
-        categoryId: this.userTest.categoryId,
         testName: this.userTest.testName,
-        score: 0,
+        score: null,
       };
       try {
         const response = await axios.post(url, data, { headers });
@@ -182,7 +142,7 @@ export default {
       this.state = "Read";
     },
 
-    async deleteUserTestById() {
+    async deleteUserTestById(){
       try {
         const id = this.selectedRowId;
         const url = `${this.urlApiUserTest}/${id}`;
@@ -194,6 +154,7 @@ export default {
         console.error("Nem sikerült a teszt törlése:", error);
       }
     },
+
 
     onClickDeleteButton(userTest) {
       this.state = "Delete";
@@ -214,16 +175,16 @@ export default {
       this.selectedRowId = userTest.id;
     },
 
-    onClickCreateButton() {
+     onClickCreateButton() {
       this.state = "Create";
       this.title = "Új teszt bevitele";
       this.yes = null;
       this.no = "Mégsem";
       this.size = "lg";
       this.userTest = new UserTest();
-    },
+  },
 
-    saveItemHandler() {
+  saveItemHandler() {
       if (this.state === "Update") {
         this.updateUserTest();
       } else if (this.state === "Create") {
@@ -238,9 +199,9 @@ export default {
         this.deleteUserTestById();
         this.modal.hide(); // A modal bezárása a törlés után
       }
-    },
-  },
-};
+    }
+}
+}
 </script>
 
 <style>
@@ -250,18 +211,7 @@ export default {
   background-attachment: fixed;
 }
 
-.container {
-  max-width: auto;
-  margin: auto;
-  padding: 40px;
-  transform: translateY(2%);
-}
-
 h2 {
   text-align: center;
-}
-
-.my-cursor {
-  cursor: pointer;
 }
 </style>

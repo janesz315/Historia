@@ -4,7 +4,7 @@
     class="row g-3 needs-validation was-validated"
   >
     <!-- <p v-if="debug">{{ itemForm }}</p> -->
-    <div class=" mb-3">
+    <div class="mb-3">
       <label for="testName" class="form-label">Mi legyen a neve?</label>
       <input
         type="text"
@@ -15,33 +15,13 @@
       />
     </div>
 
-    <!-- Témakör kiválasztása -->
-    <!-- <div class="mb-3">
-      <label for="category" class="form-label">Téma:</label>
-      <select
-        id="category"
-        class="form-select"
-        required
-        v-model="itemForm.categoryId"
-      >
-        <option disabled value="">Válassz témakört!</option>
-        <option
-          v-for="category in categories"
-          :key="category.id"
-          :value="category.id"
-        >
-          {{ category.category }}
-        </option>
-      </select>
-    </div> -->
-
     <button type="submit" class="btn btn-success">Mentés</button>
   </form>
 </template>
 
 <script>
 export default {
-  props: ["itemForm", "categories"],
+  props: ["itemForm"],
   emits: ["saveItem"],
   methods: {
     onClickSubmit() {
