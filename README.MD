@@ -1,1 +1,1 @@
-János írja: Szia!#
+Itt lesz majd az útmutató a futtatáshoz!
