@@ -7,7 +7,7 @@
     >
       <button
         type="button"
-        class="btn btn-outline-danger"
+        class="btn btn-outline-danger ms-2 me-2"
         data-bs-toggle="modal"
         data-bs-target="#modal"
         @click="onClickDeleteButton"
@@ -58,12 +58,14 @@ export default {
 </script>
 
 <style>
+
 @media (max-width: 768px) {
   .crud-buttons {
     display: flex;
     flex-direction: column;
     gap: 5px;
     max-width: max-content;
+    margin-right: 0px;
   }
 
   .crud-buttons .btn {
