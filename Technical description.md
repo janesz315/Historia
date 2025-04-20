@@ -77,3 +77,27 @@ Funkciók:
 
 
 
+# A backend oldal:
+
+Ebben fog megtörténni a szerveroldal fejlesztésének ismertetése
+
+## A migráció:
+- A migráció azért felel, hogy a létrehozott táblához hozzáadjuk a mezőket, annak típusát és egyéb jellemzőjét. Ezen felül a meglévő táblákkal kapcsolatot is létre tudunk hozni.
+
+
+## A modellek:
+
+
+## A seeder-ek:
+
+## A controller-ek:
+
+
+## A validáció:
+
+## A REST API kérések:
+
+
+## A tesztelés:
+
+# A frontend oldal:
