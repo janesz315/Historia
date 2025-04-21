@@ -84,11 +84,206 @@ Ebben fog megtörténni a szerveroldal fejlesztésének ismertetése
 ## A migráció:
 - A migráció azért felel, hogy a létrehozott táblához hozzáadjuk a mezőket, annak típusát és egyéb jellemzőjét. Ezen felül a meglévő táblákkal kapcsolatot is létre tudunk hozni.
 
+![migrációs fájlok](/backend/img/migrations.jpg)
+
+```php
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('questions', function (Blueprint $table) {
+            $table->integer('id')->autoIncrement();
+            $table->text('question');
+            $table->integer('questionTypeId');
+            $table->integer('categoryId');
+
+            $table->foreign('questionTypeId')->references('id')->on('question_types');
+            $table->foreign('categoryId')->references('id')->on('categories')->onDelete('cascade');
+
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('questions');
+    }
+};
+```
+- Ez itt a questions tábla létrehozására összpontosít. Az up() függvény hozza létre a táblát és a benne szereplő mezőket. Ezt a Schema::create() függvény hozza létre. Itt 4 darab mező van, egy elsődleges kulcs (id), egy érték mező (question), és két idegen kulcs (a questionTypeId és a categoryId). Ezután létrehozzuk az összeköttetést a két tábla között. A drop függvény pedig a "php artisan migrate:rollback" parancs kiadásakor törli, azaz visszavonja a tábla létrejöttét.
 
 ## A modellek:
+- A Laravel az Eloquent ORM-et (Object-Relational Mapping) használja. Ez azt jelenti, hogy a modellek PHP osztályok, amik egy-egy adatbázistáblát képviselnek.
+- Ezeket is ugyanúgy, minden táblához el kell készíteni.
 
+```php
+class Answer extends Model
+{
+    use HasFactory;
+    protected $fillable = ['answer', 'questionId', 'rightAnswer'];
+    public function question()
+    {
+        return $this->belongsTo(Question::class, 'questionId');
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'rightAnswer' => 'boolean'
+                                
+        ];
+    }
+}
+
+```
+
+- $fillable: Ez egy tömeges hozzárendelés (mass assignment) védelmet biztosító lista. Meghatározza, mely mezők tölthetők ki create() vagy update() során.
+
+- question() kapcsolat: Ez a függvény azt mondja: egy válasz egy kérdéshez tartozik.
+
+- casts() metódus: Ebben az esetben ez a rész azt mondja meg a Laravelnek: a rightAnswer mezőt logikai értékként (true/false) kezelje, ne csak sima numerikus (0/1) vagy szöveg ('true', 'false') formában.
+
+- A jelszó titkosítása bár mehetne casts metódussal is, de itt egy másik formátumot használtunk.
+
+```php
+// A jelszó titkosítása a mentés előtt
+     protected static function booted()
+     {
+         static::creating(function ($user) {
+             if (!empty($user->password)) {
+                 $user->password = Hash::make($user->password);
+             }
+         });
+     
+         static::updating(function ($user) {
+             // Csak akkor hash-eljük újra a jelszót, ha tényleg megváltozott
+             if ($user->isDirty('password') && !empty($user->password)) {
+                 $user->password = Hash::make($user->password);
+             }
+         });
+     }
+```
+- Ez egy modell esemény figyelő, amely a User modellbe van beépítve. A célja, hogy automatikusan titkosítsa a jelszót, amikor:
+
+    1. Új felhasználót hozunk létre.
+
+    2. Meglévő felhasználót frissítünk, és közben megváltozik a jelszó.
+
+- creating esemény – új felhasználó mentése előtt: Ez azt mondja: amikor egy új User példányt hozunk létre, akkor hash-eljük (titkosítjuk) a jelszót, ha az nincs üresen.
+
+- updating esemény – meglévő felhasználó frissítésekor: Ez azt figyeli, hogy változott-e a jelszó:
+
+    - isDirty('password') ➜ igaz, ha a jelszó mező módosult
+
+    - Ha igen, akkor újra titkosítja a jelszót
+
+- Ez azért fontos, hogy ne hash-elje újra az amúgy már hash-elt jelszót, ha nem változott.
 
 ## A seeder-ek:
+- Az alábbi seeder fájlok célja az adatbázis inicializálása fejlesztési környezetben. A seederek Faker könyvtárat, statikus adatokat és fájlimportot egyaránt alkalmaznak. A sorrendiség és az adatok közötti kapcsolat biztosítása érdekében a DatabaseSeeder gondoskodik a megfelelő hívási sorrendről.
+
+
+ - AnswerSeeder.php:
+
+    - Minden kérdéshez véletlenszerűen 2–4 válasz generálódik.
+
+    - A válaszok közül mindig pontosan egy kerül kijelölésre helyesként (rightAnswer = 1).
+
+    - A válaszok szövege a Faker könyvtár segítségével véletlenszerűen kerül előállításra.
+
+    - A questionId mező biztosítja az idegen kulcs kapcsolatot a questions táblával.
+
+- CategorySeeder.php
+
+    - A kategóriák külső .csv fájlból (temakorok.csv) kerülnek beolvasásra.
+
+    - A fájl elérési útvonala: database/txt/temakorok.csv.
+
+    - A sorokat szétválasztó karakter: ;.
+
+    - Csak akkor történik feltöltés, ha a categories tábla még üres.
+
+    - A kategóriákhoz tartozó szöveg (text) mező kezdetben üres.
+
+- DatabaseSeeder.php
+
+    - Ez a fájl felelős az összes többi seeder meghívásáért.
+
+    - A seeder futása előtt törli a főbb táblák tartalmát (DELETE FROM ...), ezzel biztosítva a friss állapotot.
+
+    - A call() metódus segítségével meghatározott sorrendben hívja meg a seeder fájlokat – ez kulcsfontosságú az idegen kulcs kapcsolatok miatt.
+
+- QuestionSeeder.php
+
+    - Három minta kérdést szúr be a questions táblába.
+
+    - Minden kérdéshez meg van határozva a típus (questionTypeId) és a témakör (categoryId).
+
+    - A kérdések statikus, kézzel megadott értékekkel kerülnek feltöltésre.
+
+- QuestionTypeSeeder.php
+
+    - A question_types tábla feltöltését végzi.
+
+    - Három fő kategóriát ad hozzá: Évszámok, Fogalmak, Személyek.
+
+    - Ezek a kategóriák segítik a kérdések típus szerinti szűrését.
+
+- RoleSeeder.php
+
+    - Két alapértelmezett szerepkört hoz létre:
+
+        1. admin (ID: 1)
+
+        2. user (ID: 2)
+
+    - Ezek a szerepek lehetővé teszik a jogosultsági szintek kezelését az alkalmazásban.
+
+- SourceSeeder.php
+
+    - Különböző kategóriákhoz kapcsolódó forrásanyagokat generál.
+
+    - A Faker könyvtár véletlenszerű URL-eket és megjegyzéseket hoz létre.
+
+    - Minden Source rekord kapcsolódik egy categoryId értékhez.
+
+    - Alapértelmezetten 50 forrás jön létre.
+
+- TestQuestionSeeder.php
+
+    - Teszt-kérdés-válasz kapcsolatok feltöltését végzi.
+
+    - Az első user_test rekordhoz rendel kérdéseket és véletlenszerű válaszokat.
+
+    - Feltételezi, hogy a questions és answers táblák már feltöltésre kerültek.
+
+- UserSeeder.php
+
+    - Egy admin felhasználót hoz létre, ha még nincs adat a users táblában.
+
+    - A jelszót titkosítja a User modell (implicit hash-elés).
+
+    - Létrejövő felhasználó:
+
+        - Email: test@example.com
+
+        - Jelszó: 123
+
+        - Szerepkör: admin (ID: 1)
+
+- UserTestSeeder.php
+
+    - Két mintatesztet hoz létre a test nevű admin felhasználóhoz.
+
+    - Az eredmények (score) lebegőpontos értékek: pl. 85.5, 92.3.
+
+    - A rekordok a user_tests táblába kerülnek.
 
 ## A controller-ek:
 
