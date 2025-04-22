@@ -286,13 +286,724 @@ class Answer extends Model
     - A rekordok a user_tests táblába kerülnek.
 
 ## A controller-ek:
+- A Controller-ek (vezérlők) a Laravelben az MVC (Model–View–Controller) architektúra "C" komponensét jelentik. Feladatuk, hogy közvetítsenek a felhasználói kérések (requestek) és az alkalmazás logikája, illetve az adatbázis (modellek) között.
+
+
+- A controller fogadja az útvonalakon (routes) keresztül érkező HTTP-kéréseket (pl. GET, POST, PUT, DELETE), és meghatározza, hogy milyen művelet történjen. A controller általában meghívja a modelleket, hogy adatot kérjen le, módosítson, hozzon létre vagy töröljön.
+
+- Példának a QuestionControllert fogjuk megnézni, hiszen nincsen nagy különbség a táblák Controller-jei között.
+
+```php
+public function index()
+    {
+        $rows = Question::all();
+        // $rows = Diak::orderBy('nev', 'asc')->get();
+        $data = [
+            'message' => 'ok',
+            'data' => $rows
+        ];
+        return response()->json($data, options: JSON_UNESCAPED_UNICODE);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(StoreQuestionRequest $request)
+    {
+        $rows = Question::create(attributes: $request->all());
+        return response()->json(['rows' => $rows], options:JSON_UNESCAPED_UNICODE);
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(int $id)
+    {
+        $row = Question::find($id);
+        if ($row) {
+            $data = [
+                'message' => 'ok',
+                'data' => $row
+            ];
+        } else {
+            $data = [
+                'message' => 'Not found',
+                'data' => [
+                    'id' => $id
+                ]
+            ];
+        }
+        return response()->json($data, options: JSON_UNESCAPED_UNICODE);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(UpdateQuestionRequest $request, $id)
+    {
+        $row = Question::find($id);
+        if ($row) {
+
+            try {
+                $row->update($request->all());
+                $data = [
+                    'message' => 'ok',
+                    'data' => $row
+                ];
+            } catch (\Illuminate\Database\QueryException $e) {
+                $data = [
+                    'message' => 'The patch failed',
+                    'data' => $request->all()
+                ];
+            }
+
+        } else {
+            $data = [
+                'message' => 'Not found',
+                'data' => [
+                    'id' => $id
+                ]
+            ];
+        }
+        return response()->json($data, options: JSON_UNESCAPED_UNICODE);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(int $id)
+    {
+        $row = Question::find($id);
+        if ($row) {
+            $row->delete();
+            $data = [
+                'message' => 'ok',
+                'data' => [
+                    'id' => $id
+                ]
+            ];
+        } else {
+            $data = [
+                'message' => 'Not found',
+                'data' => [
+                    'id' => $id
+                ]
+            ];
+        }
+        return response()->json($data, options: JSON_UNESCAPED_UNICODE);
+    }
+```
+- Ha egy tábláhot készítünk Controller-t, akkor általában 5 függvény lesz. index(): GET, store(): POST, show(id): GET BY ID, update(id): PATCH/PUT, destroy(id): DELETE.
+
+    - index(): Minden kérdést visszaad. A válasz formázott JSON, amely "message" és "data" kulcsokat tartalmaz.
+
+    - store(StoreQuestionRequest $request): Új kérdés létrehozása validált adatok alapján. A StoreQuestionRequest automatikusan elvégzi az adatellenőrzést. Sikeres mentés után visszaadja az új rekordot.
+
+    - show(int $id): Egy kérdés lekérdezése az ID alapján. Ha nem található, "Not found" üzenettel tér vissza.
+
+    - update(UpdateQuestionRequest $request, $id): Frissíti az adott kérdést validált adatokkal. Ha nincs ilyen rekord, "Not found" választ ad. Ha SQL-hiba történik, "The patch failed" üzenetet ad vissza.
+
+    - destroy(int $id): Törli a kérdést az ID alapján. Ha sikeres, "ok" üzenettel tér vissza, különben "Not found".
+
+### A login és a logout:
+
+- A UserController-ben találhatjuk meg a fentebb megjegyzetteken felül a login és a logout függvényeket, amelyek a bejelentkezéshez és a kijelentkezéshez használunk.
+    - A login(Request $request):  
+        1. Először is a beérkező HTTP kérésből kinyerjük az e-mailt és a jelszót.
+        2. Lekérjük az első olyan User rekordot, ahol az e-mail egyezik. Ha nincs találat, $user értéke null lesz.
+        3.  Feltétel: Ha nem található felhasználó, vagy a jelszó nem egyezik a titkosított jelszóval (Hash::check() ellenőrzi), akkor hibás belépés.
+        4. Ha a jelszó stimmel: Létrehoz egy Sanctum API tokent. Hozzárendeli a token mezőhöz, amit így visszaadhat.
+        5. Mi jön vissza? A teljes felhasználói adat + a token JSON válaszban. A magyar karakterek is kezelve vannak (JSON_UNESCAPED_UNICODE).
+```php
+    public function login(Request $request){
+        //beolvassuk az adatokat
+        $email = $request->input('email');
+        $password = $request->input('password');
+
+        //megkeressük a usert
+        $user= User::where('email', $email)->first();
+
+        if (!$user || !Hash::check($password, $password ? $user->password : "")) {
+            return response()->json([
+                'message' => 'invalid email or password'
+            ], 200);
+        }
+
+        //Minden oké az adatokkal
+        //Kitöröljük a userhez tartozó esetleges tokneket
+        // $user->tokens()->delete();
+
+        //Adunk egy tokent
+        $user->token = $user->createToken('access')->plainTextToken;
+        return response()->json(['user' => $user], options:JSON_UNESCAPED_UNICODE);
+    }
+```
+- A logout(Request $request):
+    1. Lekéri az Authorization headerből a Bearer {token} értéket. 
+    2.  A token alapján megkeresi az adatbázisban a hozzá tartozó personal_access_tokens rekordot.
+    3. Ha megtalálja, törli – így a token többé nem lesz használható. Ha nem található token, hibát ad vissza – de ez nem kritikus.
+    4.  Visszajelzés a sikeres kijelentkezésről.
+
+```php
+public function logout(Request $request){
+        $token = $request->bearerToken();
+        $personalAccessToken = PersonalAccessToken::findToken($token);
+        if ($personalAccessToken) {
+            $personalAccessToken->delete();
+            return response()->json(['message' => 'Successfully logged out'], options:JSON_UNESCAPED_UNICODE);
+            
+        } else {
+            return response()->json(['message' => 'Token not found'], options:JSON_UNESCAPED_UNICODE);
+        }
+        
+    }
+```
+- Meg kell tennünk még egy apró megjegyzést. A User tébla nem teljesen ugyanúgy frissül, ahogy a többi, úgyhogy kitérnénk még erre is. Fontos még az is, hogy elkerüljük ezeket: az ismeretlen ID-k frissítését, az e-mail duplikációt, a felesleges adatbázis-módosítást.
+
+    1. Megkeresi az adott id-hoz tartozó felhasználót.
+    2.  Ha nem található ilyen felhasználó, 404-es státusszal tér vissza.
+    3. Ha a kérésben van email mező és az eltér a jelenlegi e-mailtől, akkor: Ellenőrizzük, hogy létezik-e már más felhasználónál ugyanez az e-mail. Ezzel megelőzzük a duplikált e-mail címek mentését.
+    4. Ha az e-mail már létezik, 400-as hibával tér vissza.
+    5.  A User rekord frissítése csak azokra a mezőkre korlátozva, amelyek engedélyezettek (név, e-mail, jelszó).
+    6. Ezután visszaadjuk a frissített Usert.
+```php
+public function update(UpdateUserRequest $request, int $id)
+{
+    $row = User::find($id);
+
+    if (!$row) {
+        return response()->json([
+            'message' => 'Not found',
+            'id' => $id
+        ], 404);
+    }
+
+    // Ha van e-mail a kérésben ÉS az eltér a meglévőtől, akkor ellenőrizzük az egyediséget
+    if ($request->has('email') && $request->email !== $row->email) {
+        $emailExists = User::where('email', $request->email)->exists();
+        if ($emailExists) {
+            return response()->json([
+                'message' => 'This email already exists',
+                'email' => $request->email
+            ], 400);
+        }
+    }
+
+    // Csak azokat az adatokat frissítjük, amik valóban változtak
+    $row->update($request->only(['name', 'email', 'password']));
+    
+    return response()->json(['row' => $row], 200);
+}
+```
+### A QueryController
+- A fejlesztés közben felmerült az, hogy a question_types, a questions és az answers táblát összevonjuk egy több táblás lekérdezéssel. Ahogy az látható, csakis GET műveletet tud.
+
+    1. SQL lekérdezés LEFT JOIN-okkal, hogy minden kérdés megjelenjen, függetlenül attól, van-e válasz.
+    DB::select() – nyers SQL lekérdezés Laravel Query Builder helyett, nagyobb kontrollt biztosítva.
+    2. Csoportosítás: Minden kérdést egyszer veszünk fel egy groupedQuestions tömbbe, egy questionMap segítségével, ami gyors elérést biztosít.
+    3. Válaszok hozzáadása: Ha a sor tartalmaz answerId-t, akkor hozzáadja az aktuális kérdéshez a rightAnswert Boolean típusra alakítva. 
+    4. array_values(): újraindexálja a tömböt (0, 1, 2...), hogy ne legyenek „lyukas” indexek.
+
+```php
+    public function index()
+{
+    $query = "SELECT questions.id AS questionId, questions.question, questions.categoryId, question_types.questionCategory, questions.questionTypeId AS questionTypeId, answers.id AS answerId, answers.answer, answers.rightAnswer
+              FROM questions
+              LEFT JOIN question_types ON questions.questionTypeId = question_types.id
+              LEFT JOIN answers ON questions.id = answers.questionId"; // Használj LEFT JOIN-ot, hogy akkor is jöjjenek vissza a kérdések, ha nincs válasz
+
+    $rows = DB::select($query);
+
+    $groupedQuestions = [];
+    $questionMap = [];
+
+    foreach ($rows as $row) {
+        // Ha még nem találkoztunk a kérdéssel, hozzuk létre
+        if (!isset($questionMap[$row->questionId])) {
+            $questionMap[$row->questionId] = count($groupedQuestions);
+            $groupedQuestions[] = [
+                'questionId' => $row->questionId,
+                'question' => $row->question,
+                'categoryId' => $row->categoryId,
+                'questionCategory' => $row->questionCategory,
+                'questionTypeId' => $row->questionTypeId,
+                'answers' => [], // Üres válaszok tömb, ha nincs válasz
+            ];
+        }
+
+        // Ha van válasz, hozzáadjuk és beillesztjük a questionId-t
+        if ($row->answerId) {
+            $groupedQuestions[$questionMap[$row->questionId]]['answers'][] = [
+                'answerId' => $row->answerId,
+                'answer' => $row->answer,
+                'rightAnswer' => $row->rightAnswer == 1 ? true : false,
+                'questionId' => $row->questionId, // Hozzáadjuk a questionId-t
+            ];
+        }
+    }
+
+    // Még akkor is visszaküldjük a kérdéseket, ha nincs válaszuk
+    $data = [
+        'message' => 'ok',
+        'data' => array_values($groupedQuestions), // A tömb indexeinek visszaállítása
+    ];
+
+    return response()->json($data, options: JSON_UNESCAPED_UNICODE);
+}
+```
+
+- A másik függvény igazából csak id alapján adja vissza az adott kérdést a válaszokkal együtt, még akkor is, ha nincs válasz. Az SQL lekérdezésben a különbség az, hogy van WHERE questions.id = :id megszorítás. 
+
+```php
+if (empty($groupedQuestions)) {
+    return response()->json(['message' => 'No data found'], 404);
+}
+```
+- És ha nem találja meg a kérdést az adott ID-vel, akkor 404-es hiba lép fel.
+
+
+### UserRoleController
+- Ez a controller a felhasználók és szerepköreik kezelését végzik el egy Laravel API-ban.
+
+```php
+public function index()
+    {
+        return response()->json(User::with('role')->get());
+    }
+
+    public function updateRole(Request $request, $id)
+    {
+        $request->validate([
+            'roleId' => 'required|integer|exists:roles,id',
+        ]);
+
+        $user = User::findOrFail($id);
+        $user->roleId = $request->roleId;
+        $user->save();
+
+        return response()->json(['message' => 'Role updated successfully']);
+    }
+```
+- index(): Az összes felhasználó listázása a hozzájuk tartozó szerepkörrel együtt. Eager loading-ot használ. Betölti az összes users rekordot és a hozzájuk tartozó role modellt (feltételezve, hogy User modellben van egy role() kapcsolat). Így kéri le az adatokat.
+
+- updateRole(): 
+    1. Validálás: Kötelező, egész szám, Léteznie kell az roles táblában az adott id-nak.
+    2. Felhasználó lekérése: Ha a felhasználó nem létezik, automatikusan 404 válasz keletkezik.
+    3. Szerepkör módosítása és mentése.
+
+
 
 
 ## A validáció:
+- A validáció akkor lép életbe, amikor új rekordot viszünk fel vagy amikor egy már meglévő rekordot szeretnénk módosítani. Validálni tudunk a backend-ben és a frontend-ben is.
+- Hogy is néz ki ez a backend-ben?
+    - Két külön fájlban kell meghatározni egy táblához a Store és az Update miatt. StoreModelRequest.php és UpdateModelRequest. Felépítésük teljesen ugyanaz. Felhasználásuk is csak attól függ, hogy melyik függvény paraméteréhez írjuk. 
+    - authorize(): Ha true értékkel jön vissza, akkor engedélyezi a felhasználónak ezt a műveletet.
+    - rules(): itt határozzuk meg, hogy a rekord hozzáadásának pillanatában milyen szabványoknak kell megfelelnie. Egy példa:
+
+```php
+public function rules(): array
+    {
+        return [
+            'userId' => 'required|exists:users,id', //kötelező és léteznie kell annak az ID-nek, amit átadunk.
+            'testName' => 'required|string', // kötelező és szöveg formátumúnak kell lennie
+            'score' => 'nullable|numeric' //nem kötelező, egész vagy tört szám is lehet
+        ];
+    }
+```
+
 
 ## A REST API kérések:
+- A REST (Representational State Transfer) egy szabványos architektúra, amely meghatározza, hogyan épüljenek fel az API kérések HTTP-n keresztül.
 
+- Ha működésre szeretnénk késztetni a végpontunkat, akkor a routes/api.php fájlban ilyen szintaktikával fel kell jegyezni: Először a művelet, utána a végpont elérési pontja, a kód helye (melyik osztályban), és a függvény neve. Ezután még hozzáírhatjuk azt is, hogy ez védett tartalom-e vagy nem a Middleware() segítségével.
+```php
+Route::post('/users/login', [UserController::class, 'login']);
+Route::post('/users/logout', [UserController::class, 'logout']);
+Route::get('/users', [UserController::class, 'index'])
+    ->middleware('auth:sanctum');
+Route::get('/users/{id}', [UserController::class, 'show'])
+    ->middleware('auth:sanctum');
+Route::post('/users', [UserController::class, 'store']);
+    // ->middleware('auth:sanctum');
+Route::delete('/users/{id}', [UserController::class, 'destroy'])
+    ->middleware('auth:sanctum');
+Route::patch('/users/{id}', [UserController::class, 'update'])
+    ->middleware('auth:sanctum');
+```
 
+- Ezt a request.rest-ben kezeljük. 
+
+```r
+# ----------------- login -------------------
+### login
+# @name login
+POST {{host}}/api/users/login 
+Accept: application/json
+Content-Type: application/json
+
+{
+    "email": "test@example.com",
+    "password": "123"
+}
+
+###
+@token = {{login.response.body.user.token}}
+
+### logout
+POST {{host}}/api/users/logout 
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### get users
+get {{host}}/api/users
+Accept: application/json
+Authorization: Bearer {{token}}
+
+### get user by Id
+get {{host}}/api/users/10
+Accept: application/json
+Authorization: Bearer {{token}}
+
+### post user
+post {{host}}/api/users
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "name": "test6",
+    "roleId": 2,
+    "email": "test6@example.com",
+    "password": "123"
+}
+
+### delete user by id
+delete {{host}}/api/users/3
+Accept: application/json
+Authorization: Bearer {{token}}
+
+### patch user by id
+patch {{host}}/api/users/10
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "email": "kaaaaab@gmail.com",
+    "password" : "12345"
+}
+
+# ----------------- login -------------------
+```
+- Login: POST metódus → bejelentkezés
+    - A {{host}} változó a szerver URL-jét tartalmazza (http://localhost:8000)
+    - JSON-ként küldi az emailt és a jelszót
+    - A @name login címke később hivatkozási pont lesz
+- Token mentése: 
+    - Ez egy változó-definíció: Elmenti a login válaszából a token értéket. A {{token}} változó későbbi kérésekben Authorization fejlécbe kerül, így nem kell minden kérésnél manuálisan megadni.
+- Logout: A felhasználó kijelentkeztetése
+    - A Bearer token hitelesítést használja a fejlécben
+    - A szerver törli az adott hozzáférési tokent
+- Felhasználók lekérdezése: Lekérdezi az összes felhasználót
+    - Védett tartalom
+-  Felhasználó lekérése ID alapján: Lekér egy konkrét felhasználót ID alapján (id=1); Védett tartalom
+- Új felhasználó létrehozása: A roleId meghatározza, milyen szerepkört kap, JSON formában küldi a felhasználó adatait. Védett tartalom.
+-  Felhasználó törlése ID alapján: Törli a beírt ID-jű Usert. Védett tartalom.
+- Felhasználó frissítése (részlegesen): A PATCH csak részlegesen frissít. Védett tartalom.
 ## A tesztelés:
+### Unit tesztek:
+- A unit teszt célja, hogy egyetlen funkciót, osztályt vagy metódust elszigetelten teszteljen — azaz függetlenül más moduloktól vagy adatbázistól (bár Laravelben sokszor keverednek integrációs elemekkel is).
+```php
+public function test_database_creation_and_tables_exists()
+{
+    $databaseNameConn = DB::connection()->getDatabaseName();
+    $databaseNameEnv = env('DB_DATABASE');
+    $this->assertEquals($databaseNameConn, $databaseNameEnv);
 
+    // Táblák létezésének ellenőrzése a Schema facáddal
+    $this->assertTrue(Schema::hasTable('users'));
+    $this->assertTrue(Schema::hasTable('roles'));
+    $this->assertTrue(Schema::hasTable('categories'));
+    $this->assertTrue(Schema::hasTable('sources'));
+    $this->assertTrue(Schema::hasTable('question_types'));
+    $this->assertTrue(Schema::hasTable('questions'));
+    $this->assertTrue(Schema::hasTable('answers'));
+    $this->assertTrue(Schema::hasTable('test_questions'));
+    $this->assertTrue(Schema::hasTable('user_tests'));
+
+    echo PHP_EOL . "\tAdatbázis -> DB_DATABASE={$databaseNameEnv} | adatbázis: {$databaseNameConn}";
+}
+```
+- test_database_creation_and_tables_exists(): Ellenőrzi, hogy az adatbázis és a szükséges táblák léteznek-e.
+    1. Ellenőrzi, hogy a tényleges adatbázis kapcsolatban szereplő név megegyezik a .env fájlban megadottal.
+    2. Schema::hasTable() segítségével ellenőrzi, hogy a tábla valóban létezik-e az adatbázisban.
+
+```php
+public function test_questions_table_structure()
+    {
+        // Ellenőrizzük, hogy a tábla létezik
+        $this->assertTrue(Schema::hasTable('questions'));
+
+        // Ellenőrizzük a mezőket és azok típusait
+        $columns = [
+            'id' => 'int',
+            'question' => 'text',
+            'questionTypeId' => 'int',
+            'categoryId' => 'int',
+        ];
+
+        foreach ($columns as $column => $type) {
+            $this->assertTrue(Schema::hasColumn('questions', $column));  // Ellenőrizzük, hogy a mező létezik
+            $this->assertEquals($type, Schema::getColumnType('questions', $column));  // Ellenőrizzük a típusát
+        }
+
+        // Elsődleges kulcs ellenőrzése
+        $primaryIndex = collect(DB::select('SHOW INDEX FROM questions'))->firstWhere('Key_name', 'PRIMARY');
+        $this->assertNotNull($primaryIndex);
+    }
+```
+- test_questions_table_structure(): Ellenőrzi a questions tábla szerkezetét (oszlopnevek és típusok), valamint hogy van-e elsődleges kulcs.
+    1. A mezők típusát ellenőrizzük. Itt a kulcs az elvárt mezőnév, az érték pedig a mező típusa.
+    2. Ezután egy ciklusban ellenőrzi, hogy létezik-e a mező, és megfelelő-e a típusa (Schema::getColumnType()).
+    3. SQL-lekérdezéssel ellenőrzi, hogy van-e elsődleges kulcs az id mezőn.
+
+```php
+public function test_questiontypes_categories_questions_relationships(){  
+
+    // A questions tábla kapcsolatai
+    $databaseName = env('DB_DATABASE');
+    $tableName = "questions";
+
+    // Lekérdezzük mindkét idegen kulcsot (questionTypeId és categoryId)
+    $query = "
+        SELECT 
+            TABLE_NAME,
+            COLUMN_NAME,
+            CONSTRAINT_NAME,
+            REFERENCED_TABLE_NAME,
+            REFERENCED_COLUMN_NAME
+        FROM 
+            information_schema.KEY_COLUMN_USAGE
+        WHERE
+            TABLE_NAME = ? 
+            AND CONSTRAINT_SCHEMA = ? 
+            AND REFERENCED_TABLE_NAME IS NOT NULL
+            AND COLUMN_NAME IN ('questionTypeId', 'categoryId')";
+
+    $rows = DB::select($query, [$tableName, $databaseName]);
+
+    // Ellenőrizzük, hogy van találat
+    if (count($rows) > 0) {
+        $columnNames = array_column($rows, 'COLUMN_NAME');
+        
+        // Ellenőrizzük, hogy mindkét idegen kulcs szerepel
+        $this->assertTrue(in_array('questionTypeId', $columnNames));
+        $this->assertTrue(in_array('categoryId', $columnNames));
+
+        // Ellenőrizzük a 'questionTypeId' kapcsolatot
+        $questionTypeIdRelation = collect($rows)->firstWhere('COLUMN_NAME', 'questionTypeId');
+        $this->assertEquals('question_types', $questionTypeIdRelation->REFERENCED_TABLE_NAME);
+        $this->assertEquals('id', $questionTypeIdRelation->REFERENCED_COLUMN_NAME);
+
+        // Ellenőrizzük a 'categoryId' kapcsolatot
+        $categoryIdRelation = collect($rows)->firstWhere('COLUMN_NAME', 'categoryId');
+        $this->assertEquals('categories', $categoryIdRelation->REFERENCED_TABLE_NAME);
+        $this->assertEquals('id', $categoryIdRelation->REFERENCED_COLUMN_NAME);
+    } else {
+        $this->fail('Nincs találat az idegen kulcsokra.');
+    }
+
+    // Készítünk egy kérdéstípus rekordot
+    $dataQuestionType = [
+        'questionCategory' => 'Találós kérdés'
+    ];
+    $questionType = QuestionType::factory()->create($dataQuestionType);
+
+    // Készítünk egy kategória rekordot
+    $dataCategory = [
+        'category' => 'Történelem'
+    ];
+    $category = Category::factory()->create($dataCategory);
+
+    // Az új kérdéstípus és kategóriával készítek egy kérdést
+    $dataQuestion = [
+        'questionTypeId' => $questionType->id,
+        'categoryId' => $category->id,
+        'question' => 'Mikor volt a gyulai csata?',
+    ];
+    $question = Question::factory()->create($dataQuestion);
+
+    // Visszakeressük a kérdést és ellenőrizzük mindkét kapcsolatot
+    $question = DB::table('questions')
+        ->where('id', $question->id)
+        ->first();
+
+    // Ellenőrizzük, hogy a questionTypeId kapcsolódik a megfelelő kérdéstípushoz
+    $this->assertEquals($questionType->id, $question->questionTypeId);
+    
+    // Ellenőrizzük, hogy a categoryId kapcsolódik a megfelelő kategóriához
+    $this->assertEquals($category->id, $question->categoryId);
+}
+```
+
+- test_questiontypes_categories_questions_relationships(): Ellenőrzi, hogy a questions tábla idegen kulcsai valóban kapcsolódnak a question_types és categories táblákhoz. Ezen kívül készít egy kérdést, hogy megnézze, működik-e a kapcsolat.
+    1. Idegen kulcsok lekérdezése information_schema.KEY_COLUMN_USAGE-ból: SQL-lekérdezéssel ellenőrzi, hogy az questionTypeId és categoryId valóban idegen kulcsok, és hogy hova mutatnak.
+    2. Factory (a tábla alapértelmezett állapota) segítségével létrehoz egy QuestionType és Category rekordot.
+    3. Létrehoz egy kérdést az előzőekre hivatkozva.
+    4. Ellenőrzi, hogy a kapcsolatok megfelelően jöttek-e létre
+
+- Tehát láthattunk példát a táblák és adatbázis meglétének ellenőrzésére, a tábla mezőinek tulajdonságainak helyességére és két vagy több tábla közötti kapcsolatra is.
+
+- A felhasználóval kapcsolatos teszteket a UserTest.php-ben írjuk le.
+
+- Mi a DatabaseTransactions? A DatabaseTransactions trait minden teszt esetén tranzakcióba zárja az adatbázisműveleteket, és automatikusan rollbackeli őket a teszt végén. Ez biztosítja, hogy az adatbázis minden teszt után tiszta állapotban maradjon.
+
+```php
+public function test_check_if_user_insert_into_db(): void
+    {
+        $userResponse = [
+            'name' => 'roger',
+            'value' => 1,
+        ];
+        $this->assertEquals(1, $userResponse['value']);
+        $this->assertArrayHasKey('name', $userResponse);
+    }
+
+```
+- test_check_if_user_insert_into_db(): Ez egy alap logikai teszt, ami nem tesz valódi adatbázis műveletet. Inkább arra jó, hogy kipróbáljuk, hogy a tesztelés működik-e. A value mező értékét, és a kulcsok meglétét ellenőrzi.
+
+```php
+public function test_check_if_users_getting_fetched_with_id(): void
+    {
+        $response = DB::table("users")->find(1);
+        // $response = User::find(3);
+        // dd($response);
+        // dd($response->id);
+        //Adott mező értékének ellenőrzése
+        $this->assertEquals(1, $response->id);
+        
+        //A rekordok számának ellenőrzése
+        $response = DB::table("users")->get();
+        
+        // dd($response);
+        $this->assertCount(1, $response);
+        // dd($response);
+
+        //A rekordok száma > mint 0
+        $this->assertGreaterThan(0, count($response));
+    }
+
+```
+- test_check_if_users_getting_fetched_with_id: Ellenőrzi, hogy az id mező valóban 1, illetve hogy az adatbázisban van legalább egy rekord.
+
+```php
+ public function test_the_presence_of_the_given_user_in_the_database()
+    {
+        $this->assertTrue(DB::table('users')->where('name', 'test')->exists());
+    }
+
+```
+- test_the_presence_of_the_given_user_in_the_database: Ellenőrzi, hogy van-e egy test nevű user az adatbázisban. Ez is egy külső függőségű teszt, hiszen test nevű usernek már léteznie kell.
+
+```php
+public function test_does_the_user_table_contain_all_fields()
+    {
+        //mezők megvannak-e
+        $columns = ['id', 'name', 'roleId', 'email', 'password'];
+        foreach ($columns as $column) {
+            $this->assertTrue(Schema::hasColumn('users', $column), "A '$column' oszlop nem található a 'users' táblában.");
+        }
+    }
+```
+
+- test_does_the_user_table_contain_all_fields: Ez egy séma validáló teszt, ami ellenőrzi, hogy a users táblában jelen vannak-e a várt mezők.
+
+### Feature tesztek
+- A feature teszt (vagy „funkcionális teszt”) azt vizsgálja, hogy egy adott funkció hogyan működik a rendszer egészén belül – az adatbázistól a middleware-eken át a view-ig.
+
+```php
+ public function test_user_can_take_a_quiz()
+    {
+        // Hozzáadunk egy kérdést
+        $question = Question::factory()->create();
+
+        // Ellenőrizzük, hogy a kérdés sikeresen bekerült az adatbázisba
+        $this->assertDatabaseHas('questions', [
+            'id' => $question->id,
+            'question' => $question->question,  // Ellenőrizzük, hogy a kérdés szövege megegyezik
+        ]);
+
+        // Hozzáadunk egy választ a kérdéshez
+        $answer = Answer::factory()->create([
+            'questionId' => $question->id,  // Kérdéshez kapcsoljuk
+            'rightAnswer' => 1,  // Helyes válasz
+        ]);
+
+        // Ellenőrizzük, hogy a válasz sikeresen bekerült az adatbázisba
+        $this->assertDatabaseHas('answers', [
+            'questionId' => $question->id,
+            'rightAnswer' => 1,
+        ]);
+
+        // Létrehozzuk a szerepkört és a felhasználót
+        $role = Role::factory()->create(['role' => 'guest']);
+        $user = User::factory()->create(['roleId' => $role->id]);
+
+        // Létrehozzuk a user_test rekordot
+        $userTest = UserTest::factory()->create([
+            'userId' => $user->id,  // A felhasználó azonosítója
+        ]);
+
+        // Ellenőrizzük, hogy a teszt rekordja sikeresen létrejött az adatbázisban
+        $this->assertDatabaseHas('user_tests', [
+            'userId' => $user->id,
+            'testName' => $userTest->testName,
+            'score' => $userTest->score,
+        ]);
+
+        // További ellenőrzés, például az HTTP válasz ellenőrzése
+        // $response = $this->actingAs($user)->get('/some-test-route');
+        // $response->assertStatus(200);
+    }
+
+```
+- test_user_can_take_a_quiz: Ez a teszt gyakorlatilag lépésről lépésre felépíti a kvíz kitöltéséhez szükséges alapokat, és minden ponton ellenőrzést is végez.
+    1. Kérdés létrehozása és ellenőrzése: Létrehoz egy kérdést a factory segítségével, majd ellenőrzi, hogy az bekerült-e az adatbázisba.
+    2.  Válasz létrehozása és ellenőrzése: Létrehoz egy helyes választ, majd ellenőrzi, hogy az kapcsolódik a kérdéshez, és mentésre került.
+    3. Felhasználó és szerepkör létrehozása: Létrehoz egy „vendég” szerepkört, majd egy hozzá tartozó felhasználót.
+    4.  UserTest létrehozása és validálása: Létrehoz egy user_tests rekordot, amely elvileg egy konkrét tesztkísérletet reprezentál a felhasználó részéről.
+
+### Integrációs tesztek
+- Az integrációs tesztek célja, hogy ellenőrizzék:
+     különböző komponensek (adatbázis, backend, API, külső szolgáltatások, stb.) helyesen működnek együtt.
+- Jöjjön egy példa rá:
+```php
+public function test_questions_http(): void
+    {
+        //Ez szimulál egy klienst, ami ajax kérést képes küldeni egy endpointra
+        $httpClient = new Client();
+        $response = $httpClient->get('http://localhost:8000/api/questions');
+        //A json választ dekódolja php tömbbé
+        $data = json_decode($response->getBody()->getContents(), true);
+
+        $statusCode = $response->getStatusCode();
+        $message = $data['message'];
+        $data = $data['data'];
+        $this->assertEquals(200, $statusCode);
+        $this->assertEquals('ok', $message);
+        $this->assertGreaterThan(0, count($data));
+        // dd($data);
+
+    }
+```
+
+- test_questions_http: Valódi HTTP kérés egy endpointra → teljes integrációs folyamat tesztelése. 
+    - Ellenőrzi:
+        - a status code-ot (pl. sikeres válasz)
+
+        - JSON válasz szerkezetét (van message, van data)
+
+        - hogy a kérdéslista nem üres
 # A frontend oldal:
