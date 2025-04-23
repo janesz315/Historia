@@ -12,13 +12,15 @@ use Laravel\Sanctum\PersonalAccessToken;
 
 class UserController extends Controller
 {
-    public function login(Request $request){
+
+    public function login(Request $request)
+    {
         //beolvassuk az adatokat
         $email = $request->input('email');
         $password = $request->input('password');
 
         //megkeressük a usert
-        $user= User::where('email', $email)->first();
+        $user = User::where('email', $email)->first();
 
         if (!$user || !Hash::check($password, $password ? $user->password : "")) {
             return response()->json([
@@ -29,11 +31,45 @@ class UserController extends Controller
         //Minden oké az adatokkal
         //Kitöröljük a userhez tartozó esetleges tokneket
         // $user->tokens()->delete();
+        // Token készítése roleId alapján
+        $abilities = match ($user->roleId) {
+            1 => ['*'], // Admin: mindenhez hozzáférés
+            2 => ['categories:view', 'sources:view', 'users:view', 'userTests:view', 'testQuestions:view', "answers:view"], // Korlátozott felhasználó
+            default => [], // Alapértelmezett: semmihez nincs joga
+        };
 
+        $user->token = $user->createToken('access-token', $abilities)->plainTextToken;
         //Adunk egy tokent
-        $user->token = $user->createToken('access')->plainTextToken;
-        return response()->json(['user' => $user], options:JSON_UNESCAPED_UNICODE);
+        // $user->token = $user->createToken('access')->plainTextToken;
+        return response()->json(['user' => $user], options: JSON_UNESCAPED_UNICODE);
+        // return response()->json([
+        //     'user' => $user,
+        //     'token' => $token,
+        // ]);
     }
+    
+    // public function login(Request $request){
+    //     //beolvassuk az adatokat
+    //     $email = $request->input('email');
+    //     $password = $request->input('password');
+
+    //     //megkeressük a usert
+    //     $user= User::where('email', $email)->first();
+
+    //     if (!$user || !Hash::check($password, $password ? $user->password : "")) {
+    //         return response()->json([
+    //             'message' => 'invalid email or password'
+    //         ], 200);
+    //     }
+
+    //     //Minden oké az adatokkal
+    //     //Kitöröljük a userhez tartozó esetleges tokneket
+    //     // $user->tokens()->delete();
+
+    //     //Adunk egy tokent
+    //     $user->token = $user->createToken('access')->plainTextToken;
+    //     return response()->json(['user' => $user], options:JSON_UNESCAPED_UNICODE);
+    // }
 
     public function logout(Request $request){
         $token = $request->bearerToken();

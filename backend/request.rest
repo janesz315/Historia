@@ -11,10 +11,12 @@ get {{host}}/api/
 ### get users
 get {{host}}/api/getQuestionsWithTypesAndAnswers
 Accept: application/json
+Authorization: Bearer {{token}}
 
 ### get questions and answersbyId
 get {{host}}/api/getQuestionsWithTypesAndAnswers/1
 Accept: application/json
+Authorization: Bearer {{token}}
 
 
 # ----------------- login -------------------
@@ -44,7 +46,7 @@ Accept: application/json
 Authorization: Bearer {{token}}
 
 ### get user by Id
-get {{host}}/api/users/10
+get {{host}}/api/users/1
 Accept: application/json
 Authorization: Bearer {{token}}
 
@@ -82,7 +84,7 @@ Authorization: Bearer {{token}}
 # ----------------- roles -------------------
 ### get roles
 get {{host}}/api/roles
-
+Authorization: Bearer {{token}}
 ### create roles
 post {{host}}/api/roles/
 Accept: application/json
@@ -95,6 +97,7 @@ Authorization: Bearer {{token}}
 
 ### get role by id
 get {{host}}/api/roles/5
+Authorization: Bearer {{token}}
 
 ### patch role
 patch {{host}}/api/roles/5
@@ -117,9 +120,11 @@ Authorization: Bearer {{token}}
 # ----------------- categories -------------------
 ### get categories
 get {{host}}/api/categories
+Authorization: Bearer {{token}}
 
 ### get categories by id
 GET {{host}}/api/categories/1
+Authorization: Bearer {{token}}
 
 
 ### post new category
@@ -162,6 +167,7 @@ Authorization: Bearer {{token}}
 
 ### get sources
 get {{host}}/api/sources
+Authorization: Bearer {{token}}
 
 ### create source
 post {{host}}/api/sources/
@@ -177,6 +183,7 @@ Authorization: Bearer {{token}}
 
 ### get source by id
 get {{host}}/api/sources/5
+Authorization: Bearer {{token}}
 
 ### patch source
 patch {{host}}/api/sources/5
@@ -203,9 +210,11 @@ Authorization: Bearer {{token}}
 
 ### get questionType
 get {{host}}/api/questionTypes
+Authorization: Bearer {{token}}
 
 ### get questionType by id
 GET {{host}}/api/questionTypes/1
+Authorization: Bearer {{token}}
 
 ### post new questionType
 POST {{host}}/api/questionTypes/
@@ -239,6 +248,7 @@ Authorization: Bearer {{token}}
 
 ### get questions
 get {{host}}/api/questions
+Authorization: Bearer {{token}}
 
 ### create new question
 POST {{host}}/api/questions/
@@ -254,6 +264,7 @@ Authorization: Bearer {{token}}
 
 ### get question by id
 GET {{host}}/api/questions/7
+Authorization: Bearer {{token}}
 
 ### update questionType
 patch {{host}}/api/questions/7
@@ -279,6 +290,7 @@ Authorization: Bearer {{token}}
 
 ### get answers
 get {{host}}/api/answers
+Authorization: Bearer {{token}}
 
 ### create new answers
 POST {{host}}/api/answers/
@@ -294,6 +306,7 @@ Authorization: Bearer {{token}}
 
 ### get answer by id
 GET {{host}}/api/answers/4
+Authorization: Bearer {{token}}
 
 ### update answer
 patch {{host}}/api/answers/4
@@ -319,6 +332,7 @@ Authorization: Bearer {{token}}
 
 ### get userTests
 get {{host}}/api/userTests
+Authorization: Bearer {{token}}
 
 ### create new userTest
 POST {{host}}/api/userTests/
@@ -334,6 +348,7 @@ Authorization: Bearer {{token}}
 
 ### get user test by id
 GET {{host}}/api/userTests/5
+Authorization: Bearer {{token}}
 
 ### update userTest
 patch {{host}}/api/userTests/5
@@ -360,6 +375,7 @@ Authorization: Bearer {{token}}
 
 ### get testQuestions
 get {{host}}/api/testQuestions
+Authorization: Bearer {{token}}
 
 ### create new test question
 POST {{host}}/api/testQuestions/
@@ -375,6 +391,7 @@ Authorization: Bearer {{token}}
 
 ### get test question by id
 GET {{host}}/api/testQuestions/5
+Authorization: Bearer {{token}}
 
 ### update testQuestions
 patch {{host}}/api/testQuestions/16
