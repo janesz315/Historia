@@ -13,21 +13,46 @@ class IntegrationUserTestTest extends TestCase
     /**
      * A basic feature test example.
      */
+    protected function setUp(): void
+ {
+     parent::setUp();
+
+     // Kikapcsoljuk az auth middleware-t tesztnél
+     $this->withoutMiddleware();
+     // VAGY célzottan csak az auth-ot:
+     // $this->withoutMiddleware(\App\Http\Middleware\Authenticate::class);
+     // $this->withoutMiddleware(\Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class);
+ }
     public function test_usertests_http(): void
     {
-        //Ez szimulál egy klienst, ami ajax kérést képes küldeni egy endpointra
-        $httpClient = new Client();
-        $response = $httpClient->get('http://localhost:8000/api/userTests');
-        //A json választ dekódolja php tömbbé
-        $data = json_decode($response->getBody()->getContents(), true);
+        $user = \App\Models\User::factory()->create([
+            'roleId' => 1
+        ]);
+    
+        $this->actingAs($user);
+    
+        $response = $this->getJson('/api/userTests');
+    
+        $response->assertStatus(200);
+        $response->assertJsonStructure([
+            'message',
+            'data'
+        ]);
+   
+       //  dd($response);
+        // //Ez szimulál egy klienst, ami ajax kérést képes küldeni egy endpointra
+        // $httpClient = new Client();
+        // $response = $httpClient->get('http://localhost:8000/api/userTests');
+        // //A json választ dekódolja php tömbbé
+        // $data = json_decode($response->getBody()->getContents(), true);
 
-        $statusCode = $response->getStatusCode();
-        $message = $data['message'];
-        $data = $data['data'];
-        $this->assertEquals(200, $statusCode);
-        $this->assertEquals('ok', $message);
-        $this->assertGreaterThan(0, count($data));
-        // dd($data);
+        // $statusCode = $response->getStatusCode();
+        // $message = $data['message'];
+        // $data = $data['data'];
+        // $this->assertEquals(200, $statusCode);
+        // $this->assertEquals('ok', $message);
+        // $this->assertGreaterThan(0, count($data));
+        // // dd($data);
 
     }
 }

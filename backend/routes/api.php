@@ -118,7 +118,7 @@ Route::delete('questions/{id}', [QuestionController::class, 'destroy'])
 
 //region userTests
 Route::get('userTests', [UserTestController::class, 'index'])
-    ->middleware('auth:sanctum', CheckAbilities::class.':*');
+    ->middleware('auth:sanctum', CheckAbilities::class.':userTests:view');
 Route::get('userTests/{id}', [UserTestController::class, 'show'])
     ->middleware('auth:sanctum', CheckAbilities::class.':userTests:view');
 Route::post('userTests', [UserTestController::class, 'store'])

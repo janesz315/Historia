@@ -28,9 +28,6 @@ class UserController extends Controller
             ], 200);
         }
 
-        //Minden oké az adatokkal
-        //Kitöröljük a userhez tartozó esetleges tokneket
-        // $user->tokens()->delete();
         // Token készítése roleId alapján
         $abilities = match ($user->roleId) {
             1 => ['*'], // Admin: mindenhez hozzáférés
@@ -39,13 +36,9 @@ class UserController extends Controller
         };
 
         $user->token = $user->createToken('access-token', $abilities)->plainTextToken;
-        //Adunk egy tokent
-        // $user->token = $user->createToken('access')->plainTextToken;
+        
         return response()->json(['user' => $user], options: JSON_UNESCAPED_UNICODE);
-        // return response()->json([
-        //     'user' => $user,
-        //     'token' => $token,
-        // ]);
+        
     }
     
     // public function login(Request $request){

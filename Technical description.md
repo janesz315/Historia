@@ -408,20 +408,15 @@ public function index()
 ### A login és a logout:
 
 - A UserController-ben találhatjuk meg a fentebb megjegyzetteken felül a login és a logout függvényeket, amelyek a bejelentkezéshez és a kijelentkezéshez használunk.
-    - A login(Request $request):  
-        1. Először is a beérkező HTTP kérésből kinyerjük az e-mailt és a jelszót.
-        2. Lekérjük az első olyan User rekordot, ahol az e-mail egyezik. Ha nincs találat, $user értéke null lesz.
-        3.  Feltétel: Ha nem található felhasználó, vagy a jelszó nem egyezik a titkosított jelszóval (Hash::check() ellenőrzi), akkor hibás belépés.
-        4. Ha a jelszó stimmel: Létrehoz egy Sanctum API tokent. Hozzárendeli a token mezőhöz, amit így visszaadhat.
-        5. Mi jön vissza? A teljes felhasználói adat + a token JSON válaszban. A magyar karakterek is kezelve vannak (JSON_UNESCAPED_UNICODE).
 ```php
-    public function login(Request $request){
+    public function login(Request $request)
+    {
         //beolvassuk az adatokat
         $email = $request->input('email');
         $password = $request->input('password');
 
         //megkeressük a usert
-        $user= User::where('email', $email)->first();
+        $user = User::where('email', $email)->first();
 
         if (!$user || !Hash::check($password, $password ? $user->password : "")) {
             return response()->json([
@@ -429,20 +424,33 @@ public function index()
             ], 200);
         }
 
-        //Minden oké az adatokkal
-        //Kitöröljük a userhez tartozó esetleges tokneket
-        // $user->tokens()->delete();
+        // Token készítése roleId alapján
+        $abilities = match ($user->roleId) {
+            1 => ['*'], // Admin: mindenhez hozzáférés
+            2 => ['categories:view', 'sources:view', 'users:view', 'userTests:view', 'testQuestions:view', "answers:view"], // Korlátozott felhasználó
+            default => [], // Alapértelmezett: semmihez nincs joga
+        };
 
-        //Adunk egy tokent
-        $user->token = $user->createToken('access')->plainTextToken;
-        return response()->json(['user' => $user], options:JSON_UNESCAPED_UNICODE);
+        $user->token = $user->createToken('access-token', $abilities)->plainTextToken;
+        
+        return response()->json(['user' => $user], options: JSON_UNESCAPED_UNICODE);
+        
     }
 ```
-- A logout(Request $request):
-    1. Lekéri az Authorization headerből a Bearer {token} értéket. 
-    2.  A token alapján megkeresi az adatbázisban a hozzá tartozó personal_access_tokens rekordot.
-    3. Ha megtalálja, törli – így a token többé nem lesz használható. Ha nem található token, hibát ad vissza – de ez nem kritikus.
-    4.  Visszajelzés a sikeres kijelentkezésről.
+- A login(Request $request):  
+    1. Először is a beérkező HTTP kérésből kinyerjük az e-mailt és a jelszót.
+    2. Lekérjük az első olyan User rekordot, ahol az e-mail egyezik. Ha nincs találat, $user értéke null lesz.
+    3.  Feltétel: Ha nem található felhasználó, vagy a jelszó nem egyezik a titkosított jelszóval (Hash::check() ellenőrzi), akkor hibás belépés.
+    4. Jogosultságok (abilities) kiosztása: Az abilities tömb azt határozza meg, hogy a generált token mire lesz jogosult.
+        - 1 → admin jog: ['*'] - minden
+        - 2 → korlátozott jogkörök
+        - minden más: semmire nincs joga
+    5. Ha a jelszó stimmel: Készít egy új API tokent az adott képességekkel. Hozzárendeli a token mezőhöz, amit így visszaadhat. A createToken() metódus a Laravel Sanctum csomag része. 
+        - A plainTextToken az, amit a frontendnek vissza kell küldeni, és amit majd a Bearer token formában elment.
+    6. Mi jön vissza? A teljes felhasználói adat + a token JSON válaszban. A magyar karakterek is kezelve vannak (JSON_UNESCAPED_UNICODE).
+
+
+
 
 ```php
 public function logout(Request $request){
@@ -458,14 +466,17 @@ public function logout(Request $request){
         
     }
 ```
+
+- A logout(Request $request):
+    1. Lekéri az Authorization headerből a Bearer {token} értéket. 
+    2.  A token alapján megkeresi az adatbázisban a hozzá tartozó personal_access_tokens rekordot.
+    3. Ha megtalálja, törli – így a token többé nem lesz használható. Ha nem található token, hibát ad vissza – de ez nem kritikus.
+    4.  Visszajelzés a sikeres kijelentkezésről.
+
+
 - Meg kell tennünk még egy apró megjegyzést. A User tébla nem teljesen ugyanúgy frissül, ahogy a többi, úgyhogy kitérnénk még erre is. Fontos még az is, hogy elkerüljük ezeket: az ismeretlen ID-k frissítését, az e-mail duplikációt, a felesleges adatbázis-módosítást.
 
-    1. Megkeresi az adott id-hoz tartozó felhasználót.
-    2.  Ha nem található ilyen felhasználó, 404-es státusszal tér vissza.
-    3. Ha a kérésben van email mező és az eltér a jelenlegi e-mailtől, akkor: Ellenőrizzük, hogy létezik-e már más felhasználónál ugyanez az e-mail. Ezzel megelőzzük a duplikált e-mail címek mentését.
-    4. Ha az e-mail már létezik, 400-as hibával tér vissza.
-    5.  A User rekord frissítése csak azokra a mezőkre korlátozva, amelyek engedélyezettek (név, e-mail, jelszó).
-    6. Ezután visszaadjuk a frissített Usert.
+    
 ```php
 public function update(UpdateUserRequest $request, int $id)
 {
@@ -495,6 +506,14 @@ public function update(UpdateUserRequest $request, int $id)
     return response()->json(['row' => $row], 200);
 }
 ```
+
+1. Megkeresi az adott id-hoz tartozó felhasználót.
+    2.  Ha nem található ilyen felhasználó, 404-es státusszal tér vissza.
+    3. Ha a kérésben van email mező és az eltér a jelenlegi e-mailtől, akkor: Ellenőrizzük, hogy létezik-e már más felhasználónál ugyanez az e-mail. Ezzel megelőzzük a duplikált e-mail címek mentését.
+    4. Ha az e-mail már létezik, 400-as hibával tér vissza.
+    5.  A User rekord frissítése csak azokra a mezőkre korlátozva, amelyek engedélyezettek (név, e-mail, jelszó).
+    6. Ezután visszaadjuk a frissített Usert.
+
 ### A QueryController
 - A fejlesztés közben felmerült az, hogy a question_types, a questions és az answers táblát összevonjuk egy több táblás lekérdezéssel. Ahogy az látható, csakis GET műveletet tud.
 
@@ -616,26 +635,26 @@ public function rules(): array
 ## A REST API kérések:
 - A REST (Representational State Transfer) egy szabványos architektúra, amely meghatározza, hogyan épüljenek fel az API kérések HTTP-n keresztül.
 
-- Ha működésre szeretnénk késztetni a végpontunkat, akkor a routes/api.php fájlban ilyen szintaktikával fel kell jegyezni: Először a művelet, utána a végpont elérési pontja, a kód helye (melyik osztályban), és a függvény neve. Ezután még hozzáírhatjuk azt is, hogy ez védett tartalom-e vagy nem a Middleware() segítségével.
+- Ha működésre szeretnénk késztetni a végpontunkat, akkor a routes/api.php fájlban ilyen szintaktikával fel kell jegyezni: Először a művelet, utána a végpont elérési pontja, a kód helye (melyik osztályban), és a függvény neve. Ezután még hozzáírhatjuk azt is, hogy ez védett tartalom-e vagy nem a Middleware() segítségével és hogy milyen tokennel rendelkező felhasználók tudnak hozzáférni az adatokhoz.
 ```php
 Route::post('/users/login', [UserController::class, 'login']);
-Route::post('/users/logout', [UserController::class, 'logout']);
-Route::get('/users', [UserController::class, 'index'])
-    ->middleware('auth:sanctum');
-Route::get('/users/{id}', [UserController::class, 'show'])
-    ->middleware('auth:sanctum');
-Route::post('/users', [UserController::class, 'store']);
+    Route::post('/users/logout', [UserController::class, 'logout']);
+    Route::get('/users', [UserController::class, 'index'])
+    ->middleware('auth:sanctum', CheckAbilities::class.':*');
+    Route::get('/users/{id}', [UserController::class, 'show'])
+    ->middleware('auth:sanctum', CheckAbilities::class.':users:view');
+    Route::post('/users', [UserController::class, 'store']);
     // ->middleware('auth:sanctum');
-Route::delete('/users/{id}', [UserController::class, 'destroy'])
-    ->middleware('auth:sanctum');
-Route::patch('/users/{id}', [UserController::class, 'update'])
-    ->middleware('auth:sanctum');
+    Route::delete('/users/{id}', [UserController::class, 'destroy'])
+        ->middleware(CheckAbilities::class.':users:view');
+    Route::patch('/users/{id}', [UserController::class, 'update'])
+    ->middleware(CheckAbilities::class.':users:view');
 ```
 
 - Ezt a request.rest-ben kezeljük. 
 
 ```r
-# ----------------- login -------------------
+ ----------------- login -------------------
 ### login
 # @name login
 POST {{host}}/api/users/login 
@@ -662,7 +681,7 @@ Accept: application/json
 Authorization: Bearer {{token}}
 
 ### get user by Id
-get {{host}}/api/users/10
+get {{host}}/api/users/1
 Accept: application/json
 Authorization: Bearer {{token}}
 
@@ -697,12 +716,15 @@ Authorization: Bearer {{token}}
 
 # ----------------- login -------------------
 ```
+
 - Login: POST metódus → bejelentkezés
     - A {{host}} változó a szerver URL-jét tartalmazza (http://localhost:8000)
     - JSON-ként küldi az emailt és a jelszót
     - A @name login címke később hivatkozási pont lesz
 - Token mentése: 
     - Ez egy változó-definíció: Elmenti a login válaszából a token értéket. A {{token}} változó későbbi kérésekben Authorization fejlécbe kerül, így nem kell minden kérésnél manuálisan megadni.
+
+
 - Logout: A felhasználó kijelentkeztetése
     - A Bearer token hitelesítést használja a fejlécben
     - A szerver törli az adott hozzáférési tokent
@@ -712,6 +734,57 @@ Authorization: Bearer {{token}}
 - Új felhasználó létrehozása: A roleId meghatározza, milyen szerepkört kap, JSON formában küldi a felhasználó adatait. Védett tartalom.
 -  Felhasználó törlése ID alapján: Törli a beírt ID-jű Usert. Védett tartalom.
 - Felhasználó frissítése (részlegesen): A PATCH csak részlegesen frissít. Védett tartalom.
+
+- Middleware: A middleware egy olyan réteg, amely a kliens kérése és a Laravel alkalmazás belső működése között helyezkedik el. Célja lehet az autentikáció ellenőrzése. Laravelben minden kérés middleware-eken megy keresztül, mielőtt eljutna a controllerhez vagy route-hoz.
+
+```php
+<?php
+
+namespace App\Http\Middleware;
+
+use Closure;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
+
+class CheckAbilities
+{
+    public function handle(Request $request, Closure $next, ...$abilities): Response
+    {
+        // Ellenőrizzük, hogy van-e bejelentkezett user (Sanctum authentikáció)
+        $user = $request->user();
+
+        if (!$user || !$request->user()->currentAccessToken()) {
+            return response()->json(['message' => 'Unauthenticated.'], 401);
+        }
+
+        // Megkapjuk a tokenhez tartozó képességeket (abilities)
+        $tokenAbilities = $request->user()->currentAccessToken()->abilities;
+
+        // Ellenőrizzük, hogy legalább egy szükséges képesség megvan
+        foreach ($abilities as $ability) {
+            if (in_array($ability, $tokenAbilities) || in_array('*', $tokenAbilities)) {
+                return $next($request);
+            }
+        }
+
+        return response()->json(['message' => 'Unauthorized.'], 403);
+    }
+}
+```
+- A handle metódus a kötelező belépési pont, ide jön minden HTTP-kérés.
+
+- A $next egy callback, amit akkor hívunk meg, ha át akarjuk engedni a kérést a következő rétegnek (pl. controllernek).
+
+- A ...$abilities egy variadic argumentum, tehát több jogosultságot is megadhatunk.
+
+    1. Autentikációs ellenőrzés: Lekérjük a bejelentkezett felhasználót.
+        - Ha nincs felhasználó vagy a token hiányzik → 401 Unauthenticated választ küldünk vissza.
+    2. Token jogosultságok (abilities) ellenőrzése: Ez a sor kiolvassa a tokenhez tartozó jogosultságokat.
+    3. Jogosultságvizsgálat: A middleware megnézi, hogy a token tartalmazza-e bármelyik megadott képességet.
+        - Ha igen (vagy * van, ami mindenre jó) → átengedjük a kérést.
+        - Ha egyik sincs → megyünk tovább a kódban.
+    4. Jogosultság hiánya esetén válasz: Ha nincs meg a szükséges jogosultság, akkor 403-as hibát küldünk vissza, jelezve, hogy a felhasználó nem jogosult a kérés teljesítésére.
+
 ## A tesztelés:
 ### Unit tesztek:
 - A unit teszt célja, hogy egyetlen funkciót, osztályt vagy metódust elszigetelten teszteljen — azaz függetlenül más moduloktól vagy adatbázistól (bár Laravelben sokszor keverednek integrációs elemekkel is).
@@ -980,30 +1053,50 @@ public function test_does_the_user_table_contain_all_fields()
      különböző komponensek (adatbázis, backend, API, külső szolgáltatások, stb.) helyesen működnek együtt.
 - Jöjjön egy példa rá:
 ```php
-public function test_questions_http(): void
+protected function setUp(): void
     {
-        //Ez szimulál egy klienst, ami ajax kérést képes küldeni egy endpointra
-        $httpClient = new Client();
-        $response = $httpClient->get('http://localhost:8000/api/questions');
-        //A json választ dekódolja php tömbbé
-        $data = json_decode($response->getBody()->getContents(), true);
+        parent::setUp();
+   
+        // Kikapcsoljuk az auth middleware-t tesztnél
+        $this->withoutMiddleware();
+        // VAGY célzottan csak az auth-ot:
+        // $this->withoutMiddleware(\App\Http\Middleware\Authenticate::class);
+        // $this->withoutMiddleware(\Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class);
+    }
+    public function test_questions_http(): void
+    {
 
-        $statusCode = $response->getStatusCode();
-        $message = $data['message'];
-        $data = $data['data'];
-        $this->assertEquals(200, $statusCode);
-        $this->assertEquals('ok', $message);
-        $this->assertGreaterThan(0, count($data));
-        // dd($data);
+        $user = \App\Models\User::factory()->create([
+            'roleId' => 1
+        ]);
+    
+        $this->actingAs($user);
+    
+        $response = $this->getJson('/api/questions');
+    
+        $response->assertStatus(200);
+        $response->assertJsonStructure([
+            'message',
+            'data'
+        ]);
+   
 
     }
 ```
+- setUp: Ez automatikusan lefut minden teszt előtt.
+    - A parent::setUp() meghívása biztosítja, hogy az Illuminate\Foundation\Testing\TestCase alapbeállításai érvényesüljenek.
+    - A withoutMiddleware() metódus kikapcsolja az összes middleware-t – így nem kell tényleges hitelesítést használni a teszt során.
 
-- test_questions_http: Valódi HTTP kérés egy endpointra → teljes integrációs folyamat tesztelése. 
-    - Ellenőrzi:
-        - a status code-ot (pl. sikeres válasz)
+- test_questions_http: 
+    1.  Felhasználó létrehozása (Factory használatával)
+        - A User::factory()->create() létrehoz egy új felhasználót az adatbázisban.
+    2. Felhasználó bejelentkeztetése (actingAs):
+        - Laravel módja annak, hogy szimuláljuk a bejelentkezett állapotot.
+        - Ezáltal a kérések úgy futnak, mintha a megadott felhasználó lenne bejelentkezve – anélkül, hogy valódi auth tokenre lenne szükség.
+    3. API-hívás elküldése: GET kérés JSON választ várva.
+    4.  Válasz ellenőrzése: A válaszkód legyen 200, azaz sikeres.
+        - A válasz tartalmazza a message és data mezőket.
+        - A data mezőben általában a kérdések listája szerepel.
 
-        - JSON válasz szerkezetét (van message, van data)
 
-        - hogy a kérdéslista nem üres
 # A frontend oldal:
