@@ -786,6 +786,49 @@ class CheckAbilities
     4. Jogosultság hiánya esetén válasz: Ha nincs meg a szükséges jogosultság, akkor 403-as hibát küldünk vissza, jelezve, hogy a felhasználó nem jogosult a kérés teljesítésére.
 
 ## A tesztelés:
+- A teszteléskor egy különálló, erre a célra létrehozott adatbázisban dolgoztunk. Ehhez a phpunit.xml-ben kellett módosításokat eszközölni.
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
+         bootstrap="vendor/autoload.php"
+         colors="true"
+>
+    <testsuites>
+        <testsuite name="Unit">
+        <directory>tests/Unit</directory>
+    </testsuite>
+    <testsuite name="Feature">
+        <directory>tests/Feature</directory>
+    </testsuite>
+    <testsuite name="Integration">
+        <directory>tests/Integration</directory>
+    </testsuite>
+    </testsuites>
+    <source>
+        <include>
+            <directory>app</directory>
+        </include>
+    </source>
+    <php>
+        <env name="APP_ENV" value="testing"/>
+        <env name="APP_MAINTENANCE_DRIVER" value="file"/>
+        <env name="BCRYPT_ROUNDS" value="4"/>
+        <env name="CACHE_STORE" value="array"/>
+        <!-- <env name="DB_CONNECTION" value="sqlite"/> -->
+        <!-- <env name="DB_DATABASE" value=":memory:"/> -->
+        <env name="MAIL_MAILER" value="array"/>
+        <env name="PULSE_ENABLED" value="false"/>
+        <env name="QUEUE_CONNECTION" value="sync"/>
+        <env name="SESSION_DRIVER" value="array"/>
+        <env name="TELESCOPE_ENABLED" value="false"/>
+    </php>
+</phpunit>
+```
+
+- az "env name="APP_ENV" value="testing"/" sor biztosítja azt, hogy a tesztelési környezet a .env.testing fájlból fusson, ahol a teszt adatbázis van beépítve. A teszt adatbázis feltöltése úgy zajlik, hogy a .env-ben ideiglenesen átírjuk a DB_DATABASE változót a teszt adatbázis nevére.
+
+
 ### Unit tesztek:
 - A unit teszt célja, hogy egyetlen funkciót, osztályt vagy metódust elszigetelten teszteljen — azaz függetlenül más moduloktól vagy adatbázistól (bár Laravelben sokszor keverednek integrációs elemekkel is).
 ```php
@@ -1047,6 +1090,223 @@ public function test_does_the_user_table_contain_all_fields()
     2.  Válasz létrehozása és ellenőrzése: Létrehoz egy helyes választ, majd ellenőrzi, hogy az kapcsolódik a kérdéshez, és mentésre került.
     3. Felhasználó és szerepkör létrehozása: Létrehoz egy „vendég” szerepkört, majd egy hozzá tartozó felhasználót.
     4.  UserTest létrehozása és validálása: Létrehoz egy user_tests rekordot, amely elvileg egy konkrét tesztkísérletet reprezentál a felhasználó részéről.
+
+- Minden táblához készítettünk egy olyan tesztet, amely teszteli azt, hogy az új rekord, amit létrehozunk, megjelenik-e az összes rekord között.
+```php
+
+    public function test_the_get_categories_table_all_record_example(): void
+    {
+        $row = Category::create([
+            'category' => 'xxx',
+            'level' => 'emelt',
+            'text' => ''
+        ]);
+
+        $response = $this->get('/api/categories');
+        //A táblába bekerült a rekord
+        $response->assertSee('xxx');
+        $response->assertSee('emelt');
+        $response->assertStatus(200);
+
+        $this->assertDatabaseHas('categories', [
+            'category' => 'xxx',
+            'level' => 'emelt'
+        ]);
+    }
+
+```
+- test_the_get_categories_table_all_record_example: teszteli, hogy az összes kategória lekérésekor visszajön-e az új rekord
+    1. Tesztadat létrehozása: Ez egy valódi rekordot hoz létre az adatbázisban.
+    2.  Lekérés az API-n keresztül: Ez elküld egy HTTP GET kérést az /api/categories végpontra.
+    3.  Ellenőrzések (Assertions): Ez azt vizsgálja, hogy a visszakapott válasz tartalmazza-e a megadott szövegeket.
+        - Státuszkód ellenőrzése: Ez biztosítja, hogy a kérés sikeres volt, tehát nem 404 vagy 500 stb.
+    4. Adatbázisellenőrzés: Ez azt nézi meg, hogy a categories tábla tartalmaz-e egy olyan sort, ahol a témakör neve "xxx" és a szintje emelt.
+
+
+``` php
+private function login(string $email = "test@example.com", string $password = "123")
+    {
+        //Bejelentkezés
+        $response = $this
+            ->withHeaders([
+                'Accept' => 'application/json',
+                'Content-Type' => 'application/json',
+            ])
+            ->postJson('/api/users/login', [
+                'email' => $email,
+                'password' => $password
+            ]);
+
+        $userData = $response->json('user');
+        $token = $userData['token'] ?? null;
+        // dd($token);
+        return $token;
+    }
+
+
+    public function test_login()
+    {
+
+        //Csinálok egy user-t
+        $name = 'test99';
+        $email = 'test99@example.com';
+        $roleId = '1';
+        $password = '123';
+
+        $user = User::factory()->create([
+            'name' => $name,
+            'email' => $email,
+            'roleId' => $roleId,
+            'password' => $password,
+        ]);
+
+        //Loginolok a user-el
+        $response = $this
+            ->withHeaders([
+                'Accept' => 'application/json',
+                'Content-Type' => 'application/json',
+            ])
+            ->postJson('/api/users/login', [
+                'email' => $email,
+                'password' => $password
+            ]);
+
+        //Lekérdezem, hogy a válasz státusza 200-e    
+        $response->assertStatus(200);
+        //Kiolvasom a válaszból a tokent
+        $userData = $response->json('user');
+        $token = $userData['token'] ?? null;
+        // dd($token);
+        //Ha van token, az jó
+        $this->assertNotNull($token);
+
+
+        //Egy védett útvonalra küldünk egy kérést
+        $response = $this
+            ->withHeaders([
+                'Content-Type' => 'application/json',
+                'Accept' => 'application/json',
+                'Authorization' => 'Bearer ' . $token
+            ])
+            ->get('/api/users');
+
+        // Ellenőrizzük, hogy a kérés sikeres volt-e
+        $response->assertStatus(200);
+    }
+
+    public function test_create_user(): void
+    {
+
+        $token = $this->login();
+        // dd($token);
+
+        $data = [
+            'name' => 'John Doe',
+            'email' => 'johndoe@example.com',
+            'roleId' => '1',
+            'password' => 'password123',
+        ];
+
+        $response = $this
+            ->withHeaders([
+                'Content-Type' => 'application/json',
+                'Accept' => 'application/json',
+                'Authorization' => 'Bearer ' . $token
+            ])
+            ->postJson('/api/users', $data);
+        // dd($response);
+
+        $response->assertStatus(200);
+        $this->assertDatabaseHas('users', ['email' => 'johndoe@example.com']);
+
+        $user = User::where('email', 'johndoe@example.com')->first();
+        $this->assertNotNull($user);
+    }
+```
+
+- login() privát segédfüggvény: Központosított bejelentkezési logika. Egyetlen hívással kaphatunk egy Sanctum token-t vissza a megadott user hitelesítésével.
+    - Küld egy POST kérést a /api/users/login végpontra.
+    - Kéri a token-t a válaszból.
+    - Visszaadja a token-t a teszteléshez.
+
+- test_login: Teszteli, hogy egy újonnan létrehozott felhasználó sikeresen be tud-e jelentkezni, és érvényes tokennel eléri-e a védett végpontot.
+    1. User létrehozása
+    2. Bejelentkezés API-n keresztül
+    3. Státuszkód és token ellenőrzés
+    4. Védett API végpont elérése
+    5. Sikeres válasz ellenőrzése
+
+- test_create_user: Azt ellenőrzi, hogy admin tokennel új felhasználót lehessen létrehozni az API-n keresztül, és az valóban bekerül-e az adatbázisba.
+    1. Login segédfüggvénnyel: Ez bejelentkezteti az alapértelmezett test@example.com usert.
+    2. POST kérés az /api/users végpontra
+    3. Sikeres válasz ellenőrzése
+    4. Adatbázis ellenőrzés
+    5. Biztonság kedvéért lekérdezés is
+
+```php
+<?php
+
+namespace Tests\Feature;
+
+// use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
+
+class QueryQuestionsWithTypesAndAnswersTimeTest extends TestCase
+{
+    private $startTime;
+    private $endTime;
+    private $responseTime;
+
+    /**
+     * A basic test example.
+     */
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        // Kikapcsoljuk az auth middleware-t tesztnél
+        $this->withoutMiddleware();
+        // VAGY célzottan csak az auth-ot:
+        // $this->withoutMiddleware(\App\Http\Middleware\Authenticate::class);
+        // $this->withoutMiddleware(\Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class);
+    }
+    public function test_the_querygetQuestionsWithTypesAndAnswers_response_time(): void
+    {
+        $this->startTime = microtime(true);
+        $response = $this->get('/api/getQuestionsWithTypesAndAnswers');
+        // $response = $this->get('/api/queryOsztalytasrsak/Balla Albert');
+        $this->endTime = microtime(true);
+
+        $response->assertStatus(200);
+
+        $this->responseTime = round(($this->endTime - $this->startTime) * 1000, 2);
+        $this->assertLessThan(200, $this->responseTime);
+    }
+
+    public function tearDown(): void
+    {
+        parent::tearDown();
+        echo PHP_EOL . "\tA válaszidő (getQuestionsWithTypesAndAnswers): {$this->responseTime} ms";
+    }
+}
+
+
+```
+- Ez egy speciális típusú feature teszt: teljesítményteszt (response time mérés) egy API végpontra.
+
+- Privát property-k: Ezek a változók tárolják majd a teszt futása alatti időmérést.
+
+- test_the_querygetQuestionsWithTypesAndAnswers_response_time: Ellenőrzi, hogy a /api/getQuestionsWithTypesAndAnswers végpont válasza 200ms alatt érkezik meg.
+    1. Start idő rögzítése: Indít egy stopperórát (microtime(true))
+    2. API hívás: Küld egy GET kérést az API-hoz.
+    3. End idő rögzítése: Leállítja az órát
+    4. HTTP státusz ellenőrzése: 200-nak kell lennie
+    5. Válaszidő kiszámítása: 
+        - Átváltás milliszekundumba (ezért szorzunk 1000-del). 
+        - Kerekítés 2 tizedesjegyre.
+    6. Teljesítmény ellenőrzés: A teszt csak akkor sikeres, ha a válaszidő kevesebb mint 200ms.
+
+- teardown: Minden teszt után lefut és kiírja konzolra a lemért válaszidőt.
 
 ### Integrációs tesztek
 - Az integrációs tesztek célja, hogy ellenőrizzék:

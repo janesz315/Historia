@@ -25,7 +25,7 @@ class UserController extends Controller
         if (!$user || !Hash::check($password, $password ? $user->password : "")) {
             return response()->json([
                 'message' => 'invalid email or password'
-            ], 200);
+            ], 401);
         }
 
         // Token készítése roleId alapján
