@@ -6,16 +6,14 @@
       <section class="about-section">
         <p>
           Üdvözlünk! Mi egy szenvedélyes csapat vagyunk, akik azért dolgoznak,
-          hogy a lehető legjobb élményt nyújtsuk felhasználóinknak. Célunk, hogy
-          innovatív megoldásokat kínáljunk és egy támogató közösséget építsünk.
+          hogy a lehető legjobb élményt nyújtsák felhasználóiknak.
         </p>
       </section>
 
       <section class="mission">
         <h2>Küldetésünk</h2>
         <p>
-          Minőségi szolgáltatást nyújtani, és közösséget építeni minden
-          felhasználónk számára.
+          Egy olyan felületet biztosítani, ahol fel lehet készülni a történelem érettségire közép, de akár emelt szinten is.
         </p>
       </section>
 

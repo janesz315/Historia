@@ -47,7 +47,7 @@
                 class="nav-item"
               >
                 <RouterLink to="/tesztekAdmin" class="nav-link"
-                  >Tesztelés</RouterLink
+                  >Tesztek</RouterLink
                 >
               </li>
 
@@ -65,7 +65,7 @@
                 class="nav-item"
               >
                 <RouterLink to="/tesztek" class="nav-link"
-                  >Tesztelés</RouterLink
+                  >Tesztek</RouterLink
                 >
               </li>
 

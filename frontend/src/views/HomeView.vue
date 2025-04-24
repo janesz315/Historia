@@ -40,6 +40,12 @@
             <router-link to="/tesztekadmin" class="btn"
               >Admin Tesztek</router-link
             >
+             <router-link to="/kerdesek" class="btn"
+              >Kérdésbank</router-link
+            >
+            <router-link to="/kerdestipusok" class="btn"
+              >Kérdéstípusok</router-link
+            >
             <router-link to="/admin" class="btn">Admin Felület</router-link>
           </div>
         </div>

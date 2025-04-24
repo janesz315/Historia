@@ -44,7 +44,7 @@
         <div class="sources mt-3">
           <div class="source-item">
             <h6>Források:</h6>
-            <OperationsCrudSources
+            <OperationsCrudSources v-if="stateAuth.roleId == 1"
               @onClickCreateButton="onClickCreateSourceButton"
             />
           </div>
@@ -58,7 +58,7 @@
                   >{{ source.sourceLink }}</a
                 >
                 <p class="source-note">{{ source.note }}</p>
-                  <OperationsCrudSources
+                  <OperationsCrudSources v-if="stateAuth.roleId == 1"
                     :source="source"
                     @onClickDeleteButton="onClickDeleteSourceButton"
                     @onClickUpdateButton="onClickUpdateSourceButton"
