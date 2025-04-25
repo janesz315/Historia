@@ -1358,5 +1358,118 @@ protected function setUp(): void
         - A válasz tartalmazza a message és data mezőket.
         - A data mezőben általában a kérdések listája szerepel.
 
+- És íme az eredmény, amit a 'php artisan test' kiadásakor kapunk:
 
+```cmd
+$ php artisan test
+
+        Adatbázis -> DB_DATABASE=testing-historia | adatbázis: testing-historia
+   PASS  Tests\Unit\DatabaseTest
+  ✓ example                                                                                                                                                                   0.21s  
+  ✓ database creation and tables exists                                                                                                                                       0.03s  
+  ✓ roles table structure                                                                                                                                                     0.06s  
+  ✓ categories table structure                                                                                                                                                0.06s  
+  ✓ sources table structure                                                                                                                                                   0.10s  
+  ✓ question types table structure                                                                                                                                            0.05s  
+  ✓ questions table structure                                                                                                                                                 0.07s  
+  ✓ answers table structure                                                                                                                                                   0.08s  
+  ✓ test questions table structure                                                                                                                                            0.08s  
+  ✓ user tests table structure                                                                                                                                                0.08s  
+  ✓ roles users relationships                                                                                                                                                 0.09s  
+  ✓ categories sources relationships                                                                                                                                          0.03s  
+  ✓ questiontypes categories questions relationships                                                                                                                          0.03s  
+  ✓ questions answers relationships                                                                                                                                           0.03s  
+  ✓ questions answers user tests test questions relationships                                                                                                                 0.05s  
+  ✓ users user tests relationships                                                                                                                                            0.03s  
+
+   PASS  Tests\Unit\ExampleTest
+  ✓ that true is true                                                                                                                                                         0.02s  
+
+   PASS  Tests\Unit\UserTest
+  ✓ check if user insert into db                                                                                                                                              0.07s  
+  ✓ check if users getting fetched with id                                                                                                                                    0.07s  
+  ✓ the presence of the given user in the database                                                                                                                            0.03s  
+  ✓ does the user table contain all fields                                                                                                                                    0.04s  
+
+   PASS  Tests\Feature\AnswersTest
+  ✓ the get answers table all record example                                                                                                                                  0.09s  
+
+   PASS  Tests\Feature\CategoriesTest
+  ✓ the get categories table all record example                                                                                                                               0.05s  
+
+   PASS  Tests\Feature\ExampleTest
+  ✓ the application returns a successful response                                                                                                                             0.06s  
+  ✓ the api returns a successful response                                                                                                                                     0.03s  
+
+        A válaszidő (getQuestionsWithTypesAndAnswers): 3.93 ms
+   PASS  Tests\Feature\QueryQuestionsWithTypesAndAnswersTimeTest
+  ✓ the queryget questions with types and answers response time                                                                                                               0.04s  
+
+   PASS  Tests\Feature\QuestionTypesTest
+  ✓ the get question types table all record example                                                                                                                           0.03s  
+
+   PASS  Tests\Feature\QuestionsTest
+  ✓ the get questions table all record example                                                                                                                                0.03s  
+
+   PASS  Tests\Feature\QuizFeatureTest
+  ✓ user can take a quiz                                                                                                                                                      0.04s  
+
+   PASS  Tests\Feature\RolesTest
+  ✓ the get roles table all record example                                                                                                                                    0.05s  
+
+   PASS  Tests\Feature\SourcesTest
+  ✓ the get sources table all record example                                                                                                                                  0.06s  
+
+   PASS  Tests\Feature\TestQuestionsTest
+  ✓ the get test questions table all record example                                                                                                                           0.04s  
+
+   PASS  Tests\Feature\UserTest
+  ✓ login                                                                                                                                                                     0.22s  
+  ✓ create user                                                                                                                                                               0.47s  
+
+   PASS  Tests\Feature\UserTestsTest
+  ✓ the get user tests table all record example                                                                                                                               0.04s  
+
+   PASS  Tests\Feature\IntegrationAnswerTest
+  ✓ answers http                                                                                                                                                              0.05s  
+
+   PASS  Tests\Feature\IntegrationCategoryTest
+  ✓ categories http                                                                                                                                                           0.07s  
+
+   PASS  Tests\Feature\IntegrationQuestionTest
+  ✓ questions http                                                                                                                                                            0.05s  
+
+   PASS  Tests\Feature\IntegrationQuestionTypeTest
+  ✓ questiontypes http                                                                                                                                                        0.04s  
+
+   PASS  Tests\Feature\IntegrationRoleTest
+  ✓ roles http                                                                                                                                                                0.05s  
+
+   PASS  Tests\Feature\IntegrationSourceTest
+  ✓ sources http                                                                                                                                                              0.06s  
+
+   PASS  Tests\Feature\IntegrationTestQuestionTest
+  ✓ testquestions http                                                                                                                                                        0.04s      
+
+   PASS  Tests\Feature\IntegrationUserTestTest
+  ✓ usertests http                                                                                                                                                            0.04s      
+
+  Tests:    43 passed (199 assertions)
+  Duration: 3.35s
+```
 # A frontend oldal:
+
+
+## A menüszerkezet: 
+
+- Ebben a részben mutatnánk be, hogy milyen menüpontok vannak és később kitérünk pontos működésükre.
+
+### Amit a vendég (guest) lát:
+
+- Kezdőlap:
+    - Itt megszólítjuk a vendéget, hogy jelentkezzen be vagy regisztráljunk. Nem csak a kezdőlapból képes erre, hanem a fenti menüből a profil fül alatt is megtalálja.
+- Rólunk:
+    - Mivel ez mindenhol egységes, ezért csak egyszer fogjuk tárgyalni.
+    - Van egy apró bemutatkozás, amelyet egy "Küldetésünk" rész követ, amelyben leírjuk az oldal célját, és hogy mit szeretnénk elérni.
+    - A "Csapatunk" részben láthatjuk az oldal készítőit.
+    - A "Kapcsolat" fül pedig az elérhetőségeinket taglalja.  

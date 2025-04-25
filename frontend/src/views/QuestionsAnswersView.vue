@@ -6,7 +6,7 @@
       <div class="admin-container col-12 col-md-12 col-xl-12 col-xxl-5">
         <!-- Rögzített új kérdés gomb -->
         <h2 class="title">Kérdések kezelése</h2>
-        <div class="justify-content-between">
+        <div class="justify-content-end">
           <h6>Témakör:{{ selectedCategoryName }}</h6>
           <OperationsCrudQuestionsAnswers style="text-align: right" class="mb-2 me-2"
             @onClickCreateButton="onClickCreateButton" />
@@ -442,7 +442,8 @@ export default {
 }
 
 .admin-container {
-  max-height: 600px;
+  height: calc(100vh - 200px);
+  /* max-height: 600px; */
   max-width: 1000px;
   background: rgba(255, 248, 220, 0.9);
   padding: 20px;
