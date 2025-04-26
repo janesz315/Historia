@@ -1,41 +1,102 @@
 <template>
   <div class="container">
+    <OperationsCrudUserTests
+      style="margin-top: 10px"
+      @onClickCreateButton="onClickCreateButton"
+    />
 
-     <OperationsCrudUserTests style="margin-top:100px;" @onClickCreateButton="onClickCreateButton" />
-
-    <div class="d-flex justify-content-center align-items-end" style="min-height: 100vh;">
-      <div class="col-12 col-md-8 col-xxl-6">
+    <div
+      class="row"
+      style="min-height: 100vh;"
+    >
+      <div class="col-12 col-md-6">
         <h2 class="title">Eddigi tesztek</h2>
         <!-- Témakörök -->
         <table class="table table-hover user-table">
           <thead>
             <tr>
               <th scope="col">Név</th>
-            <th scope="col">%</th>
-            <th scope="col">+</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr class="my-cursor" v-for="userTest in userTests" :key="userTest.id">
-            <td>{{ userTest.testName }}</td>
-            <td style="width: 50px;">{{ userTest.score }}</td>
-            <td><OperationsCrudUserTests :userTest="userTest"
+              <th scope="col">%</th>
+              <th scope="col">+</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              class="my-cursor"
+              v-for="userTest in userTests"
+              :key="userTest.id"
+            >
+              <td>{{ userTest.testName }}</td>
+              <td style="width: 50px">{{ userTest.score }}</td>
+              <td>
+                <OperationsCrudUserTests
+                  :userTest="userTest"
                   @onClickDeleteButton="onClickDeleteButton"
-                  @onClickUpdateButton="onClickUpdateButton" /></td>
-          </tr>
-        </tbody>
-      </table>
+                  @onClickUpdateButton="onClickUpdateButton"
+                />
+                <button
+                  class="btn btn-outline-info ms-2"
+                  @click="loadTestQuestions(userTest.id)"
+                >
+                  Kitöltés
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    <div class="col-12 col-md-6" v-if="currentUserTestId">
+    <h3>Aktív Teszt: {{ currentUserTestId }}</h3>
+
+    <div
+      v-for="(testQuestion, index) in testQuestions"
+      :key="testQuestion.questionId"
+      class="mb-4 p-3 border rounded"
+    >
+      <h5>{{ index + 1 }}. {{ testQuestion.question }}</h5>
+
+      <div
+        v-for="answer in testQuestion.answers"
+        :key="answer.answerId"
+        class="form-check"
+      >
+        <input
+          class="form-check-input"
+          type="radio"
+          :value="answer.answerId"
+          v-model="testQuestion.answerId"
+        />
+        <label class="form-check-label">
+          {{ answer.answer }}
+        </label>
+      </div>
+    </div>
+
+    <button class="btn btn-success" @click="submitTestAnswers">
+      Teszt Beküldése
+    </button>
     </div>
   </div>
-  <Modal :title="title" :yes="yes" :no="no" :size="size" @yesEvent="yesEventHandler">
+
+    <Modal
+      :title="title"
+      :yes="yes"
+      :no="no"
+      :size="size"
+      @yesEvent="yesEventHandler"
+    >
       <div v-if="state == 'Delete'">
         {{ messageYesNo }}
       </div>
 
-      <UserTestForm v-if="state === 'Create' || state === 'Update'" :itemForm="userTest"
-        @saveItem="saveItemHandler" :categories="categories" />
+      <UserTestForm
+        v-if="state === 'Create' || state === 'Update'"
+        :itemForm="userTest"
+        @saveItem="saveItemHandler"
+        :categories="categories"
+      />
     </Modal>
-</div>
+  </div>
 </template>
 
 <script>
@@ -48,16 +109,15 @@ class UserTest {
   }
 }
 
-import axios from 'axios';
+import axios from "axios";
 import { BASE_URL } from "../helpers/baseUrls";
 import { useAuthStore } from "../stores/useAuthStore";
 import UserTestForm from "@/components/Forms/UserTestForm.vue";
 import OperationsCrudUserTests from "@/components/Modals/OperationsCrudUserTests.vue";
 import * as bootstrap from "bootstrap";
 
-
 export default {
-  components:{UserTestForm, OperationsCrudUserTests},
+  components: { UserTestForm, OperationsCrudUserTests },
   data() {
     return {
       store: useAuthStore(),
@@ -71,6 +131,8 @@ export default {
       no: null,
       size: null,
       userTest: new UserTest(),
+      currentUserTestId: null,
+      testQuestions: [],
     };
   },
   mounted() {
@@ -95,7 +157,6 @@ export default {
       }
     },
 
-
     async createUserTest() {
       const token = this.store.token;
       const url = this.urlApiUserTest;
@@ -110,13 +171,97 @@ export default {
         testName: this.userTest.testName,
         score: null,
       };
+
       try {
         const response = await axios.post(url, data, { headers });
-        this.fetchUserTests();
+        const createdUserTest = response.data.data; // itt kapod vissza a létrehozott tesztet
+        const userTestId = createdUserTest.id;
+
+        // Miután létrejött a teszt, generáljuk le a 10 véletlen kérdést
+        await this.generateTestQuestions(userTestId);
+
+        await this.fetchUserTests(); // Tesztlista frissítése
       } catch (error) {
         console.error("Nem sikerült a teszt létrehozása:", error);
       }
+
       this.state = "Read";
+    },
+
+    async generateTestQuestions(userTestId) {
+      try {
+        // Lekérdezzük az összes kérdést (kérdés + válaszok)
+        const questionsResponse = await axios.get(
+          `${BASE_URL}/getQuestionsWithTypesAndAnswers`,
+          {
+            headers: { Authorization: `Bearer ${this.store.token}` },
+          }
+        );
+
+        const allQuestions = questionsResponse.data.data;
+
+        // Véletlenszerűen kiválasztunk 10 kérdést
+        const selectedQuestions = this.getRandomElements(allQuestions, 10);
+
+        // Előkészítjük a küldendő adatokat
+        const testQuestions = selectedQuestions.map((question) => ({
+          userTestId: userTestId,
+          questionId: question.questionId,
+          answerId: null, // Ezt majd a felhasználó fogja kiválasztani
+        }));
+
+        // Egyesével vagy egyszerre elküldheted őket.
+        for (const tq of testQuestions) {
+          await axios.post(`${BASE_URL}/testQuestions`, tq, {
+            headers: { Authorization: `Bearer ${this.store.token}` },
+          });
+        }
+      } catch (error) {
+        console.error("Nem sikerült a kérdéseket létrehozni:", error);
+      }
+    },
+
+    // Segédfüggvény, ami X véletlenszerű elemet választ
+    getRandomElements(arr, count) {
+      const shuffled = arr.sort(() => 0.5 - Math.random());
+      return shuffled.slice(0, count);
+    },
+
+    async loadTestQuestions(userTestId) {
+      this.testQuestions = [];
+      this.currentUserTestId = userTestId;
+      try {
+        const response = await axios.get(`${BASE_URL}/testQuestions`, {
+          headers: { Authorization: `Bearer ${this.store.token}` },
+        });
+        var testQuestionsAll = response.data.data;
+      } catch (error) {
+        console.error("Nem sikerült betölteni a kérdéseket:", error);
+      }
+      var questionIds = [];
+
+      for (let i = 0; i < testQuestionsAll.length; i++) {
+        if (testQuestionsAll[i].userTestId == this.currentUserTestId) {
+          questionIds.push(testQuestionsAll[i].questionId);
+        }
+      }
+      // console.log(questionIds);
+
+      for (const questionId of questionIds) {
+        try {
+          const response = await axios.get(
+            `${BASE_URL}/getQuestionsWithTypesAndAnswers/${questionId}`,
+            {
+              headers: { Authorization: `Bearer ${this.store.token}` },
+            }
+          );
+          this.testQuestions.push(response.data.data[0]);
+        } catch (error) {
+          console.error("Nem sikerült betölteni a kérdést:", error);
+        }
+      }
+
+      console.log(this.testQuestions);
     },
 
     async updateUserTest() {
@@ -142,7 +287,7 @@ export default {
       this.state = "Read";
     },
 
-    async deleteUserTestById(){
+    async deleteUserTestById() {
       try {
         const id = this.selectedRowId;
         const url = `${this.urlApiUserTest}/${id}`;
@@ -154,7 +299,6 @@ export default {
         console.error("Nem sikerült a teszt törlése:", error);
       }
     },
-
 
     onClickDeleteButton(userTest) {
       this.state = "Delete";
@@ -175,16 +319,16 @@ export default {
       this.selectedRowId = userTest.id;
     },
 
-     onClickCreateButton() {
+    onClickCreateButton() {
       this.state = "Create";
       this.title = "Új teszt bevitele";
       this.yes = null;
       this.no = "Mégsem";
       this.size = "lg";
       this.userTest = new UserTest();
-  },
+    },
 
-  saveItemHandler() {
+    saveItemHandler() {
       if (this.state === "Update") {
         this.updateUserTest();
       } else if (this.state === "Create") {
@@ -199,9 +343,9 @@ export default {
         this.deleteUserTestById();
         this.modal.hide(); // A modal bezárása a törlés után
       }
-    }
-}
-}
+    },
+  },
+};
 </script>
 
 <style>

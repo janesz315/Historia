@@ -23,7 +23,7 @@ class UpdateTestQuestionRequest extends FormRequest
     {
         return [
             'questionId' => 'required|exists:questions,id', 
-            'answerId' => 'required|exists:answers,id', 
+            'answerId' => 'nullable', 
             'userTestId' => 'required|exists:user_tests,id'
         ];
     }

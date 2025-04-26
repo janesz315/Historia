@@ -27,10 +27,10 @@
           <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto d-flex justify-content-end">
               <li class="nav-item">
-                <RouterLink to="/" class="nav-link">Kezdőlap</RouterLink>
+                <RouterLink to="/" class="nav-link" @click="closeNavbar">Kezdőlap</RouterLink>
               </li>
               <li class="nav-item">
-                <RouterLink to="/rolunk" class="nav-link">Rólunk</RouterLink>
+                <RouterLink to="/rolunk" class="nav-link" @click="closeNavbar">Rólunk</RouterLink>
               </li>
 
               <!-- Admin -->
@@ -38,7 +38,7 @@
                 v-if="stateAuth.user && stateAuth.roleId === 1"
                 class="nav-item"
               >
-                <RouterLink to="/temakorokAdmin" class="nav-link"
+                <RouterLink to="/temakorokAdmin" class="nav-link" @click="closeNavbar"
                   >Témakörök</RouterLink
                 >
               </li>
@@ -46,7 +46,7 @@
                 v-if="stateAuth.user && stateAuth.roleId === 1"
                 class="nav-item"
               >
-                <RouterLink to="/tesztekAdmin" class="nav-link"
+                <RouterLink to="/tesztekAdmin" class="nav-link" @click="closeNavbar"
                   >Tesztek</RouterLink
                 >
               </li>
@@ -56,7 +56,7 @@
                 v-if="stateAuth.user && stateAuth.roleId === 2"
                 class="nav-item"
               >
-                <RouterLink to="/temakorok" class="nav-link"
+                <RouterLink to="/temakorok" class="nav-link" @click="closeNavbar"
                   >Témakörök</RouterLink
                 >
               </li>
@@ -64,7 +64,7 @@
                 v-if="stateAuth.user && stateAuth.roleId === 2"
                 class="nav-item"
               >
-                <RouterLink to="/tesztek" class="nav-link"
+                <RouterLink to="/tesztek" class="nav-link" @click="closeNavbar"
                   >Tesztek</RouterLink
                 >
               </li>
@@ -74,21 +74,21 @@
                 v-if="stateAuth.user && stateAuth.roleId === 1"
                 class="nav-item"
               >
-                <RouterLink to="/admin" class="nav-link">Admin</RouterLink>
+                <RouterLink to="/admin" class="nav-link" @click="closeNavbar">Admin</RouterLink>
               </li>
 
                <li
                 v-if="stateAuth.user && stateAuth.roleId === 1"
                 class="nav-item"
               >
-                <RouterLink to="/kerdestipusok" class="nav-link">Kérdéstípusok</RouterLink>
+                <RouterLink to="/kerdestipusok" class="nav-link" @click="closeNavbar">Kérdéstípusok</RouterLink>
               </li>
 
               <li
                 v-if="stateAuth.user && stateAuth.roleId === 1"
                 class="nav-item"
               >
-                <RouterLink to="/kerdesek" class="nav-link"
+                <RouterLink to="/kerdesek" class="nav-link" @click="closeNavbar"
                   >Kérdésbank</RouterLink
                 >
               </li>
@@ -110,12 +110,12 @@
                   aria-labelledby="userDropdown"
                 >
                   <li>
-                    <RouterLink to="/bejelentkezes" class="dropdown-item"
+                    <RouterLink to="/bejelentkezes" class="dropdown-item" @click="closeNavbar"
                       >Bejelentkezés</RouterLink
                     >
                   </li>
                   <li>
-                    <RouterLink to="/regisztracio" class="dropdown-item"
+                    <RouterLink to="/regisztracio" class="dropdown-item" @click="closeNavbar"
                       >Regisztráció</RouterLink
                     >
                   </li>
@@ -139,12 +139,12 @@
                   aria-labelledby="userDropdown"
                 >
                   <li>
-                    <RouterLink class="dropdown-item" to="/profil"
+                    <RouterLink class="dropdown-item" to="/profil" @click="closeNavbar"
                       >Profil</RouterLink
                     >
                   </li>
                   <li>
-                    <RouterLink class="dropdown-item" to="/" @click="Logout()"
+                    <RouterLink class="dropdown-item" to="/"  @click="LogoutAndCloseNavbar()" 
                       >Kijelentkezés</RouterLink
                     >
                   </li>
@@ -166,7 +166,7 @@ import { useAuthStore } from "@/stores/useAuthStore.js";
 import { RouterLink, RouterView } from "vue-router";
 import axios from "axios";
 import { BASE_URL } from "@/helpers/baseUrls";
-
+import * as bootstrap from "bootstrap";
 export default {
   data() {
     return {
@@ -174,6 +174,17 @@ export default {
     };
   },
   methods: {
+    closeNavbar() {
+    const nav = document.querySelector(".navbar-collapse");
+    if (nav && nav.classList.contains("show")) {
+      nav.classList.remove("show");
+    }
+  },
+
+  async LogoutAndCloseNavbar() {
+    this.closeNavbar();
+    await this.Logout();
+  },
     async Logout() {
       const url = `${BASE_URL}/users/logout`;
       const headers = {
@@ -192,6 +203,14 @@ export default {
       // Kényszerített oldalfrissítés
       window.location.reload(); // Ezzel frissíti az oldalt és törli a helyben tárolt adatokat
     },
+    // closeNavbar() {
+    //   // Az összecsukás biztosítása
+    //   const navbarCollapse = document.getElementById("navbarNav");
+    //   const bsCollapse = new bootstrap.Collapse(navbarCollapse, {
+    //     toggle: false,
+    //   });
+    //   bsCollapse.hide(); // Bezárja a menüt
+    // },
   },
 };
 </script>
@@ -251,6 +270,12 @@ export default {
   text-decoration: none;
   font-weight: bold;
   margin-left: 15px;
+}
+
+nav.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 1020; 
 }
 
 /* A Bootstrap navbar osztályok most biztosítják a menü megjelenését és rejtését */

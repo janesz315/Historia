@@ -160,9 +160,9 @@ Route::delete('answers/{id}', [AnswerController::class, 'destroy'])
 
 //region admin interface
 
-Route::get('/users', [UserRoleController::class, 'index'])
+Route::get('/usersWithRoles', [UserRoleController::class, 'index'])
     ->middleware('auth:sanctum', CheckAbilities::class.':*');
-Route::put('/users/{id}/role', [UserRoleController::class, 'updateRole'])
+Route::put('/usersWithRoles/{id}/role', [UserRoleController::class, 'updateRole'])
     ->middleware('auth:sanctum', CheckAbilities::class.':*');
 
 //endregion

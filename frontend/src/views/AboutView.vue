@@ -75,7 +75,7 @@ export default {
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
-  transform: translateY(3%);
+  /* transform: translateY(3%); */
 }
 
 .about-container {

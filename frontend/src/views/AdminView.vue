@@ -54,7 +54,7 @@ export default {
   methods: {
     async fetchUsers() {
       try {
-        const response = await axios.get('http://127.0.0.1:8000/api/users');
+        const response = await axios.get('http://127.0.0.1:8000/api/usersWithRoles');
         this.users = response.data;
       } catch (error) {
         console.error('Hiba a felhasználók lekérésekor:', error);
@@ -62,7 +62,7 @@ export default {
     },
     async updateRole(user) {
       try {
-        await axios.put(`http://127.0.0.1:8000/api/users/${user.id}/role`, {
+        await axios.put(`http://127.0.0.1:8000/api/usersWithRoles/${user.id}/role`, {
           roleId: user.roleId
         });
         alert('Szerepkör sikeresen frissítve!');
