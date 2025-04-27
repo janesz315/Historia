@@ -22,8 +22,8 @@ class StoreUserTestRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'userId' => 'required|exists:users,id',
-            'testName' => 'required|string',
+            'userId' => 'sometimes|exists:users,id',
+            'testName' => 'sometimes|string',
             'score' => 'nullable|numeric'
         ];
     }

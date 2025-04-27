@@ -15,7 +15,7 @@
       />
     </div>
 
-    <div class="col-md-4 position-relative">
+    <div class="col-md-12 position-relative">
       <label for="note" class="form-label">Megjegyzés</label>
       <input
         type="text"

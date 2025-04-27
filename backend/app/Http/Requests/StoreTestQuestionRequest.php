@@ -22,9 +22,9 @@ class StoreTestQuestionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'questionId' => 'required|exists:questions,id', 
+            'questionId' => 'sometimes|exists:questions,id', 
             'answerId' => 'nullable', 
-            'userTestId' => 'required|exists:user_tests,id'
+            'userTestId' => 'sometimes|exists:user_tests,id'
 
 
         ];

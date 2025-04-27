@@ -99,16 +99,6 @@ const router = createRouter({
       meta: {title: (route) => 'Tesztek'}
     },
     {
-      path: '/tesztekadmin',
-      name: 'testsadmin',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/TestsAdminView.vue'),
-      beforeEnter: [checkIfNotLogged],
-      meta: {title: (route) => 'Tesztek - Admin', requiresAdmin: true,}
-    },
-    {
       path: '/admin',
       name: 'admin',
       // route level code-splitting

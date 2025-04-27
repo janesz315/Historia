@@ -15,7 +15,7 @@
 
         <!-- Táblázat Wrapper, hogy a görgetés csak itt történjen -->
         <div class="table-wrapper table-responsive">
-          <table class="table table-hover user-table">
+          <table class="table table-hover user-table mb-5">
             <thead>
               <tr class="sticky-top">
                 <th scope="col">Kérdés</th>
@@ -31,7 +31,7 @@
                 <td>
                   <div v-for="answer in questionAnswer.answers" :key="answer.answerId">
                     <i v-if="answer.rightAnswer === true" class="bi bi-check-lg right-answer-icon"></i>
-                    {{ answer.answer }}
+                    - {{ answer.answer }}
                   </div>
                 </td>
                 <td>
@@ -44,7 +44,7 @@
         </div>
       </div>
 
-      <div class="col-12 category-container col-md-4 col-xxl-4">
+      <div class="col-12 category-container col-md-4 col-xxl-4 ms-5">
         <h2 class="title">Témakörök</h2>
         <!-- Témakörök -->
         <table class="table table-hover user-table">
@@ -74,7 +74,7 @@
 
 
       <QuestionsAnswersForm v-if="state === 'Create' || state === 'Update'" :key="formKey" :is-create="isCreate"
-        :formData="questionAnswers" :categories="categories" :questionTypes="questionTypes" @saveItem="saveItemHandler"
+        :formData="questionAnswers" :categories="categories" :questionTypes="questionTypes" :selectedCategoryId="selectedCategoryId" @saveItem="saveItemHandler"
         @addAnswer="addAnswerHandler" @saveField="saveField" @removeAnswer="deleteAnswerById" />
 
     </Modal>
@@ -389,7 +389,7 @@ export default {
       this.title = "Kérdés módosítása";
       this.isCreate = false;
       this.yes = null;
-      this.no = "Mégsem";
+      this.no = "Bezár";
       this.size = "lg";
       this.selectedRowId = questionAnswer.questionId;
       await this.fetchQuestionsAnswersById(this.selectedRowId); // FONTOS
@@ -400,14 +400,14 @@ export default {
       this.state = "Create";
       this.title = "Új kérdés bevitele";
       this.yes = null;
-      this.no = "Mégsem";
+      this.no = "Bezár";
       this.size = "lg";
       this.question = new Question();
       this.answer = new Answer();
       this.questionAnswers = {
         questionId: null,
         question: "", // Alapértelmezett értékek
-        categoryId: null,
+        categoryId: this.selectedCategoryId || null, // Ha van kiválasztott kategória, az lesz az alapértelmezett
         questionTypeId: null,
         answers: [],
       };
@@ -442,8 +442,8 @@ export default {
 }
 
 .admin-container {
-  height: calc(100vh - 200px);
-  /* max-height: 600px; */
+  /* height: calc(100vh - 200px); */
+  max-height: 600px;
   max-width: 1000px;
   background: rgba(255, 248, 220, 0.9);
   padding: 20px;
@@ -461,8 +461,16 @@ export default {
 .table-wrapper {
   max-height: 500px;
   /* Maximális magasság a táblázathoz */
-  overflow-y: auto;
+  overflow-y: scroll;
   /* Görgetés csak a táblázat számára */
+}
+
+@media (max-width: 767.98px) {
+  .table-wrapper {
+    max-height: 500px;           /* tetszőleges, vagy hagyd ahogy volt */
+    overflow-y: scroll;          /* mindig jelenítse meg a függőleges scroll-t */
+    -webkit-overflow-scrolling: touch; /* natív görgetés iOS-en */
+  }
 }
 
 .user-table {

@@ -27,10 +27,14 @@
           <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto d-flex justify-content-end">
               <li class="nav-item">
-                <RouterLink to="/" class="nav-link" @click="closeNavbar">Kezdőlap</RouterLink>
+                <RouterLink to="/" class="nav-link" @click="closeNavbar"
+                  >Kezdőlap</RouterLink
+                >
               </li>
               <li class="nav-item">
-                <RouterLink to="/rolunk" class="nav-link" @click="closeNavbar">Rólunk</RouterLink>
+                <RouterLink to="/rolunk" class="nav-link" @click="closeNavbar"
+                  >Rólunk</RouterLink
+                >
               </li>
 
               <!-- Admin -->
@@ -38,50 +42,53 @@
                 v-if="stateAuth.user && stateAuth.roleId === 1"
                 class="nav-item"
               >
-                <RouterLink to="/temakorokAdmin" class="nav-link" @click="closeNavbar"
+                <RouterLink
+                  to="/temakorokAdmin"
+                  class="nav-link"
+                  @click="closeNavbar"
                   >Témakörök</RouterLink
                 >
               </li>
               <li
-                v-if="stateAuth.user && stateAuth.roleId === 1"
+                v-if="stateAuth.user && stateAuth.roleId === 2"
                 class="nav-item"
               >
-                <RouterLink to="/tesztekAdmin" class="nav-link" @click="closeNavbar"
-                  >Tesztek</RouterLink
+                <RouterLink
+                  to="/temakorok"
+                  class="nav-link"
+                  @click="closeNavbar"
+                  >Témakörök</RouterLink
                 >
               </li>
 
-              <!-- User -->
-              <li
-                v-if="stateAuth.user && stateAuth.roleId === 2"
-                class="nav-item"
-              >
-                <RouterLink to="/temakorok" class="nav-link" @click="closeNavbar"
-                  >Témakörök</RouterLink
-                >
-              </li>
-              <li
-                v-if="stateAuth.user && stateAuth.roleId === 2"
-                class="nav-item"
-              >
+              <li v-if="stateAuth.user" class="nav-item">
                 <RouterLink to="/tesztek" class="nav-link" @click="closeNavbar"
                   >Tesztek</RouterLink
                 >
               </li>
 
+              <!-- User -->
+
               <!-- Admin -->
               <li
                 v-if="stateAuth.user && stateAuth.roleId === 1"
                 class="nav-item"
               >
-                <RouterLink to="/admin" class="nav-link" @click="closeNavbar">Admin</RouterLink>
+                <RouterLink to="/admin" class="nav-link" @click="closeNavbar"
+                  >Admin</RouterLink
+                >
               </li>
 
-               <li
+              <li
                 v-if="stateAuth.user && stateAuth.roleId === 1"
                 class="nav-item"
               >
-                <RouterLink to="/kerdestipusok" class="nav-link" @click="closeNavbar">Kérdéstípusok</RouterLink>
+                <RouterLink
+                  to="/kerdestipusok"
+                  class="nav-link"
+                  @click="closeNavbar"
+                  >Kérdéstípusok</RouterLink
+                >
               </li>
 
               <li
@@ -110,12 +117,18 @@
                   aria-labelledby="userDropdown"
                 >
                   <li>
-                    <RouterLink to="/bejelentkezes" class="dropdown-item" @click="closeNavbar"
+                    <RouterLink
+                      to="/bejelentkezes"
+                      class="dropdown-item"
+                      @click="closeNavbar"
                       >Bejelentkezés</RouterLink
                     >
                   </li>
                   <li>
-                    <RouterLink to="/regisztracio" class="dropdown-item" @click="closeNavbar"
+                    <RouterLink
+                      to="/regisztracio"
+                      class="dropdown-item"
+                      @click="closeNavbar"
                       >Regisztráció</RouterLink
                     >
                   </li>
@@ -139,12 +152,18 @@
                   aria-labelledby="userDropdown"
                 >
                   <li>
-                    <RouterLink class="dropdown-item" to="/profil" @click="closeNavbar"
+                    <RouterLink
+                      class="dropdown-item"
+                      to="/profil"
+                      @click="closeNavbar"
                       >Profil</RouterLink
                     >
                   </li>
                   <li>
-                    <RouterLink class="dropdown-item" to="/"  @click="LogoutAndCloseNavbar()" 
+                    <RouterLink
+                      class="dropdown-item"
+                      to="/"
+                      @click="LogoutAndCloseNavbar()"
                       >Kijelentkezés</RouterLink
                     >
                   </li>
@@ -175,16 +194,16 @@ export default {
   },
   methods: {
     closeNavbar() {
-    const nav = document.querySelector(".navbar-collapse");
-    if (nav && nav.classList.contains("show")) {
-      nav.classList.remove("show");
-    }
-  },
+      const nav = document.querySelector(".navbar-collapse");
+      if (nav && nav.classList.contains("show")) {
+        nav.classList.remove("show");
+      }
+    },
 
-  async LogoutAndCloseNavbar() {
-    this.closeNavbar();
-    await this.Logout();
-  },
+    async LogoutAndCloseNavbar() {
+      this.closeNavbar();
+      await this.Logout();
+    },
     async Logout() {
       const url = `${BASE_URL}/users/logout`;
       const headers = {
@@ -215,7 +234,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 /* Alap stílusok */
 * {
   margin: 0;
@@ -251,6 +270,7 @@ export default {
 
 .my-container {
   height: 100%;
+  /* overflow: visible; */
   overflow: hidden;
 }
 
@@ -275,7 +295,7 @@ export default {
 nav.navbar {
   position: sticky;
   top: 0;
-  z-index: 1020; 
+  z-index: 1020;
 }
 
 /* A Bootstrap navbar osztályok most biztosítják a menü megjelenését és rejtését */

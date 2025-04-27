@@ -31,7 +31,7 @@ class UserController extends Controller
         // Token készítése roleId alapján
         $abilities = match ($user->roleId) {
             1 => ['*'], // Admin: mindenhez hozzáférés
-            2 => ['categories:view', 'sources:view', 'users:view', 'userTests:view', 'testQuestions:view', "answers:view"], // Korlátozott felhasználó
+            2 => ['categories:view', 'sources:view', 'users:view', 'userTests:view', 'testQuestions:view', "answers:view", "questions:view"], // Korlátozott felhasználó
             default => [], // Alapértelmezett: semmihez nincs joga
         };
 

@@ -49,6 +49,7 @@
           v-for="category in categories"
           :key="category.id"
           :value="category.id"
+          :selected="category.id === selectedCategoryId"
         >
           {{ category.category }}
         </option>
@@ -151,6 +152,7 @@ export default {
     "formData",
     "questionTypes",
     "isCreate",
+    "selectedCategoryId"
   ],
   emits: [
     "saveItem",

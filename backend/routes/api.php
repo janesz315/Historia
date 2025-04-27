@@ -28,7 +28,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         ->middleware(CheckAbilities::class.':*');
     
     Route::get('/getQuestionsWithTypesAndAnswers/{id}', [QueryController::class, 'show'])
-        ->middleware(CheckAbilities::class.':*');
+        ->middleware(CheckAbilities::class.':questions:view');
     
 }); 
     
@@ -104,7 +104,7 @@ Route::delete('questionTypes/{id}', [QuestionTypeController::class, 'destroy'])
 
 //region questions
 Route::get('questions', [QuestionController::class, 'index'])
-    ->middleware('auth:sanctum', CheckAbilities::class.':*');
+    ->middleware('auth:sanctum', CheckAbilities::class.':questions:view');
 Route::get('questions/{id}', [QuestionController::class, 'show'])
     ->middleware('auth:sanctum', CheckAbilities::class.':*');
 Route::post('questions', [QuestionController::class, 'store'])
@@ -132,15 +132,15 @@ Route::delete('userTests/{id}', [UserTestController::class, 'destroy'])
 
 //region testQuestions 
 Route::get('testQuestions', [TestQuestionController::class, 'index'])
-    ->middleware('auth:sanctum', CheckAbilities::class.':*');
+    ->middleware('auth:sanctum', CheckAbilities::class.':testQuestions:view');
 Route::get('testQuestions/{id}', [TestQuestionController::class, 'show'])
     ->middleware('auth:sanctum', CheckAbilities::class.':testQuestions:view');
 Route::post('testQuestions', [TestQuestionController::class, 'store'])
     ->middleware('auth:sanctum', CheckAbilities::class.':testQuestions:view');
 Route::patch('testQuestions/{id}', [TestQuestionController::class, 'update'])
-    ->middleware('auth:sanctum', CheckAbilities::class.':*');
+    ->middleware('auth:sanctum', CheckAbilities::class.':testQuestions:view');
 Route::delete('testQuestions/{id}', [TestQuestionController::class, 'destroy'])
-    ->middleware('auth:sanctum', CheckAbilities::class.':*');
+    ->middleware('auth:sanctum', CheckAbilities::class.':testQuestions:view');
 
 //endregion
 

@@ -414,7 +414,14 @@ Authorization: Bearer {{token}}
 
 # ----------------- testQuestions -------------------
 
+# ----------------- usersWithRoles -------------------
+### get usersWithRoles
+get {{host}}/api/usersWithRoles
+Authorization: Bearer {{token}}
 
+
+
+# ----------------- usersWithRoles -------------------
 
 
 

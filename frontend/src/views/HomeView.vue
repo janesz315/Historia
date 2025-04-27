@@ -77,7 +77,6 @@ export default {
   height: 100vh;
   width: 100vw;
   overflow: hidden; /* Biztosítja, hogy ne legyen scroll */
-  position: fixed; /* Megakadályozza a görgetést */
 }
 
 .container {

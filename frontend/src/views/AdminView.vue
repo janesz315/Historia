@@ -23,20 +23,20 @@
               </select>
             </td>
             <td>
-              <button class="btn save-btn" @click="updateRole(user)">Mentés</button>
+              <button class="btn save-btn" @click="updateRole(user)" :disabled="user.id == store.id">
+                Mentés
+              </button>
             </td>
           </tr>
         </tbody>
       </table>
     </div>
-    <div>
-
-    </div>
+    <div></div>
   </div>
 </template>
 
 <script>
-import axios from 'axios';
+import axios from "axios";
 import { BASE_URL } from "../helpers/baseUrls";
 import { useAuthStore } from "../stores/useAuthStore";
 
@@ -45,8 +45,8 @@ export default {
     return {
       users: [],
       roles: [
-        { id: 1, role: 'admin' },
-        { id: 2, role: 'user' }
+        { id: 1, role: "admin" },
+        { id: 2, role: "user" },
       ],
       store: useAuthStore(),
     };
@@ -54,32 +54,33 @@ export default {
   methods: {
     async fetchUsers() {
       try {
-        const response = await axios.get('http://127.0.0.1:8000/api/usersWithRoles');
+        const response = await axios.get(`${BASE_URL}/usersWithRoles`, {
+          headers: { Authorization: `Bearer ${this.store.token}` },
+        });
         this.users = response.data;
       } catch (error) {
-        console.error('Hiba a felhasználók lekérésekor:', error);
+        console.error("Hiba a felhasználók lekérésekor:", error);
       }
     },
     async updateRole(user) {
       try {
-        await axios.put(`http://127.0.0.1:8000/api/usersWithRoles/${user.id}/role`, {
-          roleId: user.roleId
+        await axios.put(`${BASE_URL}/usersWithRoles/${user.id}/role`, {
+          headers: { Authorization: `Bearer ${this.store.token}` },
+          roleId: user.roleId,
         });
-        alert('Szerepkör sikeresen frissítve!');
+        alert("Szerepkör sikeresen frissítve!");
       } catch (error) {
-        console.error('Hiba a szerepkör frissítésekor:', error);
+        console.error("Hiba a szerepkör frissítésekor:", error);
       }
-    }
+    },
   },
   mounted() {
     this.fetchUsers();
-  }
+  },
 };
 </script>
 
 <style scoped>
-
-
 .my-container {
   background-image: url("/images/parchment-texture.jpg");
   background-size: cover;
@@ -150,5 +151,4 @@ export default {
 .save-btn:hover {
   background: #5a3e1b;
 }
-
 </style>
