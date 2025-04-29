@@ -5,15 +5,15 @@
       <form @submit.prevent="userAuth">
         <div class="input-group">
           <span class="icon"><i class="fas fa-envelope"></i></span>
-          <input type="email" v-model="user.email" placeholder="Email cím*" required />
+          <input type="email" v-model="user.email" placeholder="Email cím*" required id="email"/>
         </div>
 
         <div class="input-group">
           <span class="icon"><i class="fas fa-lock"></i></span>
-          <input type="password" v-model="user.password" placeholder="Jelszó*" required />
+          <input type="password" v-model="user.password" placeholder="Jelszó*" required id="password"/>
         </div>
 
-        <button type="submit" class="login-button">
+        <button type="submit" class="login-button" id="login-button">
           <span v-if="loading"> Bejelentkezés...</span>
           <span v-else> Bejelentkezés</span>
         </button>
@@ -195,3 +195,4 @@ input {
   font-size: 0.9rem;
 }
 </style>
+

@@ -34,7 +34,7 @@
             és a tartalmakat.
           </p>
           <div class="btn-group">
-            <router-link to="/temakorokadmin" class="btn"
+            <router-link to="/temakorokadmin" class="btn" id="categoriesAdmin"
               >Admin Témakörök</router-link
             >
             <router-link to="/tesztekadmin" class="btn"

@@ -28,7 +28,7 @@
 
               <!-- Admin -->
               <li v-if="stateAuth.user && stateAuth.roleId === 1" class="nav-item">
-                <RouterLink to="/temakorokAdmin" class="nav-link" @click="closeNavbar">Témakörök</RouterLink>
+                <RouterLink to="/temakorokAdmin" class="nav-link" @click="closeNavbar" id="categoriesAdmin">Témakörök</RouterLink>
               </li>
               <li v-if="stateAuth.user && stateAuth.roleId === 2" class="nav-item">
                 <RouterLink to="/temakorok" class="nav-link" @click="closeNavbar">Témakörök</RouterLink>

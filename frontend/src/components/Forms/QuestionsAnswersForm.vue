@@ -15,9 +15,9 @@
       </div>
       <!-- Kérdéstípus -->
       <div class="col-4">
-        <label for="questionCategory" class="form-label">Típus:</label>
+        <label for="questionType" class="form-label">Típus:</label>
         <select
-          id="category"
+          id="questionType"
           class="form-select"
           v-model="formData.questionTypeId"
           required

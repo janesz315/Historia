@@ -165,7 +165,7 @@ export default {
   background-position: center;
   background-attachment: fixed;
   overflow: hidden;
-  position: fixed;
+  /* position: fixed; */
 }
 
 /* 📜 Kártyák (Felhasználónév, Email, Jelszó) */
