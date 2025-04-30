@@ -1459,17 +1459,83 @@ $ php artisan test
 ```
 # A frontend oldal:
 
+- A használt npm csomagok a projekthez:
 
 ## A menüszerkezet: 
 
 - Ebben a részben mutatnánk be, hogy milyen menüpontok vannak és később kitérünk pontos működésükre.
 
+### A route-ok
+
 ### Amit a vendég (guest) lát:
 
 - Kezdőlap:
     - Itt megszólítjuk a vendéget, hogy jelentkezzen be vagy regisztráljunk. Nem csak a kezdőlapból képes erre, hanem a fenti menüből a profil fül alatt is megtalálja.
+    - ![Kezdőlap guest](/backend/img/kezdolapGuest.jpg)
 - Rólunk:
     - Mivel ez mindenhol egységes, ezért csak egyszer fogjuk tárgyalni.
     - Van egy apró bemutatkozás, amelyet egy "Küldetésünk" rész követ, amelyben leírjuk az oldal célját, és hogy mit szeretnénk elérni.
     - A "Csapatunk" részben láthatjuk az oldal készítőit.
     - A "Kapcsolat" fül pedig az elérhetőségeinket taglalja.  
+    - Kép
+    
+- Regisztráció
+    - Kép
+    
+- Bejelentkezés
+
+### Amit a felhasználó (user) lát:
+
+- Kezdőlap
+
+- Témakörök
+
+- Tesztek
+
+- Profil
+### Amit az admin lát:
+
+- Kezdőlap
+
+- Témakörök
+
+- Tesztek (semmi változás)
+
+- Admin nézet (szerepkörök kezelése)
+
+- Kérdésbank
+
+- Kérdéstípusok
+
+## Működésük
+
+### Amit a vendég (a guest lát)
+- Kezdőlap (HomeView.vue)
+
+- Rólunk (AboutView.vue)
+
+- Regisztráció (SignUp.vue)
+
+- Be-kijelentkezés (Login.vue)
+
+### Amit a felhasználó (user) lát:
+
+- Témakörök (CategoriesView.vue)
+
+- Tesztek (TestsView.vue)
+
+- Felhasználói profil (Profile.vue)
+
+### Amit az admin lát:
+
+- Témakörök (CategoriesAdminView.vue)
+
+- Admin nézet (AdminView.vue)
+
+- Kérdésbank (QuestionsAnswersView.vue)
+
+- Kérdéstípusok (QuestionTypesView.vue)
+
+
+## Frontend tesztelés
+
