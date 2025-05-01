@@ -1465,7 +1465,6 @@ $ php artisan test
 
 - Ebben a részben mutatnánk be, hogy milyen menüpontok vannak és később kitérünk pontos működésükre.
 
-### A route-ok
 
 ### Amit a vendég (guest) lát:
 
@@ -1508,6 +1507,11 @@ $ php artisan test
 - Kérdéstípusok
 
 ## Működésük
+
+### A route-ok 
+
+### A helper
+
 
 ### Amit a vendég (a guest lát)
 - Kezdőlap (HomeView.vue)
