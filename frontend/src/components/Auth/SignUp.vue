@@ -124,7 +124,6 @@ export default {
   height: 100vh;
   width: 100vw;
   overflow: hidden;
-  position: fixed;
 }
 
 /* 📌 Regisztrációs kártya */

@@ -122,7 +122,6 @@ body {
   height: 100vh;
   width: 100vw;
   overflow: hidden;
-  position: fixed;
 }
 
 /* 📌 Középre igazított bejelentkezési kártya */

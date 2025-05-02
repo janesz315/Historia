@@ -1468,43 +1468,123 @@ $ php artisan test
 
 ### Amit a vendég (guest) lát:
 
+- Menü:
+    - ![Menü a vendégeknek](/backend/img/guest_menu.jpg)
+    - ![Dropdown a vendégeknek](/backend/img/guest_dropdown.jpg)
 - Kezdőlap:
     - Itt megszólítjuk a vendéget, hogy jelentkezzen be vagy regisztráljunk. Nem csak a kezdőlapból képes erre, hanem a fenti menüből a profil fül alatt is megtalálja.
-    - ![Kezdőlap guest](/backend/img/kezdolapGuest.jpg)
+    ![Kezdőlap guest](/backend/img/kezdolapGuest.jpg)
 - Rólunk:
     - Mivel ez mindenhol egységes, ezért csak egyszer fogjuk tárgyalni.
     - Van egy apró bemutatkozás, amelyet egy "Küldetésünk" rész követ, amelyben leírjuk az oldal célját, és hogy mit szeretnénk elérni.
     - A "Csapatunk" részben láthatjuk az oldal készítőit.
     - A "Kapcsolat" fül pedig az elérhetőségeinket taglalja.  
-    - Kép
+    ![Rólunk](/backend/img/Rolunk.jpg)
     
-- Regisztráció
-    - Kép
+- Regisztráció:
+    - Ha a jobb felső sarokban a profil ikonra kattintunk, akkor a kezdőlapon is fellelhető regisztráció gombra kattintva ez jön be:
+    - ![Regisztráció](/backend/img/regisztracio.jpg)
+    - Itt meg kell adnunk egy felhasználónevet, egy e-mail címet és a használandó jelszót kétszer. Figyeljünk oda a megfelelő hosszúságra!
+    - Ha sikeres volt, akkor a bejelentkezés ablakra fog minket bedobni.
     
-- Bejelentkezés
+- Bejelentkezés:
+    - Ha egy meglevő fiókkal szeretnénk bejelentkezni, vagy éppen most regisztráltunk, akkor azt itt lehet megtenni.
+    - ![Bejelentkezés](/backend/img/login.jpg)
+    - Ha a bejelentkezés nem sikerül, akkor ilyen üzenetet kapunk vissza:
+    - ![Sikertelen bejelentkezés](/backend/img/login_sikertelen.jpg)
 
 ### Amit a felhasználó (user) lát:
 
-- Kezdőlap
+- Menü:
+   - ![A felhasználó menüje](/backend/img/user_menu.jpg)
+   - A különbség annyi, hogy több menüpont van, a profil ikon mellé a felhasználónevünk is bejön. A lefelé nyíló menüben a bejelentkezés/regisztráció helyett a profil/kijelentkezés jelenik meg:
+    - ![A felhasználó dropdown-ja](/backend/img/user_dropdown.jpg)
 
-- Témakörök
+- Kezdőlap:
+    - A sikeres bejelentkezés után egy frissített kezdőlapot kapunk.
+    - ![A felhasználó kezdőlapja](/backend/img/kezdolapUser.jpg)
 
-- Tesztek
+- Témakörök:
+    - Ennek a menüpontnak az a lényege, hogy megmutassa a jelenlegi témaköröket, amik fenn vannak és a hozzájuk tartozó források (amik alapján a kidolgozás elkészülhetett).
+    - Két féle témakör van, amiket a betűjelekkel különböztetünk meg:
+        - A közép:
+            - ![Középszintű témakör](/backend/img/temakor_kozep.jpg)
+        - Az emelt:
+            - ![Emelt szintű témakör](/backend/img/temakor_emelt.jpg)
+    - Lehetőségünk van szűrni őket a szint alapján:
+        - ![Témakör szűrése](/backend/img/temakor_szures.jpg)
+    - Minden témakörhöz tartozik egy leírás:
+        -  ![Témakör kidolgozása](/backend/img/temakor_kidolgozas.jpg)
+    
+    - Minden témakörhöz létezik forrás:
+        -  ![Témakör forrásai](/backend/img/temakor_forrasok.jpg)
 
-- Profil
+- Tesztek:
+    -  Itt lehetséges tudásunkat tesztelni a témakörök kidolgozásának általi megszerzett tudást. Mindig csak a saját tesztjeink jelennek meg.
+    - Alapértelmezetten csak az "Új teszt készítése" gomb jelenik meg:
+        - ![Tesztek](/backend/img/tesztek_alap.jpg)
+    - Ha rányomunk a fentebb említett gombra, akkor kapunk egy modális ablakot, ahol is megadhatjuk a teszt nevét és a mentés gombra kattintunk, akkor egy új tesztet adunk hozzá, amibe 10 véletlenszerű kérdést generál le.
+        - ![Új teszt készítése](/backend/img/tesztek_uj.jpg)
+    - Egy kis várakozás után az áhított teszt meg fog jelenni:
+       - ![A tesztek állapotai](/backend/img/tesztek_allapotok.jpg) 
+       - Gyakorlatilag két állapota van a teszteknek:
+            - Kitöltetlen: Ekkor a % helyén semmi nincsen és ezért a "Kitöltés" gomb jelenik meg.
+            - Kitöltött: Ez a teszt ki lett töltve és ki is lett értékelve. A "Megtekintés" gombra meg lehet tekinteni a teszt részletes elemzését.
+    - Ha a kitöltés gombra kattintunk, akkor egy legördülő listában megjelennek a kérdések a válaszlehetőségekkel együtt:
+        - ![A teszt kérdései](/backend/img/tesztek_kerdesek.jpg)
+        - Amennyiben a teszt beküldésekor nem jelöltünk meg valamelyik kérdésre választ, akkor ez az üzenet fogja ezt átadni:
+            - ![Hibaüzenet a meg nem válaszolt kérdésre](/backend/img/tesztek_megoldatlan.jpg) 
+    - A teszt kiértékelése után megkapjuk az eredményeket (mire adtunk jó választ és ahol meg nem, ott pedig a jó és a rossz választ is megjeleníti):
+        - ![A teszt kiértékelése](/backend/img/tesztek_ertekeles.jpg)
+    - Azt is megfigyelhetjük, hogy ekkor a teszt eredménye bekerül a táblázatba:
+        - ![A tesztek táblázatának módosulása](/backend/img/tesztek_modosulas.jpg)
+    - A teszt törlése:
+        - A gomb lenyomására megkérdezi, hogy tényleg szeretnénk-e törölni az adott tesztet:
+            - ![A teszt törlése](/backend/img/tesztek_torles.jpg) 
+    - A teszt módosítása:
+        - Ha rányomunk a ceruza ikonra, akkor lehetőségünk lesz módosítani a tesztünk nevét:
+            - ![A teszt módosítása](/backend/img/tesztek_modositas.jpg)  
+    -  A teszt megtekintése:
+        - Ha esetleg újra meg szeretnénk tekinteni a tesztet, akkor a "Megtekintés" gombra kell rányomni és egy olyan nézettel találhatjuk szembe magunkat, amellyel a teszt kiértékelése után is találkozhattunk.
+- Profil:
+    - Ez az a pont, ahol meg tudjuk jeleníteni és változtatni a felhasználói fiókunk adatait, netán törölni az egész fiókot:
+        - ![A profil](/backend/img/profil.jpg)
+    - Ha rákattintunk a módosítás gombra, akkor ilyen megjelenést kapunk:
+        - ![A profil adatának módosítása](/backend/img/profil_modositas.jpg)
+            - Ha az e-mailt vagy a jelszót módosítjuk, akkor újra be kell jelentkeznünk. A felhasználónév esetében a jobb felső sorban a következő bejelentkezés során következik be a módosítás.
 ### Amit az admin lát:
 
+- Amikor bejelentkezünk, akkor ez a kép fogad bennünket:
+    - ![Az admin menü](/backend/img/admin_menu.jpg)
 - Kezdőlap
-
-- Témakörök
-
+    - ![Az admin kezdőlapja](/backend/img/kezdolapAdmin.jpg)
+- Témakörök:
+    - Felépítése teljesen hasonló ahhoz, amit a felhasználó lát, annyi különbséggel, hogy a CRUD műveleteket is el tudja végezni:
+    - ![CRUD műveletek elvégzésének lehetősége a témaköröknél](/backend/img/temakor_crud.jpg)
+        - create (a kidolgozott leírás az null):
+            - ![Hozzáadás lehetősége a témaköröknél](/backend/img/temakor_crud_create.jpg)
+        - update (csak a témakör és a szint):
+            - ![Módosítás lehetősége a témaköröknél](/backend/img/temakor_crud_update.jpg)
+        - update (csak a szöveget):
+            - A gomb: ![A szöveg módosításának lehetősége a témaköröknél](/backend/img/temakor_crud_update_szoveg_gomb.jpg)
+            - A WYSIWYG szerkesztő: ![A szöveg módosításának lehetősége a témaköröknél](/backend/img/temakor_crud_update_szoveg.jpg)
+        - delete:
+            - ![Törlés lehetősége a témaköröknél](/backend/img/temakor_crud_delete.jpg)
+    - Szinte pontosan ugyanez a forrásoknál is, ezt nem fogjuk bemutatni, mivel szinte hasonlóan működik a témakörökhöz képest:
+        - ![Témakör forrásai CRUD](/backend/img/temakor_forrasok_crud.jpg) 
 - Tesztek (semmi változás)
 
-- Admin nézet (szerepkörök kezelése)
-
-- Kérdésbank
+- Admin nézet (szerepkörök kezelése): Az admin saját szerepkörét nem tudja megváltoztatni:
+    - ![Admin nézet](/backend/img/admin_nezet.jpg)
+    - ![Szerepkör kiválasztása](/backend/img/admin_szerepkivalasztas.jpg)
 
 - Kérdéstípusok
+    - Itt lehet kérdéstípusokat hozzáadni a nemsokára kifejtendő kérdésbankhoz:
+        - ![Kérdéstípust](/backend/img/kerdestipus.jpg)
+
+- Kérdésbank:
+    - 
+
 
 ## Működésük
 

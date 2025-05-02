@@ -56,6 +56,7 @@
               </tr>
             </tbody>
           </table>
+          <span v-if="generating"><p>A teszt generálása folyamatban.</p></span>
         </div>
       </div>
       <div class="col-12 col-md-6" v-if="currentUserTestId">
@@ -92,7 +93,7 @@
             </div>
           </div>
         </div>
-
+        <span v-if="rating"><p>A teszt kiértékelése folyamatban.</p></span>
         <!-- Eredmény megjelenítése -->
         <h3 v-if="submitted" class="result-title">
           Eredmény: <span class="score">{{ scorePercent }}%</span>
@@ -176,6 +177,8 @@ export default {
       testQuestionIds: [],
       testQuestions: [],
       submitted: false,
+      generating: false,
+      rating: false,
       scorePercent: null,
     };
   },
@@ -200,6 +203,7 @@ export default {
     },
 
     async createUserTest() {
+      this.generating = true;
       const token = this.store.token;
       const url = this.urlApiUserTest;
       const headers = {
@@ -221,7 +225,7 @@ export default {
 
         // Miután létrejött a teszt, generáljuk le a 10 véletlen kérdést
         await this.generateTestQuestions(userTestId);
-
+        this.generating = false;
         await this.fetchUserTests(); // Tesztlista frissítése
       } catch (error) {
         console.error("Nem sikerült a teszt létrehozása:", error);
@@ -376,6 +380,7 @@ export default {
     },
 
     async submitTestAnswers() {
+      this.rating = true;
       const token = this.store.token;
 
       try {
@@ -399,11 +404,13 @@ export default {
             );
           } else {
             alert(`Nem jelöltél meg választ az ${i + 1}. kérdésre!`);
+            this.rating = false;
             return;
           }
         }
 
         this.submitted = true;
+        this.rating = false;
         
         let correctAnswers = 0;
         let totalQuestions = this.testQuestions.length;
