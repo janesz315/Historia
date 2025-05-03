@@ -584,13 +584,9 @@ h2 {
   color: red;
   font-weight: bold;
 } */
+
 .user-table {
   table-layout: auto; /* Automatikus oszlop szélesség */
-}
-
-.user-table th,
-.user-table td {
-  white-space: nowrap; /* Ne törje meg a szöveget */
 }
 
 /* Görgetősáv beállítása a táblázathoz és kérdőívhez */
@@ -598,6 +594,7 @@ h2 {
   max-height: 600px; /* Maximális magasság beállítása */
   overflow-y: auto; /* Vertikális görgetősáv megjelenítése, ha a tartalom meghaladja a magasságot */
 }
+
 
 .test-questions-container {
   max-height: 600px; /* Maximális magasság a kérdésekhez */

@@ -7,7 +7,7 @@
         <!-- Rögzített új kérdés gomb -->
         <h2 class="title">Kérdések kezelése</h2>
         <div class="justify-content-end">
-          <h6>Témakör:{{ selectedCategoryName }}</h6>
+          <h6>Témakör: {{ selectedCategoryName }}</h6>
           <OperationsCrudQuestionsAnswers style="text-align: right" class="mb-2 me-2"
             @onClickCreateButton="onClickCreateButton" />
         </div>

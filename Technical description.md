@@ -1580,12 +1580,25 @@ $ php artisan test
 
 - Kérdéstípusok
     - Itt lehet kérdéstípusokat hozzáadni a nemsokára kifejtendő kérdésbankhoz:
-        - ![Kérdéstípust](/backend/img/kerdestipus.jpg)
+        - ![Kérdéstípus](/backend/img/kerdestipusok.jpg)
 
 - Kérdésbank:
-    - 
-
-
+    - A kérdésbankban találhatjuk meg a kérdéseket a válaszaikkal együtt.
+    - Alapértelmezésben nincsen megjelölve a témakör, ami alapján szűrnénk a kérdéseket, így minden kérdés megtekinthető:
+        - ![Kérdésbank](/backend/img/kerdesbank_alap.jpg)
+    - Viszont amennyiben rákattintunk valamely témakörre a listában, akkor kiszűri azokat a kérdéseket, amelyek az adott témakörhöz hozzátartoznak:
+        - ![Szűrt kérdésbank](/backend/img/kerdesbank_kijelolve.jpg)
+    - Ha így kattintunk rá az "Új kérdés létrehozása" gombra, akkor a témakör kiválasztásánál megjelent a szűrt témakör (egyébként a felhasználónak önerejéből kellene kiválasztania a témakört):
+        - ![Új kérdés létrehozása](/backend/img/kerdesbank_create_kerdes.jpg)
+    - Ha beírtunk minden adatot, akkor lehetőségünk lesz menteni a kérdést a "Mentés" gombbal és ezután a kérdés legalul meg is  jelenik.
+    - Miután létrehoztuk a kérdéseket és ha módosítani szeretnénk azt, akkor ezt a képet kell kapnunk:
+        - ![Meglévő kérdés módosítása](/backend/img/kerdesbank_update.jpg)
+    - Ekkor láthatjuk, hogy magát a kérdést is módosíthatjuk, amennyiben nem vagyunk megelégedve a megfogalmazással vagy a témakörrel. De a másik, a fontosabb gomb, az a válaszok hozzáadása. Ha rányomunk a "Válasz hozzáadása" gombra, akkor megjelenik egy "Új válasz" nevű válasz:
+        - ![Válasz létrehozása után](/backend/img/kerdesbank_valasz.jpg)
+    - Ha rányomunk a ceruza ikonra, akkor megnyílik egy szerkesztő mező, ahová beírhatjuk a válaszlehetőséget, amit jónak látunk.
+        - ![Válasz módosítása](/backend/img/kerdesbank_valasz_update.jpg)
+    - Ezen kívül azt is megjelölhetjük, hogy a megadott válaszlehetőség helyes-e vagy nem (a válasz előtti jelölődoboz). A válasz jobb oldalán levő gombbal menthetjük, az utána levővel pedig a szerkesztő mező záródik be mentés nélkül.
+    - A törlés gombok természetesen törlik a választ. Ha ugyanezt a kérdéseknél tesszük meg, akkor nemcsak a megjelölt kérdés, hanem az ahhoz tartozó válaszok is törlődnek
 ## Működésük
 
 ### A route-ok 
