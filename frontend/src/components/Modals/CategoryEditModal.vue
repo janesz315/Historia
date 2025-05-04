@@ -1,5 +1,11 @@
 <template>
-  <div class="modal fade" :id="modalId" tabindex="-1" aria-hidden="true" ref="modal">
+  <div
+    class="modal fade"
+    :id="modalId"
+    tabindex="-1"
+    aria-hidden="true"
+    ref="modal"
+  >
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -10,8 +16,12 @@
           <QuillEditor v-model="tempText" />
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" @click="closeModal">Mégse</button>
-          <button type="button" class="btn btn-primary" @click="saveChanges">Mentés</button>
+          <button type="button" class="btn btn-secondary" @click="closeModal">
+            Mégse
+          </button>
+          <button type="button" class="btn btn-primary" @click="saveChanges">
+            Mentés
+          </button>
         </div>
       </div>
     </div>

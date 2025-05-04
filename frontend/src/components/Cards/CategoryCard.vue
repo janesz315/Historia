@@ -10,18 +10,21 @@
         <img :src="'/images/' + imageLevelE" alt="Kép leírása" height="35" />
       </h5>
       <div class="d-flex justify-content-between align-items-center">
-        <button class="btn btn-outline-secondary me-1 ms-2" @click="toggleExpand">
+        <button
+          class="btn btn-outline-secondary me-1 ms-2"
+          @click="toggleExpand"
+        >
           <i
             :class="
               category.expanded ? 'bi bi-chevron-up' : 'bi bi-chevron-down'
             "
           ></i>
         </button>
-        <div v-if="stateAuth.roleId == 1">
-          <OperationsCrud
+        <div v-if="store.roleId == 1">
+          <OperationsCrudCategories
             :category="category"
-            @onClickDeleteButton="onClickDeleteButton"
-            @onClickUpdateButton="onClickUpdateButton"
+            @onClickDeleteButton="onClickDeleteCategoryButton"
+            @onClickUpdateButton="onClickUpdateCategoryButton"
           />
         </div>
       </div>
@@ -33,7 +36,7 @@
         <p v-html="category.text"></p>
 
         <button
-          v-if="stateAuth.roleId === 1"
+          v-if="store.roleId === 1"
           @click="openEditModal"
           class="btn btn-outline-primary btn-sm"
         >
@@ -44,7 +47,8 @@
         <div class="sources mt-3">
           <div class="source-item">
             <h6>Források:</h6>
-            <OperationsCrudSources v-if="stateAuth.roleId == 1"
+            <OperationsCrudSources
+              v-if="store.roleId == 1"
               @onClickCreateButton="onClickCreateSourceButton"
             />
           </div>
@@ -58,11 +62,12 @@
                   >{{ source.sourceLink }}</a
                 >
                 <p class="source-note">{{ source.note }}</p>
-                  <OperationsCrudSources v-if="stateAuth.roleId == 1"
-                    :source="source"
-                    @onClickDeleteButton="onClickDeleteSourceButton"
-                    @onClickUpdateButton="onClickUpdateSourceButton"
-                  />
+                <OperationsCrudSources
+                  v-if="store.roleId == 1"
+                  :source="source"
+                  @onClickDeleteButton="onClickDeleteSourceButton"
+                  @onClickUpdateButton="onClickUpdateSourceButton"
+                />
               </div>
             </li>
           </ul>
@@ -80,32 +85,30 @@
 </template>
 
 <script>
-import axios from "axios";
-import { BASE_URL } from "@/helpers/baseUrls";
 import CategoryEditModal from "@/components/Modals/CategoryEditModal.vue";
 import { useAuthStore } from "@/stores/useAuthStore.js";
-import OperationsCrud from "../Modals/OperationsCrudCategories.vue";
+import OperationsCrudCategories from "../Modals/OperationsCrudCategories.vue";
 import OperationsCrudSources from "../Modals/OperationsCrudSources.vue";
 
 export default {
   components: {
     CategoryEditModal,
-    OperationsCrud,
+    OperationsCrudCategories,
     OperationsCrudSources,
   },
   data() {
     return {
       imageLevelK: "letter-k.svg",
       imageLevelE: "letter-e.svg",
-      stateAuth: useAuthStore(),
+      store: useAuthStore(),
     };
   },
   props: [
     "category",
     "saveCategory",
     "sources",
-    "onClickDeleteButton",
-    "onClickUpdateButton",
+    "onClickDeleteCategoryButton",
+    "onClickUpdateCategoryButton",
     "onClickDeleteSourceButton",
     "onClickUpdateSourceButton",
     "onClickCreateSourceButton",
@@ -239,8 +242,6 @@ export default {
     max-width: fit-content;
   }
 
-   
-
   .source-item {
     flex-direction: column;
     align-items: flex-start;
@@ -250,7 +251,7 @@ export default {
 @media (max-width: 576px) {
   .category-title {
     font-size: 1.2rem;
-    max-width:150px;
+    max-width: 150px;
   }
 }
 </style>

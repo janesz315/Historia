@@ -5,15 +5,27 @@
       <form @submit.prevent="userAuth">
         <div class="input-group">
           <span class="icon"><i class="fas fa-envelope"></i></span>
-          <input type="email" v-model="user.email" placeholder="Email cím*" required id="email"/>
+          <input
+            type="email"
+            v-model="user.email"
+            placeholder="Email cím*"
+            required
+            id="email"
+          />
         </div>
 
         <div class="input-group">
           <span class="icon"><i class="fas fa-lock"></i></span>
-          <input type="password" v-model="user.password" placeholder="Jelszó*" required id="password"/>
+          <input
+            type="password"
+            v-model="user.password"
+            placeholder="Jelszó*"
+            required
+            id="password"
+          />
         </div>
 
-        <button type="submit" class="login-button" id="login-button">
+        <button type="submit" class="login-button">
           <span v-if="loading"> Bejelentkezés...</span>
           <span v-else> Bejelentkezés</span>
         </button>
@@ -40,6 +52,16 @@ export default {
       errorMessage: null,
       loading: false,
     };
+  },
+  mounted() {
+    const setDynamicHeight = () => {
+      document.documentElement.style.setProperty(
+        "--vh",
+        `${window.innerHeight}px`
+      );
+    };
+    window.addEventListener("resize", setDynamicHeight);
+    setDynamicHeight();
   },
   methods: {
     async userAuth() {
@@ -86,16 +108,16 @@ export default {
         this.loading = false;
       }
       // Fixálja a magasságot, hogy az UI ne ugráljon a billentyűzet feljövetelekor
-      function setDynamicHeight() {
-        document.documentElement.style.setProperty(
-          "--vh",
-          `${window.innerHeight}px`
-        );
-      }
+      // function setDynamicHeight() {
+      //   document.documentElement.style.setProperty(
+      //     "--vh",
+      //     `${window.innerHeight}px`
+      //   );
+      // }
 
-      // Meghívás betöltéskor és méretváltozáskor
-      window.addEventListener("resize", setDynamicHeight);
-      setDynamicHeight();
+      // // Meghívás betöltéskor és méretváltozáskor
+      // window.addEventListener("resize", setDynamicHeight);
+      // setDynamicHeight();
     },
   },
 };
@@ -141,8 +163,8 @@ body {
 .login-title {
   font-size: 2.5rem;
   margin-bottom: 20px;
-  font-family: 'Cinzel', serif;
-  color: #5a3e1b
+  font-family: "Cinzel", serif;
+  color: #5a3e1b;
 }
 
 /* 📌 Bemeneti mezők */

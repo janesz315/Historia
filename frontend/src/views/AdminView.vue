@@ -23,7 +23,11 @@
               </select>
             </td>
             <td>
-              <button class="btn save-btn" @click="updateRole(user)" :disabled="user.id == store.id">
+              <button
+                class="btn save-btn"
+                @click="updateRole(user)"
+                :disabled="user.id == store.id"
+              >
                 Mentés
               </button>
             </td>
@@ -44,14 +48,21 @@ export default {
   data() {
     return {
       users: [],
-      roles: [
-        { id: 1, role: "admin" },
-        { id: 2, role: "user" },
-      ],
+      roles: [],
       store: useAuthStore(),
     };
   },
   methods: {
+    async fetchRoles() {
+      try {
+        const response = await axios.get(`${BASE_URL}/roles`, {
+          headers: { Authorization: `Bearer ${this.store.token}` },
+        });
+        this.roles = response.data.data;
+      } catch (error) {
+        console.error("Hiba a szerepkör lekérésekor:", error);
+      }
+    },
     async fetchUsers() {
       try {
         const response = await axios.get(`${BASE_URL}/usersWithRoles`, {
@@ -64,11 +75,12 @@ export default {
     },
     async updateRole(user) {
       try {
-        await axios.put(`${BASE_URL}/usersWithRoles/${user.id}/role`, {
-          headers: { Authorization: `Bearer ${this.store.token}` },
-          roleId: user.roleId,
-        });
-        alert("Szerepkör sikeresen frissítve!");
+        await axios.put(
+          `${BASE_URL}/usersWithRoles/${user.id}/role`,
+          { roleId: user.roleId },
+          { headers: { Authorization: `Bearer ${this.store.token}` } }
+        );
+        // alert("Szerepkör sikeresen frissítve!");
       } catch (error) {
         console.error("Hiba a szerepkör frissítésekor:", error);
       }
@@ -76,6 +88,7 @@ export default {
   },
   mounted() {
     this.fetchUsers();
+    this.fetchRoles();
   },
 };
 </script>

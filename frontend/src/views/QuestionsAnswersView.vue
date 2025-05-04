@@ -1,15 +1,16 @@
 <template>
   <div>
     <div class="my-container row">
-
-
       <div class="admin-container col-12 col-md-12 col-xl-12 col-xxl-5">
         <!-- Rögzített új kérdés gomb -->
         <h2 class="title">Kérdések kezelése</h2>
         <div class="justify-content-end">
           <h6>Témakör: {{ selectedCategoryName }}</h6>
-          <OperationsCrudQuestionsAnswers style="text-align: right" class="mb-2 me-2"
-            @onClickCreateButton="onClickCreateButton" />
+          <OperationsCrudQuestionsAnswers
+            style="text-align: right"
+            class="mb-2 me-2"
+            @onClickCreateButton="onClickCreateButton"
+          />
         </div>
         <!-- <button class="create-question-btn" @click="onClickCreateButton">Új kérdés létrehozása</button> -->
 
@@ -25,18 +26,30 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="questionAnswer in filteredQuestions" :key="questionAnswer.questionId">
+              <tr
+                v-for="questionAnswer in filteredQuestions"
+                :key="questionAnswer.questionId"
+              >
                 <td>{{ questionAnswer.question }}</td>
                 <td>{{ questionAnswer.questionCategory }}</td>
                 <td>
-                  <div v-for="answer in questionAnswer.answers" :key="answer.answerId">
-                    <i v-if="answer.rightAnswer === true" class="bi bi-check-lg right-answer-icon"></i>
+                  <div
+                    v-for="answer in questionAnswer.answers"
+                    :key="answer.answerId"
+                  >
+                    <i
+                      v-if="answer.rightAnswer === true"
+                      class="bi bi-check-lg right-answer-icon"
+                    ></i>
                     - {{ answer.answer }}
                   </div>
                 </td>
                 <td>
-                  <OperationsCrudQuestionsAnswers :questionAnswer="questionAnswer"
-                    @onClickDeleteButton="onClickDeleteButton" @onClickUpdateButton="onClickUpdateButton" />
+                  <OperationsCrudQuestionsAnswers
+                    :questionAnswer="questionAnswer"
+                    @onClickDeleteButton="onClickDeleteButton"
+                    @onClickUpdateButton="onClickUpdateButton"
+                  />
                 </td>
               </tr>
             </tbody>
@@ -54,31 +67,45 @@
             </tr> -->
           </thead>
           <tbody>
-            <tr class="my-cursor" v-for="category in categories" :key="category.id" @click="selectCategory(category.id, category.category)"
-              :class="{ 'table-danger': selectedCategoryId === category.id }">
+            <tr
+              class="my-cursor"
+              v-for="category in categories"
+              :key="category.id"
+              @click="selectCategory(category.id, category.category)"
+              :class="{ 'table-danger': selectedCategoryId === category.id }"
+            >
               <td>{{ category.category }}</td>
-
             </tr>
           </tbody>
         </table>
       </div>
-
-      
     </div>
 
-    <Modal :title="title" :yes="yes" :no="no" :size="size" @yesEvent="yesEventHandler">
+    <Modal
+      :title="title"
+      :yes="yes"
+      :no="no"
+      :size="size"
+      @yesEvent="yesEventHandler"
+    >
       <div v-if="state == 'Delete'">
         {{ messageYesNo }}
       </div>
 
-
-
-      <QuestionsAnswersForm v-if="state === 'Create' || state === 'Update'" :key="formKey" :is-create="isCreate"
-        :formData="questionAnswers" :categories="categories" :questionTypes="questionTypes" :selectedCategoryId="selectedCategoryId" @saveItem="saveItemHandler"
-        @addAnswer="addAnswerHandler" @saveField="saveField" @removeAnswer="deleteAnswerById" />
-
+      <QuestionsAnswersForm
+        v-if="state === 'Create' || state === 'Update'"
+        :key="formKey"
+        :is-create="isCreate"
+        :formData="questionAnswers"
+        :categories="categories"
+        :questionTypes="questionTypes"
+        :selectedCategoryId="selectedCategoryId"
+        @saveItem="saveItemHandler"
+        @addAnswer="addAnswerHandler"
+        @saveField="saveField"
+        @removeAnswer="deleteAnswerById"
+      />
     </Modal>
-
   </div>
 </template>
 
@@ -129,8 +156,13 @@ import OperationsCrudQuestionTypes from "@/components/Modals/OperationsCrudQuest
 import * as bootstrap from "bootstrap";
 
 export default {
-  components: { QuestionsAnswersForm, QuestionTypesForm, OperationsCrudQuestionsAnswers, OperationsCrudQuestionTypes },
-   data() {
+  components: {
+    QuestionsAnswersForm,
+    QuestionTypesForm,
+    OperationsCrudQuestionsAnswers,
+    OperationsCrudQuestionTypes,
+  },
+  data() {
     return {
       store: useAuthStore(),
       questionsAnswers: [],
@@ -276,9 +308,6 @@ export default {
       }
     },
 
-
-
-
     async addAnswerHandler() {
       if (!this.questionAnswers || !this.questionAnswers.questionId) {
         console.error("Nincs érvényes kérdés!");
@@ -356,13 +385,10 @@ export default {
 
         // A sikeres törlés után frissíteni kell a kérdések listáját
         this.fetchQuestionsAnswers();
-
       } catch (error) {
         console.error("Törlés hiba:", error);
         alert("A kérdés törlése nem sikerült!");
       }
-
-
     },
 
     yesEventHandler() {
@@ -371,7 +397,6 @@ export default {
         this.modal.hide(); // A modal bezárása a törlés után
       }
     },
-
 
     onClickDeleteButton(questionAnswer) {
       this.state = "Delete";
@@ -412,11 +437,7 @@ export default {
         answers: [],
       };
     },
-
   },
-
-
-
 
   mounted() {
     this.fetchQuestionsAnswers();
@@ -467,8 +488,8 @@ export default {
 
 @media (max-width: 767.98px) {
   .table-wrapper {
-    max-height: 500px;           /* tetszőleges, vagy hagyd ahogy volt */
-    overflow-y: scroll;          /* mindig jelenítse meg a függőleges scroll-t */
+    max-height: 500px; /* tetszőleges, vagy hagyd ahogy volt */
+    overflow-y: scroll; /* mindig jelenítse meg a függőleges scroll-t */
     -webkit-overflow-scrolling: touch; /* natív görgetés iOS-en */
   }
 }

@@ -21,7 +21,9 @@
         </div>
         <!-- Create gomb -->
         <div class="flex-shrink-0">
-          <OperationsCrud @onClickCreateButton="onClickCreateButton" />
+          <OperationsCrudCategories
+            @onClickCreateButton="onClickCreateCategoryButton"
+          />
         </div>
       </div>
 
@@ -36,8 +38,8 @@
           :category="category"
           :saveCategory="saveCategory"
           :sources="sources[category.id] || []"
-          :onClickDeleteButton="onClickDeleteButton"
-          :onClickUpdateButton="onClickUpdateButton"
+          :onClickDeleteButton="onClickDeleteCategoryButton"
+          :onClickUpdateButton="onClickUpdateCategoryButton"
           :onClickDeleteSourceButton="onClickDeleteSourceButton"
           :onClickUpdateSourceButton="onClickUpdateSourceButton"
           :onClickCreateSourceButton="onClickCreateSourceButton"
@@ -57,7 +59,7 @@
         {{ messageYesNo }}
       </div>
 
-      <CategoryForm
+      <CategoriesForm
         v-if="state == 'Create' || state == 'Update'"
         :itemForm="category"
         @saveItem="saveItemHandler"
@@ -96,15 +98,20 @@ import axios from "axios";
 import { BASE_URL } from "../helpers/baseUrls";
 import { useAuthStore } from "../stores/useAuthStore";
 import CategoryCard from "../components/Cards/CategoryCard.vue";
-// import TopicModal from "../components/Modals/CategoryForm.vue";
-import CategoryForm from "@/components/Forms/CategoryForm.vue";
-import OperationsCrud from "@/components/Modals/OperationsCrudCategories.vue";
+// import TopicModal from "../components/Modals/CategoriesForm.vue";
+import CategoriesForm from "@/components/Forms/CategoriesForm.vue";
+import OperationsCrudCategories from "@/components/Modals/OperationsCrudCategories.vue";
 // import bootstrap from "bootstrap/dist/js/bootstrap.bundle.min.js";
 import * as bootstrap from "bootstrap";
 import SourceForm from "@/components/Forms/SourceForm.vue";
 
 export default {
-  components: { CategoryCard, CategoryForm, OperationsCrud, SourceForm },
+  components: {
+    CategoryCard,
+    CategoriesForm,
+    OperationsCrudCategories,
+    SourceForm,
+  },
   data() {
     return {
       urlApiCategory: `${BASE_URL}/categories`,
@@ -222,7 +229,6 @@ export default {
 
         // A sikeres törlés után frissíteni kell a kategóriák listáját
         await this.fetchCategories();
-
       } catch (error) {
         console.error("Törlés hiba:", error);
       }
@@ -346,12 +352,7 @@ export default {
       this.state = "Read";
     },
 
-    onClickDeleteButton(category) {
-      // if (!category || !category.id) {
-      //   console.error("A kategória nem található.");
-      //   alert("Hiba: A kategória nem található.");
-      //   return;
-      // }
+    onClickDeleteCategoryButton(category) {
       this.state = "Delete";
       this.title = "Törlés";
       this.messageYesNo = `Valóban törölni akarod a(z) ${category.category} nevű témakört?`;
@@ -360,16 +361,16 @@ export default {
       this.size = null;
       this.selectedRowId = category.id;
     },
-    onClickUpdateButton(category) {
+    onClickUpdateCategoryButton(category) {
       this.state = "Update";
       this.title = "Témakör módosítása";
       this.yes = null;
       this.no = "Mégsem";
       this.size = "lg";
-      this.category = { ...category }; // Beállítjuk a category-t, nem item
+      this.category = { ...category };
       this.selectedRowId = category.id;
     },
-    onClickCreateButton() {
+    onClickCreateCategoryButton() {
       this.title = "Új témakör bevitele";
       this.yes = null;
       this.no = "Mégsem";
@@ -392,7 +393,7 @@ export default {
       this.yes = null;
       this.no = "Mégsem";
       this.size = "lg";
-      this.source = { ...source }; // Beállítjuk a source-t, nem item
+      this.source = { ...source };
       this.selectedRowId = source.id;
     },
     onClickCreateSourceButton() {
@@ -428,7 +429,7 @@ export default {
 <style scoped>
 .my-container-height {
   min-height: 100vh;
-} 
+}
 
 .my-container {
   background-image: url("/images/parchment-texture.jpg");

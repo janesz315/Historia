@@ -1,9 +1,8 @@
 <template>
-  <div class="my-container ">
-
+  <div class="my-container">
     <div class="container my-container-height">
       <h1>Témakörök</h1>
-       <div class="d-flex justify-content-between align-items-center mb-3">
+      <div class="d-flex justify-content-between align-items-center mb-3">
         <div class="filter-container">
           <label for="levelFilter" class="me-2">Szűrés szint szerint:</label>
           <select
@@ -18,10 +17,7 @@
         </div>
       </div>
 
-      <div
-        v-for="category in filteredCategories"
-        :key="category.id"
-      >
+      <div v-for="category in filteredCategories" :key="category.id">
         <CategoryCard
           :category="category"
           :sources="sources[category.id] || []"
@@ -51,7 +47,9 @@ export default {
   computed: {
     filteredCategories() {
       return this.selectedLevel
-        ? this.categories.filter((category) => category.level === this.selectedLevel)
+        ? this.categories.filter(
+            (category) => category.level === this.selectedLevel
+          )
         : this.categories;
     },
   },
@@ -98,13 +96,12 @@ export default {
 </script>
 
 <style scoped>
-
 .filter-container {
   display: flex;
   align-items: center;
 }
 
-.my-container-height{
+.my-container-height {
   min-height: 100vh;
 }
 .my-container {

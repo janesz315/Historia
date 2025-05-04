@@ -6,7 +6,12 @@
         <!-- Felhasználónév -->
         <div class="input-group">
           <span class="icon"><i class="fas fa-user"></i></span>
-          <input type="text" v-model="username" placeholder="Felhasználónév*" required />
+          <input
+            type="text"
+            v-model="username"
+            placeholder="Felhasználónév*"
+            required
+          />
         </div>
         <p v-if="username && username.length < 2" class="error-message">
           Legalább 2 karakter hosszúnak kell lennie.
@@ -15,13 +20,23 @@
         <!-- Email -->
         <div class="input-group">
           <span class="icon"><i class="fas fa-envelope"></i></span>
-          <input type="email" v-model="email" placeholder="E-mail cím*" required />
+          <input
+            type="email"
+            v-model="email"
+            placeholder="E-mail cím*"
+            required
+          />
         </div>
 
         <!-- Jelszó -->
         <div class="input-group">
           <span class="icon"><i class="fas fa-lock"></i></span>
-          <input type="password" v-model="password" placeholder="Jelszó*" required />
+          <input
+            type="password"
+            v-model="password"
+            placeholder="Jelszó*"
+            required
+          />
         </div>
         <p v-if="password && password.length < 6" class="error-message">
           A jelszónak minimum 6 karakter hosszúnak kell lennie.
@@ -30,14 +45,26 @@
         <!-- Jelszó megerősítés -->
         <div class="input-group">
           <span class="icon"><i class="fas fa-lock"></i></span>
-          <input type="password" v-model="confirmPassword" placeholder="Jelszó mégegyszer*" required />
+          <input
+            type="password"
+            v-model="confirmPassword"
+            placeholder="Jelszó mégegyszer*"
+            required
+          />
         </div>
-        <p v-if="confirmPassword && confirmPassword !== password" class="error-message">
+        <p
+          v-if="confirmPassword && confirmPassword !== password"
+          class="error-message"
+        >
           A jelszavak nem egyeznek!
         </p>
 
         <!-- Regisztráció gomb -->
-        <button type="submit" class="register-button" :disabled="isFormInvalid || isLoading">
+        <button
+          type="submit"
+          class="register-button"
+          :disabled="isFormInvalid || isLoading"
+        >
           <span v-if="isLoading"> Regisztráció...</span>
           <span v-else> Regisztrálás</span>
         </button>
@@ -95,7 +122,10 @@ export default {
 
       try {
         await axios.post(`${BASE_URL}/users`, payload, {
-          headers: { Accept: "application/json", "Content-Type": "application/json" },
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
         });
 
         alert(" Sikeres regisztráció!");
@@ -143,7 +173,7 @@ export default {
 .register-title {
   font-size: 2.5rem;
   margin-bottom: 20px;
-  font-family: 'Cinzel', serif;
+  font-family: "Cinzel", serif;
   color: #5a3e1b;
 }
 

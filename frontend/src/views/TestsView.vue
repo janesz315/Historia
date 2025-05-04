@@ -195,7 +195,9 @@ export default {
           headers: { Authorization: `Bearer ${this.store.token}` },
         });
 
-        this.userTests = response.data.data.filter((userTest) => userTest.userId === this.store.id);
+        this.userTests = response.data.data.filter(
+          (userTest) => userTest.userId === this.store.id
+        );
       } catch (error) {
         console.error("Hiba a kérdéstípusok lekérésekor:", error);
         alert("Kérdéstípusok betöltése sikertelen.");
@@ -411,7 +413,7 @@ export default {
 
         this.submitted = true;
         this.rating = false;
-        
+
         let correctAnswers = 0;
         let totalQuestions = this.testQuestions.length;
 
@@ -594,7 +596,6 @@ h2 {
   max-height: 600px; /* Maximális magasság beállítása */
   overflow-y: auto; /* Vertikális görgetősáv megjelenítése, ha a tartalom meghaladja a magasságot */
 }
-
 
 .test-questions-container {
   max-height: 600px; /* Maximális magasság a kérdésekhez */

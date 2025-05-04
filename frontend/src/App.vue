@@ -27,34 +27,34 @@
               </li>
 
               <!-- Admin -->
-              <li v-if="stateAuth.user && stateAuth.roleId === 1" class="nav-item">
+              <li v-if="store.user && store.roleId === 1" class="nav-item">
                 <RouterLink to="/temakorokAdmin" class="nav-link" @click="closeNavbar" id="categoriesAdmin">Témakörök</RouterLink>
               </li>
-              <li v-if="stateAuth.user && stateAuth.roleId === 2" class="nav-item">
+              <li v-if="store.user && store.roleId === 2" class="nav-item">
                 <RouterLink to="/temakorok" class="nav-link" @click="closeNavbar">Témakörök</RouterLink>
               </li>
 
-              <li v-if="stateAuth.user" class="nav-item">
+              <li v-if="store.user" class="nav-item">
                 <RouterLink to="/tesztek" class="nav-link" @click="closeNavbar">Tesztek</RouterLink>
               </li>
 
               <!-- User -->
 
               <!-- Admin -->
-              <li v-if="stateAuth.user && stateAuth.roleId === 1" class="nav-item">
+              <li v-if="store.user && store.roleId === 1" class="nav-item">
                 <RouterLink to="/admin" class="nav-link" @click="closeNavbar">Admin</RouterLink>
               </li>
 
-              <li v-if="stateAuth.user && stateAuth.roleId === 1" class="nav-item">
+              <li v-if="store.user && store.roleId === 1" class="nav-item">
                 <RouterLink to="/kerdestipusok" class="nav-link" @click="closeNavbar">Kérdéstípusok</RouterLink>
               </li>
 
-              <li v-if="stateAuth.user && stateAuth.roleId === 1" class="nav-item">
+              <li v-if="store.user && store.roleId === 1" class="nav-item">
                 <RouterLink to="/kerdesek" class="nav-link" @click="closeNavbar">Kérdésbank</RouterLink>
               </li>
 
               <!-- Bejelentkezés és regisztráció -->
-              <li v-if="!stateAuth.user" class="nav-item dropdown">
+              <li v-if="!store.user" class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown"
                   aria-expanded="false">
                   <i class="bi bi-person"></i>
@@ -71,10 +71,10 @@
               </li>
 
               <!-- Dropdown menü a felhasználónévvel -->
-              <li v-if="stateAuth.user" class="nav-item dropdown">
+              <li v-if="store.user" class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown"
                   aria-expanded="false">
-                  <i class="bi bi-person"></i> {{ stateAuth.user }}
+                  <i class="bi bi-person"></i> {{ store.user }}
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                   <li>
@@ -105,7 +105,7 @@ import * as bootstrap from "bootstrap";
 export default {
   data() {
     return {
-      stateAuth: useAuthStore(),
+      store: useAuthStore(),
     };
   },
   methods: {
@@ -124,7 +124,7 @@ export default {
       const url = `${BASE_URL}/users/logout`;
       const headers = {
         Accept: "application/json",
-        Authorization: `Bearer ${this.stateAuth.token}`,
+        Authorization: `Bearer ${this.store.token}`,
       };
       try {
         await axios.post(url, null, { headers });
@@ -133,19 +133,11 @@ export default {
       }
 
       // Töröld a felhasználói adatokat a store-ból és a localStorage-ból
-      this.stateAuth.clearStoredData();
+      this.store.clearStoredData();
 
       // Kényszerített oldalfrissítés
       window.location.reload(); // Ezzel frissíti az oldalt és törli a helyben tárolt adatokat
     },
-    // closeNavbar() {
-    //   // Az összecsukás biztosítása
-    //   const navbarCollapse = document.getElementById("navbarNav");
-    //   const bsCollapse = new bootstrap.Collapse(navbarCollapse, {
-    //     toggle: false,
-    //   });
-    //   bsCollapse.hide(); // Bezárja a menüt
-    // },
   },
 };
 </script>

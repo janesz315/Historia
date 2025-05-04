@@ -1,5 +1,5 @@
 <template>
-  <div class=" my-container">
+  <div class="my-container">
     <div class="col-10 col-md-8 col-xxl-3 category-container">
       <h2 class="title">Kérdéstípusok</h2>
       <OperationsCrudQuestionTypes
@@ -95,8 +95,7 @@ export default {
     });
   },
   methods: {
-
-     selectQuestionType(questionTypeId) {
+    selectQuestionType(questionTypeId) {
       this.selectedQuestionTypeId = questionTypeId;
     },
     async fetchQuestionTypes() {
@@ -134,7 +133,6 @@ export default {
         console.error("Hiba történt a kérdéstípus mentésekor:", error);
       }
       this.state = "Read";
-
     },
 
     async updateQuestionType() {
@@ -158,7 +156,6 @@ export default {
         console.error("Hiba történt a kérdéstípus frissítésekor:", error);
       }
       this.state = "Read";
-
     },
 
     async deleteQuestionTypeById() {
@@ -170,7 +167,6 @@ export default {
 
         // A sikeres törlés után frissíteni kell a kérdések listáját
         this.fetchQuestionTypes();
-
       } catch (error) {
         console.error("Törlés hiba:", error);
         alert("A kérdés törlése nem sikerült!");
@@ -224,13 +220,11 @@ export default {
         this.modal.hide(); // A modal bezárása a törlés után
       }
     },
-
   },
 };
 </script>
 
 <style scoped>
-
 .my-container {
   background-image: url("/images/parchment-texture.jpg");
   background-size: cover;

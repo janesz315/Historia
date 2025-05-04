@@ -13,7 +13,8 @@
       <section class="mission">
         <h2>Küldetésünk</h2>
         <p>
-          Egy olyan felületet biztosítunk, ahol fel lehet készülni a történelem érettségire közép, de akár emelt szinten is.
+          Egy olyan felületet biztosítunk, ahol fel lehet készülni a történelem
+          érettségire közép, de akár emelt szinten is.
         </p>
       </section>
 

@@ -5,46 +5,95 @@
 
       <!-- Username -->
       <div class="card mb-3">
-        <div class="card-body d-flex justify-content-between align-items-center">
-          <p><strong>Felhasználó:</strong> {{ isEditingField === 'name' ? '' : user.name }}</p>
-          <div v-if="isEditingField === 'name'" class="d-flex align-items-center">
-            <input type="text" class="form-control me-2" v-model="updatedField.name" placeholder="Enter new username" />
-            <button class="btn btn-success me-2" @click="saveField('name')">Mentés</button>
+        <div
+          class="card-body d-flex justify-content-between align-items-center"
+        >
+          <p>
+            <strong>Felhasználó:</strong>
+            {{ isEditingField === "name" ? "" : user.name }}
+          </p>
+          <div
+            v-if="isEditingField === 'name'"
+            class="d-flex align-items-center"
+          >
+            <input
+              type="text"
+              class="form-control me-2"
+              v-model="updatedField.name"
+              placeholder="Enter new username"
+            />
+            <button class="btn btn-success me-2" @click="saveField('name')">
+              Mentés
+            </button>
             <button class="btn btn-secondary" @click="cancelEdit">Mégse</button>
           </div>
-          <button v-else class="btn btn-warning" @click="startEdit('name')">Módosítás</button>
+          <button v-else class="btn btn-warning" @click="startEdit('name')">
+            Módosítás
+          </button>
         </div>
       </div>
 
       <!-- Email -->
       <div class="card mb-3">
-        <div class="card-body d-flex justify-content-between align-items-center">
-          <p><strong>Email:</strong> {{ isEditingField === 'email' ? '' : user.email }}</p>
-          <div v-if="isEditingField === 'email'" class="d-flex align-items-center">
-            <input type="email" class="form-control me-2" v-model="updatedField.email" placeholder="Enter new email" />
-            <button class="btn btn-success me-2" @click="saveField('email')">Mentés</button>
+        <div
+          class="card-body d-flex justify-content-between align-items-center"
+        >
+          <p>
+            <strong>Email:</strong>
+            {{ isEditingField === "email" ? "" : user.email }}
+          </p>
+          <div
+            v-if="isEditingField === 'email'"
+            class="d-flex align-items-center"
+          >
+            <input
+              type="email"
+              class="form-control me-2"
+              v-model="updatedField.email"
+              placeholder="Enter new email"
+            />
+            <button class="btn btn-success me-2" @click="saveField('email')">
+              Mentés
+            </button>
             <button class="btn btn-secondary" @click="cancelEdit">Mégse</button>
           </div>
-          <button v-else class="btn btn-warning" @click="startEdit('email')">Módosítás</button>
+          <button v-else class="btn btn-warning" @click="startEdit('email')">
+            Módosítás
+          </button>
         </div>
       </div>
 
       <!-- Password -->
       <div class="card mb-3">
-        <div class="card-body d-flex justify-content-between align-items-center">
+        <div
+          class="card-body d-flex justify-content-between align-items-center"
+        >
           <p><strong>Jelszó:</strong>******</p>
-          <div v-if="isEditingField === 'password'" class="d-flex align-items-center">
-            <input type="password" class="form-control me-2" v-model="updatedField.password"
-              placeholder="Enter new password" />
-            <button class="btn btn-success me-2" @click="saveField('password')">Mentés</button>
+          <div
+            v-if="isEditingField === 'password'"
+            class="d-flex align-items-center"
+          >
+            <input
+              type="password"
+              class="form-control me-2"
+              v-model="updatedField.password"
+              placeholder="Enter new password"
+            />
+            <button class="btn btn-success me-2" @click="saveField('password')">
+              Mentés
+            </button>
             <button class="btn btn-secondary" @click="cancelEdit">Mégse</button>
           </div>
-          <button v-else class="btn btn-warning" @click="startEdit('password')">Módosítás</button>
+          <button v-else class="btn btn-warning" @click="startEdit('password')">
+            Módosítás
+          </button>
         </div>
       </div>
 
       <!-- Delete Account -->
-      <button class="btn btn-danger mt-3" @click="deleteUser">Fiók törlése</button>
+      <button class="btn btn-danger mt-3" @click="deleteUser">
+        Fiók törlése
+      </button>
     </div>
   </div>
 </template>
@@ -118,9 +167,8 @@ export default {
         console.error("Error updating field:", error);
         alert("Nem sikerült frissíteni a mezőt. Kérjük, próbálja újra.");
       }
-    }
-    ,
-
+    },
+    
     async deleteUser() {
       if (confirm("Biztosan le akarod törölni a fiókodat?")) {
         try {
@@ -160,7 +208,7 @@ export default {
   width: 100vw;
   margin: 0;
   padding: 0;
-  background-image: url('images/parchment-texture.jpg');
+  background-image: url("images/parchment-texture.jpg");
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
