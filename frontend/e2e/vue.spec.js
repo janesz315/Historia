@@ -9,6 +9,11 @@ test('visits the app root url', async ({ page }) => {
   await expect(page.locator('h1')).toHaveText('Kezdőlap');
 })
 
+test('Homepage has title', async ({ page }) => {
+  await page.goto('/');
+  await expect(page).toHaveTitle(/Historia - Kezdőlap/);
+})
+
 test('Vue application loads the homepage', async ({ page }) => {
   // Nyisd meg a webalkalmazást
   // await page.goto('http://localhost:5173'); // Vite alapértelmezetten 5173-es porton fut
@@ -129,7 +134,40 @@ test('Create a question', async ({ page }) => {
 
   await page.fill('input#question', 'Mikor volt az Aranybulla?');
   await page.selectOption('select#questionType', { label: 'Évszám' }); // Kiválasztjuk az "Évszám" opciót az elnevezés alapján
+  await page.waitForSelector('button:has-text("Mentés")', { state: 'visible' });
   await page.click('button:has-text("Mentés")');
+});
+
+test('Goto Profil', async ({ page }) => {
+  await page.goto('/bejelentkezes');
+
+  // Töltsd ki az űrlapot
+  await page.fill('input#email', 'test@example.com');
+  await page.fill('input#password', '123');
+  // await page.fill('input[name="email"]', 'test@example.com');
+  // await page.fill('input[name="password"]', '123');
+
+  // Kattints a bejelentkezés gombra
+  // await page.waitForSelector('button:has-text("Bejelentkezés")', { state: 'visible' });
+  // await page.click('button:has-text("Bejelentkezés")');
+  await page.click('button:has-text("Bejelentkezés")');
+
+  // Ellenőrizd, hogy sikeres bejelentkezés után átirányították a felhasználót
+  await expect(page).toHaveURL('/');
+  await expect(page.locator('h1')).toHaveText('Kezdőlap');
+
+  // Nyisd meg a dropdown menüt az Iskola menüpontra kattintva
+  // Use a more specific selector for the "Iskola" menu item
+  await page.click('a#userDropdown.nav-link.dropdown-toggle');
+
+  // Wait for the dropdown menu to be visible
+  await expect(page.locator('a#userDropdown.nav-link.dropdown-toggle')).toBeVisible();
+
+  // Click the "Kártyák" menu item
+  await page.click('a.dropdown-item:has-text("Profil")');
+  await expect(page.locator('h1')).toHaveText('Felhasználói Profil');
+  
+
 });
 
 
