@@ -206,7 +206,7 @@ test('Register and Login', async ({ page }) => {
 
   // Töltsd ki az űrlapot
   await page.fill('input[placeholder="Felhasználónév*"]', 'user');
-  await page.fill('input[placeholder="E-mail cím*"]', 'user@example.com');
+  await page.fill('input[placeholder="E-mail cím*"]', 'user2@example.com');
   await page.fill('input[placeholder="Jelszó*"]', 'heslo123');
   await page.fill('input[placeholder="Jelszó még egyszer*"]', 'heslo123');
   // await page.fill('input[name="email"]', 'test@example.com');
@@ -221,12 +221,62 @@ test('Register and Login', async ({ page }) => {
   await expect(page).toHaveURL('/bejelentkezes');
   await expect(page.locator('h2')).toHaveText('Bejelentkezés');
 
-  await page.fill('input[name="email"]', 'user@example.com');
-  await page.fill('input[name="password"]', 'heslo123');
+  await page.fill('input#email', 'user2@example.com');
+  await page.fill('input#password', 'heslo123');
 
   await page.click('button:has-text("Bejelentkezés")');
   await expect(page).toHaveURL('/');
   await expect(page.locator('h1')).toHaveText('Kezdőlap');
+});
+
+test('Register and Login and delete the account', async ({ page }) => {
+  await page.goto('/regisztracio');
+
+  // Töltsd ki az űrlapot
+  await page.fill('input[placeholder="Felhasználónév*"]', 'user');
+  await page.fill('input[placeholder="E-mail cím*"]', 'user5@example.com');
+  await page.fill('input[placeholder="Jelszó*"]', 'heslo123');
+  await page.fill('input[placeholder="Jelszó még egyszer*"]', 'heslo123');
+  // await page.fill('input[name="email"]', 'test@example.com');
+  // await page.fill('input[name="password"]', '123');
+
+  // Kattints a bejelentkezés gombra
+  // await page.waitForSelector('button:has-text("Bejelentkezés")', { state: 'visible' });
+  // await page.click('button:has-text("Bejelentkezés")');
+  await page.click('button:has-text("Regisztrálás")');
+
+  // Ellenőrizd, hogy sikeres bejelentkezés után átirányították a felhasználót
+  await expect(page).toHaveURL('/bejelentkezes');
+  await expect(page.locator('h2')).toHaveText('Bejelentkezés');
+
+  await page.fill('input#email', 'user5@example.com');
+  await page.fill('input#password', 'heslo123');
+
+  await page.click('button:has-text("Bejelentkezés")');
+  await expect(page).toHaveURL('/');
+  await expect(page.locator('h1')).toHaveText('Kezdőlap');
+  
+  await page.click('a#userDropdown.nav-link.dropdown-toggle');
+
+  // Wait for the dropdown menu to be visible
+  await expect(page.locator('a#userDropdown.nav-link.dropdown-toggle')).toBeVisible();
+
+  // Click the "Kártyák" menu item
+  await page.click('a.dropdown-item:has-text("Profil")');
+  await expect(page.locator('h1')).toHaveText('Felhasználói Profil');
+
+   // Figyeld a "dialog" eseményt ÉS kattints a "Fiók törlése" gombra
+   page.once('dialog', async dialog => {
+     console.log(`Alert üzenet: ${dialog.message()}`);
+     await dialog.accept();
+     // Ha el kellene utasítanod, akkor: await dialog.dismiss();
+    });
+    await page.click('button:has-text("Fiók törlése")');
+
+  // Itt ellenőrizheted, hogy a fiók törlése sikeres volt-e, pl. átirányítás egy másik oldalra
+  await expect(page).toHaveURL('/regisztracio');
+  await expect(page.locator('h2')).toHaveText('Regisztráció');
+  
 });
 
 

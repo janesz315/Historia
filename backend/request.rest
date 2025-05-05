@@ -64,7 +64,7 @@ Authorization: Bearer {{token}}
 }
 
 ### delete user by id
-delete {{host}}/api/users/3
+delete {{host}}/api/users/2
 Accept: application/json
 Authorization: Bearer {{token}}
 

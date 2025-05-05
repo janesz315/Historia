@@ -179,7 +179,7 @@ export default {
           });
           alert("Felhasználó sikeresen törölve");
           this.store.clearStoredData(); // Clear user data and token
-          this.$router.push("/register"); // Redirect to registration page
+          this.$router.push("/regisztracio"); // Redirect to registration page
         } catch (error) {
           console.error("Error deleting user:", error);
           alert("Nem sikerült letörölni a fiókot. Kérlek próbáld újra.");

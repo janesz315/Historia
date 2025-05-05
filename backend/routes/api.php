@@ -35,15 +35,15 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/users/login', [UserController::class, 'login']);
     Route::post('/users/logout', [UserController::class, 'logout']);
     Route::get('/users', [UserController::class, 'index'])
-    ->middleware('auth:sanctum', CheckAbilities::class.':*');
+        ->middleware('auth:sanctum', CheckAbilities::class.':*');
     Route::get('/users/{id}', [UserController::class, 'show'])
-    ->middleware('auth:sanctum', CheckAbilities::class.':users:view');
+        ->middleware('auth:sanctum', CheckAbilities::class.':users:view');
     Route::post('/users', [UserController::class, 'store']);
     // ->middleware('auth:sanctum');
     Route::delete('/users/{id}', [UserController::class, 'destroy'])
-        ->middleware(CheckAbilities::class.':users:view');
+        ->middleware('auth:sanctum', CheckAbilities::class.':users:view');
     Route::patch('/users/{id}', [UserController::class, 'update'])
-    ->middleware(CheckAbilities::class.':users:view');
+        ->middleware('auth:sanctum', CheckAbilities::class.':users:view');
 
 //region roles
 
