@@ -735,7 +735,7 @@ Authorization: Bearer {{token}}
 -  Felhasználó törlése ID alapján: Törli a beírt ID-jű Usert. Védett tartalom.
 - Felhasználó frissítése (részlegesen): A PATCH csak részlegesen frissít. Védett tartalom.
 
-- Middleware: A middleware egy olyan réteg, amely a kliens kérése és a Laravel alkalmazás belső működése között helyezkedik el. Célja lehet az autentikáció ellenőrzése. Laravelben minden kérés middleware-eken megy keresztül, mielőtt eljutna a controllerhez vagy route-hoz.
+- Middleware: A middleware egy olyan réteg, amely a kliens kérése és a Laravel alkalmazás belső működése között helyezkedik el. Célja lehet az autentikáció ellenőrzése. Laravelben minden kérés middleware-eken megy keresztül, mielőtt eljutna a controllerhez vagy route-hoz. Parancs: `php artisan make:middleware CheckAbilities`
 
 ```php
 <?php

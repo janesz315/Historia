@@ -134,8 +134,8 @@ test('Create a question', async ({ page }) => {
 
   await page.fill('input#question', 'Mikor volt az Aranybulla?');
   await page.selectOption('select#questionType', { label: 'Évszám' }); // Kiválasztjuk az "Évszám" opciót az elnevezés alapján
-  await page.waitForSelector('button:has-text("Mentés")', { state: 'visible' });
-  await page.click('button:has-text("Mentés")');
+  await page.waitForSelector('button.btn.btn-success.mb-2', { state: 'visible' });
+  await page.click('button.btn.btn-success.mb-2');
 });
 
 test('Goto Profil', async ({ page }) => {
