@@ -48,7 +48,7 @@
           <input
             type="password"
             v-model="confirmPassword"
-            placeholder="Jelszó mégegyszer*"
+            placeholder="Jelszó még egyszer*"
             required
           />
         </div>

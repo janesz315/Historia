@@ -138,7 +138,7 @@ test('Create a question', async ({ page }) => {
   await page.click('button.btn.btn-success.mb-2');
 });
 
-test('Goto Profil', async ({ page }) => {
+test('Go to Profile', async ({ page }) => {
   await page.goto('/bejelentkezes');
 
   // Töltsd ki az űrlapot
@@ -169,6 +169,66 @@ test('Goto Profil', async ({ page }) => {
   
 
 });
+
+test('Login and logout', async ({ page }) => {
+  await page.goto('/bejelentkezes');
+
+  // Töltsd ki az űrlapot
+  await page.fill('input#email', 'test@example.com');
+  await page.fill('input#password', '123');
+  // await page.fill('input[name="email"]', 'test@example.com');
+  // await page.fill('input[name="password"]', '123');
+
+  // Kattints a bejelentkezés gombra
+  // await page.waitForSelector('button:has-text("Bejelentkezés")', { state: 'visible' });
+  // await page.click('button:has-text("Bejelentkezés")');
+  await page.click('button:has-text("Bejelentkezés")');
+
+  // Ellenőrizd, hogy sikeres bejelentkezés után átirányították a felhasználót
+  await expect(page).toHaveURL('/');
+  await expect(page.locator('h1')).toHaveText('Kezdőlap');
+
+  // Nyisd meg a dropdown menüt az Iskola menüpontra kattintva
+  // Use a more specific selector for the "Iskola" menu item
+  await page.click('a#userDropdown.nav-link.dropdown-toggle');
+
+  // Wait for the dropdown menu to be visible
+  await expect(page.locator('a#userDropdown.nav-link.dropdown-toggle')).toBeVisible();
+
+  // Click the "Kártyák" menu item
+  await page.click('a.dropdown-item:has-text("Kijelentkezés")');
+  await expect(page.locator('p')).toHaveText('Üdvözlünk! Kérlek, jelentkezz be, vagy regisztrálj!');
+});
+
+
+test('Register and Login', async ({ page }) => {
+  await page.goto('/regisztracio');
+
+  // Töltsd ki az űrlapot
+  await page.fill('input[placeholder="Felhasználónév*"]', 'user');
+  await page.fill('input[placeholder="E-mail cím*"]', 'user@example.com');
+  await page.fill('input[placeholder="Jelszó*"]', 'heslo123');
+  await page.fill('input[placeholder="Jelszó még egyszer*"]', 'heslo123');
+  // await page.fill('input[name="email"]', 'test@example.com');
+  // await page.fill('input[name="password"]', '123');
+
+  // Kattints a bejelentkezés gombra
+  // await page.waitForSelector('button:has-text("Bejelentkezés")', { state: 'visible' });
+  // await page.click('button:has-text("Bejelentkezés")');
+  await page.click('button:has-text("Regisztrálás")');
+
+  // Ellenőrizd, hogy sikeres bejelentkezés után átirányították a felhasználót
+  await expect(page).toHaveURL('/bejelentkezes');
+  await expect(page.locator('h2')).toHaveText('Bejelentkezés');
+
+  await page.fill('input[name="email"]', 'user@example.com');
+  await page.fill('input[name="password"]', 'heslo123');
+
+  await page.click('button:has-text("Bejelentkezés")');
+  await expect(page).toHaveURL('/');
+  await expect(page.locator('h1')).toHaveText('Kezdőlap');
+});
+
 
 
 // test('fetchCategories fetches and processes categories correctly', async () => {
