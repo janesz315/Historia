@@ -1,10 +1,6 @@
 <template>
   <!-- Modal -->
-  <div
-    class="modal fade"
-    id="modal"
-    tabindex="-1"
-  >
+  <div class="modal fade" id="modal" tabindex="-1">
     <div
       class="modal-dialog modal-dialog-centered"
       :class="{
@@ -58,7 +54,6 @@ export default {
     onClickYesButton() {
       this.$emit("yesEvent");
     },
-
   },
 };
 </script>

@@ -2,17 +2,28 @@
   <div class="my-container">
     <!-- Fő fejléc -->
     <header>
-      <nav class="navbar navbar-expand-lg navbar-dark fixed-top" style="background-color: #8b5a2b">
-        <div class="container-fluid d-flex justify-content-between align-items-center">
-
+      <nav
+        class="navbar navbar-expand-lg navbar-dark fixed-top"
+        style="background-color: #8b5a2b"
+      >
+        <div
+          class="container-fluid d-flex justify-content-between align-items-center"
+        >
           <!-- Logo / Weboldal neve -->
           <div class="navbar-brand logo">
             <RouterLink to="/">Historia</RouterLink>
           </div>
 
           <!-- Hamburger menü -->
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+            aria-controls="navbarNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
             <span class="navbar-toggler-icon"></span>
           </button>
 
@@ -20,68 +31,131 @@
           <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto d-flex justify-content-end">
               <li class="nav-item">
-                <RouterLink to="/" class="nav-link" @click="closeNavbar">Kezdőlap</RouterLink>
+                <RouterLink to="/" class="nav-link" @click="closeNavbar"
+                  >Kezdőlap</RouterLink
+                >
               </li>
               <li class="nav-item">
-                <RouterLink to="/rolunk" class="nav-link" @click="closeNavbar">Rólunk</RouterLink>
+                <RouterLink to="/rolunk" class="nav-link" @click="closeNavbar"
+                  >Rólunk</RouterLink
+                >
               </li>
 
               <!-- Admin -->
               <li v-if="store.user && store.roleId === 1" class="nav-item">
-                <RouterLink to="/temakorokAdmin" class="nav-link" @click="closeNavbar" id="categoriesAdmin">Témakörök</RouterLink>
+                <RouterLink
+                  to="/temakorokAdmin"
+                  class="nav-link"
+                  @click="closeNavbar"
+                  id="categoriesAdmin"
+                  >Témakörök</RouterLink
+                >
               </li>
               <li v-if="store.user && store.roleId === 2" class="nav-item">
-                <RouterLink to="/temakorok" class="nav-link" @click="closeNavbar">Témakörök</RouterLink>
+                <RouterLink
+                  to="/temakorok"
+                  class="nav-link"
+                  @click="closeNavbar"
+                  >Témakörök</RouterLink
+                >
               </li>
 
               <li v-if="store.user" class="nav-item">
-                <RouterLink to="/tesztek" class="nav-link" @click="closeNavbar">Tesztek</RouterLink>
+                <RouterLink to="/tesztek" class="nav-link" @click="closeNavbar"
+                  >Tesztek</RouterLink
+                >
               </li>
 
               <!-- User -->
 
               <!-- Admin -->
               <li v-if="store.user && store.roleId === 1" class="nav-item">
-                <RouterLink to="/admin" class="nav-link" @click="closeNavbar">Admin</RouterLink>
+                <RouterLink to="/admin" class="nav-link" @click="closeNavbar"
+                  >Admin</RouterLink
+                >
               </li>
 
               <li v-if="store.user && store.roleId === 1" class="nav-item">
-                <RouterLink to="/kerdestipusok" class="nav-link" @click="closeNavbar">Kérdéstípusok</RouterLink>
+                <RouterLink
+                  to="/kerdestipusok"
+                  class="nav-link"
+                  @click="closeNavbar"
+                  >Kérdéstípusok</RouterLink
+                >
               </li>
 
               <li v-if="store.user && store.roleId === 1" class="nav-item">
-                <RouterLink to="/kerdesek" class="nav-link" @click="closeNavbar">Kérdésbank</RouterLink>
+                <RouterLink to="/kerdesek" class="nav-link" @click="closeNavbar"
+                  >Kérdésbank</RouterLink
+                >
               </li>
 
               <!-- Bejelentkezés és regisztráció -->
               <li v-if="!store.user" class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown"
-                  aria-expanded="false">
+                <a
+                  class="nav-link dropdown-toggle"
+                  href="#"
+                  id="userDropdown"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
                   <i class="bi bi-person"></i>
                 </a>
-                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                <ul
+                  class="dropdown-menu dropdown-menu-end"
+                  aria-labelledby="userDropdown"
+                >
                   <li>
-                    <RouterLink to="/bejelentkezes" class="dropdown-item" @click="closeNavbar">Bejelentkezés
+                    <RouterLink
+                      to="/bejelentkezes"
+                      class="dropdown-item"
+                      @click="closeNavbar"
+                      >Bejelentkezés
                     </RouterLink>
                   </li>
                   <li>
-                    <RouterLink to="/regisztracio" class="dropdown-item" @click="closeNavbar">Regisztráció</RouterLink>
+                    <RouterLink
+                      to="/regisztracio"
+                      class="dropdown-item"
+                      @click="closeNavbar"
+                      >Regisztráció</RouterLink
+                    >
                   </li>
                 </ul>
               </li>
 
               <!-- Dropdown menü a felhasználónévvel -->
               <li v-if="store.user" class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown"
-                  aria-expanded="false">
+                <a
+                  class="nav-link dropdown-toggle"
+                  href="#"
+                  id="userDropdown"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
                   <i class="bi bi-person"></i> {{ store.user }}
                 </a>
-                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                <ul
+                  class="dropdown-menu dropdown-menu-end"
+                  aria-labelledby="userDropdown"
+                >
                   <li>
-                    <RouterLink class="dropdown-item" to="/profil" @click="closeNavbar">Profil</RouterLink>
+                    <RouterLink
+                      class="dropdown-item"
+                      to="/profil"
+                      @click="closeNavbar"
+                      >Profil</RouterLink
+                    >
                   </li>
                   <li>
-                    <RouterLink class="dropdown-item" to="/" @click="LogoutAndCloseNavbar()">Kijelentkezés</RouterLink>
+                    <RouterLink
+                      class="dropdown-item"
+                      to="/"
+                      @click="LogoutAndCloseNavbar()"
+                      >Kijelentkezés</RouterLink
+                    >
                   </li>
                 </ul>
               </li>
@@ -244,7 +318,6 @@ nav.navbar {
 
 /* Mobil reszponzív menü */
 @media (max-width: 768px) {
-
   /* Az alapértelmezett menü el van rejtve, és csak a hamburger ikon jelenik meg */
   .navbar-collapse {
     display: flex !important;

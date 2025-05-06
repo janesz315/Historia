@@ -38,8 +38,8 @@
           :category="category"
           :saveCategory="saveCategory"
           :sources="sources[category.id] || []"
-          :onClickDeleteButton="onClickDeleteCategoryButton"
-          :onClickUpdateButton="onClickUpdateCategoryButton"
+          :onClickDeleteCategoryButton="onClickDeleteCategoryButton"
+          :onClickUpdateCategoryButton="onClickUpdateCategoryButton"
           :onClickDeleteSourceButton="onClickDeleteSourceButton"
           :onClickUpdateSourceButton="onClickUpdateSourceButton"
           :onClickCreateSourceButton="onClickCreateSourceButton"
@@ -59,7 +59,7 @@
         {{ messageYesNo }}
       </div>
 
-      <CategoriesForm
+      <CategoryForm
         v-if="state == 'Create' || state == 'Update'"
         :itemForm="category"
         @saveItem="saveItemHandler"
@@ -98,17 +98,15 @@ import axios from "axios";
 import { BASE_URL } from "../helpers/baseUrls";
 import { useAuthStore } from "../stores/useAuthStore";
 import CategoryCard from "../components/Cards/CategoryCard.vue";
-// import TopicModal from "../components/Modals/CategoriesForm.vue";
-import CategoriesForm from "@/components/Forms/CategoriesForm.vue";
+import CategoryForm from "@/components/Forms/CategoryForm.vue";
 import OperationsCrudCategories from "@/components/Modals/OperationsCrudCategories.vue";
-// import bootstrap from "bootstrap/dist/js/bootstrap.bundle.min.js";
 import * as bootstrap from "bootstrap";
 import SourceForm from "@/components/Forms/SourceForm.vue";
 
 export default {
   components: {
     CategoryCard,
-    CategoriesForm,
+    CategoryForm,
     OperationsCrudCategories,
     SourceForm,
   },

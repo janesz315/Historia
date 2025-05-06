@@ -58,7 +58,6 @@ export default {
 </script>
 
 <style>
-
 @media (max-width: 768px) {
   .crud-buttons {
     display: flex;

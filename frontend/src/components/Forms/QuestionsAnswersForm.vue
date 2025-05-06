@@ -59,7 +59,9 @@
     <button
       type="submit"
       class="btn btn-success mb-2"
-      v-show="formData.question && formData.categoryId && formData.questionTypeId"
+      v-show="
+        formData.question && formData.categoryId && formData.questionTypeId
+      "
     >
       {{ isCreate ? "Mentés" : "Frissítés" }}
     </button>
@@ -73,8 +75,11 @@
       <label class="form-label">Válasz {{ index + 1 }}: </label>
       <div class="input-group">
         <!-- Checkbox alaphelyzetben -->
-        <div class="input-group-text" v-show="!editing || isEditingField !== answer.answerId">
-          <input type="checkbox" v-model="answer.rightAnswer" disabled/>
+        <div
+          class="input-group-text"
+          v-show="!editing || isEditingField !== answer.answerId"
+        >
+          <input type="checkbox" v-model="answer.rightAnswer" disabled />
         </div>
         <!-- A válasz alaphelyzetben -->
         <p class="d-flex align-items-center mb-0">
@@ -85,11 +90,11 @@
           v-if="isEditingField === answer.answerId && editing"
           class="d-flex align-items-center"
         >
-        <!-- Checkbox -->
-        <div class="input-group-text me-2">
-          <input type="checkbox" v-model="answer.rightAnswer"/>
-        </div>
-        <!--  -->
+          <!-- Checkbox -->
+          <div class="input-group-text me-2">
+            <input type="checkbox" v-model="answer.rightAnswer" />
+          </div>
+          <!--  -->
           <input
             type="text"
             class="form-control me-2"
@@ -152,22 +157,16 @@ export default {
     "formData",
     "questionTypes",
     "isCreate",
-    "selectedCategoryId"
+    "selectedCategoryId",
   ],
-  emits: [
-    "saveItem",
-    "resetForm",
-    "addAnswer",
-    "saveField",
-    "removeAnswer"
-  ],
+  emits: ["saveItem", "resetForm", "addAnswer", "saveField", "removeAnswer"],
 
   data() {
     return {
       updatedField: {}, // Stores the value of the field being edited
       isEditingField: null, // Tracks which field is being edited
       editing: false,
-      rightAnswerTempValue: false
+      rightAnswerTempValue: false,
     };
   },
 
@@ -185,7 +184,7 @@ export default {
       this.$emit("resetForm");
     },
     saveField(answer, answerId) {
-      this.alma= answer.rightAnswer
+      this.rightAnswerId = answer.rightAnswer;
       if (answer.rightAnswer === false) {
         answer.rightAnswer = 0;
       } else {
@@ -193,7 +192,7 @@ export default {
       }
       this.$emit("saveField", answer, answerId);
       this.editing = false;
-      answer.rightAnswer = this.alma;
+      answer.rightAnswer = this.rightAnswerId;
     },
 
     startEdit(answerId, answer) {

@@ -107,17 +107,6 @@ export default {
       } finally {
         this.loading = false;
       }
-      // Fixálja a magasságot, hogy az UI ne ugráljon a billentyűzet feljövetelekor
-      // function setDynamicHeight() {
-      //   document.documentElement.style.setProperty(
-      //     "--vh",
-      //     `${window.innerHeight}px`
-      //   );
-      // }
-
-      // // Meghívás betöltéskor és méretváltozáskor
-      // window.addEventListener("resize", setDynamicHeight);
-      // setDynamicHeight();
     },
   },
 };

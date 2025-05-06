@@ -77,7 +77,6 @@ export default {
     //   content = content.replace(regex, this.replaceText);
     //   this.editor.root.innerHTML = content;
     // },
-
     // showHtmlView() {
     //   // A Quill editor HTML tartalmát beállítjuk
     //   this.htmlContent = this.editor.root.innerHTML;

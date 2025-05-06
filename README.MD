@@ -41,4 +41,4 @@ Legelső lépésként klónozzuk le ezt a repozitóriumot a git clone parancssal
 
 - Ezután az "npm run dev" paranccsal tudjuk beindítani a projektet. És ha a Ctrl lenyomása közben rákattintunk a localhost-os hivatkozásra, akkor megjelenik a weboldal.
 
-- Az npm run dev paranccsal egy másik terminálban még tesztelni is tudjuk a frontend oldalt is.
+- Az npm run test:unit / npm run test:e2e paranccsal egy másik terminálban még tesztelni is tudjuk a frontend oldalt is.

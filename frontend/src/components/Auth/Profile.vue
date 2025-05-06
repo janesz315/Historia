@@ -168,7 +168,7 @@ export default {
         alert("Nem sikerült frissíteni a mezőt. Kérjük, próbálja újra.");
       }
     },
-    
+
     async deleteUser() {
       if (confirm("Biztosan le akarod törölni a fiókodat?")) {
         try {

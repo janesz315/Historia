@@ -37,9 +37,7 @@
             <router-link to="/temakorokadmin" class="btn" id="categoriesAdmin"
               >Admin Témakörök</router-link
             >
-            <router-link to="/tesztekadmin" class="btn"
-              >Admin Tesztek</router-link
-            >
+            <router-link to="/tesztek" class="btn">Tesztek</router-link>
             <router-link to="/kerdesek" class="btn">Kérdésbank</router-link>
             <router-link to="/kerdestipusok" class="btn"
               >Kérdéstípusok</router-link
