@@ -1,7 +1,7 @@
 Legelső lépésként klónozzuk le ezt a repozitóriumot a git clone parancssal, amit a Git nevű program használatával lehet megoldani akár a Visual Studio Code-ban is. Vagy esetlegesen ZIP-ben is le lehet tölteni a repozitórium tartalmát.
 
 # Adatbázis
-- A backend/dbsave útvonalú mappában van egy mentés az adatbázisról.
+- A gyökérben van egy mentés az adatbázisról.
 ![A kép](/backend/img/save.jpg)
 - Ahhoz, hogy ezt be tudd importálni, a XAMPP telepítése szükséges, mert az adatbáziskezelő szerver (MySQL) és a backend futtatásához szükséges PHP szerver is ebben van benne. Szóval le kell, hogy telepítsük [innen](https://www.apachefriends.org/hu/download.html)
 
@@ -41,4 +41,4 @@ Legelső lépésként klónozzuk le ezt a repozitóriumot a git clone parancssal
 
 - Ezután az "npm run dev" paranccsal tudjuk beindítani a projektet. És ha a Ctrl lenyomása közben rákattintunk a localhost-os hivatkozásra, akkor megjelenik a weboldal.
 
-- Az npm run test:unit / npm run test:e2e paranccsal egy másik terminálban még tesztelni is tudjuk a frontend oldalt is.
+- Az npm run test:unit és a npm run test:e2e paranccsal egy másik terminálban még tesztelni is tudjuk a frontend oldalt is.

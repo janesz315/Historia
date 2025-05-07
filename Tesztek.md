@@ -1010,3 +1010,98 @@ Ez a fájl a `UserTestForm.vue` nevű Vue.js komponenst teszteli, amely valósz�
 * **`it('should render the input field with the correct label', () => { ... });`**: Csatlakoztatja a komponenst egy üres `itemForm` prop-pal. Ellenőrzi, hogy a "Mi legyen a neve?" címkéjű beviteli mező létezik-e.
 * **`it('should bind input value to itemForm.testName', async () => { ... });`**: Csatlakoztatja a komponenst egy kezdeti `itemForm` prop-pal. Megkeresi a beviteli mezőt, beállít egy új értéket, és ellenőrzi, hogy ez az érték kötődik-e a komponens `itemForm.testName` adatterületéhez.
 * **`it('should emit saveItem event with itemForm on submit', async () => { ... });`**: Csatlakoztatja a komponenst egy kezdeti `itemForm` prop-pal. Szimulálja az űrlap beküldését. Ellenőrzi, hogy a komponens kibocsátja-e a `saveItem` eseményt, és hogy az eseményhez tartozó payload a `itemForm` objektum.
+
+
+## A unit teszt futtatásának eredménye:
+
+ DEV  v3.0.7 F:/Informatika/Vizsgaremek/Historia/frontend
+
+stderr | src/components/__tests__/Login.spec.js
+[Vue warn]: A plugin must either be a function or an object with an "install" function.
+
+stderr | src/components/__tests__/Profile.spec.js > Profile > should initialize with an empty user object
+Error fetching user profile: TypeError: Cannot read properties of undefined (reading 'data')
+    at Proxy.created (F:\Informatika\Vizsgaremek\Historia\frontend\src\components\Auth\Profile.vue:122:28)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+stderr | src/components/__tests__/Login.spec.js > Login > should render the component
+[Vue warn]: A plugin must either be a function or an object with an "install" function.
+
+stderr | src/components/__tests__/Profile.spec.js > Profile > should log error if fetching user data fails
+Error fetching user profile: Error: Failed to fetch user
+    at F:\Informatika\Vizsgaremek\Historia\frontend\src\components\__tests__\Profile.spec.js:44:23
+    at file:///F:/Informatika/Vizsgaremek/Historia/frontend/node_modules/@vitest/runner/dist/index.js:174:14
+    at file:///F:/Informatika/Vizsgaremek/Historia/frontend/node_modules/@vitest/runner/dist/index.js:558:28
+    at file:///F:/Informatika/Vizsgaremek/Historia/frontend/node_modules/@vitest/runner/dist/index.js:61:24
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///F:/Informatika/Vizsgaremek/Historia/frontend/node_modules/@vitest/runner/dist/index.js:41:12)
+    at runTest (file:///F:/Informatika/Vizsgaremek/Historia/frontend/node_modules/@vitest/runner/dist/index.js:1137:17)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at runSuite (file:///F:/Informatika/Vizsgaremek/Historia/frontend/node_modules/@vitest/runner/dist/index.js:1291:15)
+    at runSuite (file:///F:/Informatika/Vizsgaremek/Historia/frontend/node_modules/@vitest/runner/dist/index.js:1291:15)
+
+stderr | src/components/__tests__/Login.spec.js > Login > should initialize with empty email and password
+[Vue warn]: A plugin must either be a function or an object with an "install" function.
+
+stderr | src/components/__tests__/Profile.spec.js > Profile > should start editing a field when "Módosítás" button is clicked
+[Vue Router warn]: No match found for location with path "/"
+
+stderr | src/components/__tests__/Login.spec.js > Login > should display error message if email or password is empty on submit
+[Vue warn]: A plugin must either be a function or an object with an "install" function.
+
+stderr | src/components/__tests__/Login.spec.js > Login > should display "Helytelen bejelentkezési adatok!" message for specific API error
+[Vue warn]: A plugin must either be a function or an object with an "install" function.
+
+ ✓ src/components/__tests__/Login.spec.js (4 tests) 67ms
+ ✓ src/components/__tests__/Profile.spec.js (5 tests) 143ms
+ ✓ src/components/__tests__/OperationsCrudUserTests.spec.js (5 tests) 90ms
+ ✓ src/components/__tests__/Modal.spec.js (5 tests) 105ms
+ ✓ src/components/__tests__/UserTestForm.spec.js (3 tests) 72ms
+
+ Test Files  5 passed (5)
+      Tests  22 passed (22)
+   Start at  21:51:37
+   Duration  7.10s (transform 728ms, setup 0ms, collect 1.96s, tests 476ms, environment 7.81s, prepare 927ms)
+
+
+## A playwright teszt futtatása:
+
+
+$ npx playwright test
+
+Running 42 tests using 2 workers
+[chromium] › e2e\vue.spec.js:293:1 › Register and Login and delete the account
+Alert üzenet: Biztosan le akarod törölni a fiókodat?
+  1) [firefox] › e2e\vue.spec.js:293:1 › Register and Login and delete the account ─────────────────
+
+    Test timeout of 30000ms exceeded.
+
+    Error: page.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for locator('button:has-text("Regisztrálás")')
+        - locator resolved to <button type="submit" data-v-cb33a4e4="" class="register-button">…</button>
+      - attempting click action
+        - waiting for element to be visible, enabled and stable
+        - element is visible, enabled and stable
+        - scrolling into view if needed
+        - done scrolling
+        - performing click action
+
+
+      300 |   await page.fill('input[placeholder="Jelszó még egyszer*"]', 'heslo123');
+      301 |   // Kattints a bejelentkezés gombra
+    > 302 |   await page.click('button:has-text("Regisztrálás")');
+          |              ^
+      303 |
+      304 |   // Ellenőrizd, hogy sikeres bejelentkezés után átirányították a felhasználót
+      305 |   await expect(page).toHaveURL('/bejelentkezes');
+        at F:\Informatika\Vizsgaremek\Historia\frontend\e2e\vue.spec.js:302:14
+
+[webkit] › e2e\vue.spec.js:293:1 › Register and Login and delete the account
+Alert üzenet: Biztosan le akarod törölni a fiókodat?
+  Slow test file: [webkit] › e2e\vue.spec.js (1.2m)  
+  Slow test file: [chromium] › e2e\vue.spec.js (1.1m)
+  Consider running tests from slow files in parallel, see https://playwright.dev/docs/test-parallel.
+  1 failed
+    [firefox] › e2e\vue.spec.js:293:1 › Register and Login and delete the account ──────────────────
+  41 passed (2.3m)

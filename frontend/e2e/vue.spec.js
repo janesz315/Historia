@@ -191,14 +191,14 @@ test('Create and delete a question', async ({ page }) => {
   await page.click('td:has-text("A középkori város")');
   await page.click('button:has-text("Új kérdés létrehozása")');
 
-  await page.fill('input#question', 'Mikor volt az Aranybulla?');
+  await page.fill('input#question', 'Mikor kezdődött el a középkor?');
   await page.selectOption('select#questionType', { label: 'Évszám' }); // Kiválasztjuk az "Évszám" opciót az elnevezés alapján
   await page.waitForSelector('button.btn.btn-success.mb-2', { state: 'visible' });
   await page.click('button.btn.btn-success.mb-2');
 
-  await expect(page.locator('td:has-text("Mikor volt az Aranybulla?")')).toBeVisible({ timeout: 5000 });
+  await expect(page.locator('td:has-text("Mikor kezdődött el a középkor?")')).toBeVisible({ timeout: 5000 });
 
-  const questionToDelete = page.locator('tr', { hasText: 'Mikor volt az Aranybulla?' });
+  const questionToDelete = page.locator('tr', { hasText: 'Mikor kezdődött el a középkor?' });
   await questionToDelete.locator('button.btn.btn-outline-danger.d-block.mb-2').click();
 
   // Várakozás a törlő űrlap megjelenésére (a modális ablakra)
@@ -212,8 +212,9 @@ test('Create and delete a question', async ({ page }) => {
   await page.waitForTimeout(500); // Rövid várakozás a frissülésre
 
   // Ellenőrizzük, hogy a kérdés eltűnt-e a listából
-  await expect(page.locator('td:has-text("Mikor volt az Aranybulla?")')).toBeHidden({ timeout: 5000 });
+  await expect(page.locator('td:has-text("Mikor kezdődött el a középkor?")')).toBeHidden({ timeout: 5000 });
 });
+
 test('Go to Profile', async ({ page }) => {
   await page.goto('/bejelentkezes');
 
@@ -271,7 +272,7 @@ test('Register and Login', async ({ page }) => {
 
   // Töltsd ki az űrlapot
   await page.fill('input[placeholder="Felhasználónév*"]', 'user');
-  await page.fill('input[placeholder="E-mail cím*"]', 'user2@example.com');
+  await page.fill('input[placeholder="E-mail cím*"]', 'user80@example.com');
   await page.fill('input[placeholder="Jelszó*"]', 'heslo123');
   await page.fill('input[placeholder="Jelszó még egyszer*"]', 'heslo123');
   // Kattints a bejelentkezés gombra
@@ -281,7 +282,7 @@ test('Register and Login', async ({ page }) => {
   await expect(page).toHaveURL('/bejelentkezes');
   await expect(page.locator('h2')).toHaveText('Bejelentkezés');
 
-  await page.fill('input#email', 'user2@example.com');
+  await page.fill('input#email', 'user80@example.com');
   await page.fill('input#password', 'heslo123');
 
   await page.click('button:has-text("Bejelentkezés")');
@@ -366,7 +367,7 @@ test('Go to Profile and change the username', async ({ page }) => {
   await usernameInput.fill(''); // Vagy await usernameInput.press('Control+a'); await usernameInput.press('Delete');
 
   // Írd be az új felhasználónevet
-  const newUsername = 'test3';
+  const newUsername = 'test4';
   await usernameInput.fill(newUsername);
 
   // Kattints a "Mentés" gombra a felhasználónév módosításához
