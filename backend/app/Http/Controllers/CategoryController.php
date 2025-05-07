@@ -15,7 +15,6 @@ class CategoryController extends Controller
     public function index()
     {
         $rows = Category::all();
-        // $rows = Diak::orderBy('nev', 'asc')->get();
         $data = [
             'message' => 'ok',
             'data' => $rows

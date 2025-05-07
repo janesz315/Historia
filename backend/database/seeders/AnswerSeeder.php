@@ -16,10 +16,10 @@ class AnswerSeeder extends Seeder
     {
         $faker = Faker::create();
 
-        // Megnézzük, hány kategória van a categories táblában
+        // Megnézzük, hány témakör van a categories táblában
         $questions = Question::all();
 
-        // Ha nincsenek kategóriák, akkor nem csinálunk semmit
+        // Ha nincsenek témakör, akkor nem csinálunk semmit
         
 
         // Minden kérdéshez hozzárendelünk válaszokat

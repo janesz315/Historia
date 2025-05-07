@@ -30,9 +30,6 @@ const router = createRouter({
     {
       path: '/rolunk',
       name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
       component: () => import('../views/AboutView.vue'),
       meta: { title: (route) => 'Rólunk' }
     },
@@ -45,27 +42,18 @@ const router = createRouter({
     {
       path: '/bejelentkezes',
       name: 'login',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
       component: () => import('@/components/Auth/Login.vue'),
       meta: { title: (route) => 'Bejelentkezés' }
     },
     {
       path: '/regisztracio',
       name: 'signup',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
       component: () => import('@/components/Auth/SignUp.vue'),
       meta: { title: (route) => 'Regisztráció' }
     },
     {
       path: '/profil',
       name: 'profile',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
       component: () => import('@/components/Auth/Profile.vue'),
       beforeEnter: [checkIfNotLogged],
       meta: { title: (route) => 'Profilom' }
@@ -73,9 +61,6 @@ const router = createRouter({
     {
       path: '/temakorok',
       name: 'categories',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
       component: () => import('../views/CategoriesView.vue'),
       beforeEnter: [checkIfNotLogged],
       meta: { title: (route) => 'Témakörök' }
@@ -83,9 +68,6 @@ const router = createRouter({
     {
       path: '/temakorokadmin',
       name: 'categoriesadmin',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
       component: () => import('../views/CategoriesAdminView.vue'),
       beforeEnter: [checkIfNotLogged],
       meta: { title: (route) => 'Témakörök - Admin', requiresAdmin: true, }
@@ -93,9 +75,6 @@ const router = createRouter({
     {
       path: '/tesztek',
       name: 'tests',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
       component: () => import('../views/TestsView.vue'),
       beforeEnter: [checkIfNotLogged],
       meta: { title: (route) => 'Tesztek' }
@@ -103,9 +82,6 @@ const router = createRouter({
     {
       path: '/admin',
       name: 'admin',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
       component: () => import('../views/AdminView.vue'),
       beforeEnter: [checkIfNotLogged],
       meta: { title: (route) => 'Admin felület', requiresAdmin: true, }
@@ -113,9 +89,6 @@ const router = createRouter({
     {
       path: '/kerdestipusok',
       name: 'questionTypes',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
       component: () => import('../views/QuestionTypesView.vue'),
       beforeEnter: [checkIfNotLogged],
       meta: { title: (route) => 'Kérdéstípusok', requiresAdmin: true, }
@@ -123,9 +96,6 @@ const router = createRouter({
     {
       path: '/kerdesek',
       name: 'kerdesek',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
       component: () => import('../views/QuestionsAnswersView.vue'),
       beforeEnter: [checkIfNotLogged],
       meta: { title: (route) => 'Kérdésbank', requiresAdmin: true, }

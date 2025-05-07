@@ -14,7 +14,6 @@ class TestQuestionController extends Controller
     public function index()
     {
         $rows = TestQuestion::all();
-        // $rows = Diak::orderBy('nev', 'asc')->get();
         $data = [
             'message' => 'ok',
             'data' => $rows

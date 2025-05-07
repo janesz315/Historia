@@ -16,7 +16,6 @@ return new class extends Migration {
             $table->integer('questionId');
             $table->tinyInteger('rightAnswer')->default(0);
             $table->timestamps();
-
             $table->foreign('questionId')->references('id')->on('questions')->onDelete('cascade');
         });
     }

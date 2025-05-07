@@ -18,10 +18,10 @@ class SourceSeeder extends Seeder
         // Faker példányosítása a véletlenszerű adatok generálásához
         $faker = Faker::create();
 
-        // Megnézzük, hány kategória van a categories táblában
+        // Megnézzük, hány témakör van a categories táblában
         $categories = Category::all();
 
-        // Ha nincsenek kategóriák, akkor nem csinálunk semmit
+        // Ha nincsenek témakörök, akkor nem csinálunk semmit
         
 
         // Adatok feltöltése (például 10 forrás)

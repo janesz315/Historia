@@ -14,7 +14,6 @@ class QuestionTypeController extends Controller
     public function index()
     {
         $rows = QuestionType::all();
-        // $rows = QuestionType::orderBy('questionCategory')->get();
         $data = [
             'message' => 'ok',
             'data' => $rows

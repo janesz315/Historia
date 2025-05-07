@@ -35,7 +35,6 @@
         </tbody>
       </table>
     </div>
-    <div></div>
   </div>
 </template>
 
@@ -80,7 +79,6 @@ export default {
           { roleId: user.roleId },
           { headers: { Authorization: `Bearer ${this.store.token}` } }
         );
-        // alert("Szerepkör sikeresen frissítve!");
       } catch (error) {
         console.error("Hiba a szerepkör frissítésekor:", error);
       }

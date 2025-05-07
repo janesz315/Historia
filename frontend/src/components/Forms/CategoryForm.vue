@@ -3,8 +3,7 @@
     @submit.prevent="onClickSubmit"
     class="row g-3 needs-validation was-validated"
   >
-    <!-- <p v-if="debug">{{ itemForm }}</p> -->
-    <div class=" mb-3">
+    <div class="mb-3">
       <label for="category" class="form-label">A témakör neve:</label>
       <input
         type="text"
@@ -17,12 +16,7 @@
 
     <div class="col-md-4 position-relative">
       <label for="Level" class="form-label">Szint</label>
-      <select
-        v-model="itemForm.level"
-        id="Level"
-        class="form-select"
-        required
-      >
+      <select v-model="itemForm.level" id="Level" class="form-select" required>
         <option value="közép">Közép</option>
         <option value="emelt">Emelt</option>
       </select>

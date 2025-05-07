@@ -18,7 +18,6 @@ class Answer extends Model
     {
         return [
             'rightAnswer' => 'boolean'
-                                
         ];
     }
 }

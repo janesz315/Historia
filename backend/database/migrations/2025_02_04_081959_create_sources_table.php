@@ -16,7 +16,6 @@ return new class extends Migration {
             $table->string('sourceLink', 255)->nullable();
             $table->string('note', 255)->nullable();
             $table->timestamps();
-
             $table->foreign('categoryId')->references('id')->on('categories')->onDelete('cascade');
         });
     }

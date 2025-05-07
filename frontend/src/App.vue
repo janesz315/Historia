@@ -66,8 +66,6 @@
                 >
               </li>
 
-              <!-- User -->
-
               <!-- Admin -->
               <li v-if="store.user && store.roleId === 1" class="nav-item">
                 <RouterLink to="/admin" class="nav-link" @click="closeNavbar"

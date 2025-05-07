@@ -14,7 +14,6 @@ class AnswerController extends Controller
     public function index()
     {
         $rows = Answer::all();
-        // $rows = Diak::orderBy('nev', 'asc')->get();
         $data = [
             'message' => 'ok',
             'data' => $rows

@@ -14,7 +14,6 @@ class UserTestController extends Controller
     public function index()
     {
         $rows = UserTest::all();
-        // $rows = Diak::orderBy('nev', 'asc')->get();
         $data = [
             'message' => 'ok',
             'data' => $rows

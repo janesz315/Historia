@@ -445,7 +445,7 @@ export default {
         } catch (error) {
           console.error("Nem sikerült a teszt frissítése:", error);
         }
-        // Feltételezem, hogy a userTests[0] az aktuális teszt (vagy ha több van, akkor valahogy meg kell találni a megfelelő tesztet)
+        // Feltételezem, hogy a userTests[0] az aktuális teszt
         if (this.userTests.length > 0) {
           this.userTests[0].score = this.scorePercent;
         }

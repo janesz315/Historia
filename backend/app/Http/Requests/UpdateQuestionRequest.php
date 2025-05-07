@@ -23,8 +23,8 @@ class UpdateQuestionRequest extends FormRequest
     {
         return [
             'question' => 'required|string|max:255',
-            'questionTypeId' => 'required|exists:question_types,id', // Assuming question types are in the 'question_types' table
-            'categoryId' => 'required|exists:categories,id' // Assuming categories are in the 'categories' table
+            'questionTypeId' => 'required|exists:question_types,id',
+            'categoryId' => 'required|exists:categories,id'
         ];
     }
 }

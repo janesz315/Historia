@@ -92,7 +92,7 @@ export default {
           this.store.setToken(response.data.user.token);
           this.store.setRoleId(response.data.user.roleId);
 
-          // 🔴 Itt állítsd be az új tokent az Axios fejlécekhez
+          // Itt állítsd be az új tokent az Axios fejlécekhez
           axios.defaults.headers.common[
             "Authorization"
           ] = `Bearer ${response.data.user.token}`;
@@ -121,7 +121,7 @@ body {
   /* Megakadályozza a görgetést */
 }
 
-/* 📌 Teljes képernyős bejelentkezési doboz */
+/* Teljes képernyős bejelentkezési doboz */
 .login-container {
   display: flex;
   align-items: center;
@@ -135,7 +135,7 @@ body {
   overflow: hidden;
 }
 
-/* 📌 Középre igazított bejelentkezési kártya */
+/* Középre igazított bejelentkezési kártya */
 .login-card {
   background: rgba(255, 248, 220, 0.9);
   padding: 20px;
@@ -148,7 +148,7 @@ body {
   transform: translateY(-10%);
 }
 
-/* 📌 Cím */
+/*  Cím */
 .login-title {
   font-size: 2.5rem;
   margin-bottom: 20px;
@@ -156,7 +156,7 @@ body {
   color: #5a3e1b;
 }
 
-/* 📌 Bemeneti mezők */
+/*  Bemeneti mezők */
 .input-group {
   display: flex;
   align-items: center;
@@ -180,7 +180,7 @@ input {
   font-size: 1rem;
 }
 
-/* 📌 Bejelentkezés gomb */
+/* Bejelentkezés gomb */
 .login-button {
   background: #8b5a2b;
   color: white;
@@ -198,7 +198,7 @@ input {
   transform: scale(1.05);
 }
 
-/* 📌 Hibaüzenet */
+/* Hibaüzenet */
 .error-message {
   color: red;
   margin-top: 10px;

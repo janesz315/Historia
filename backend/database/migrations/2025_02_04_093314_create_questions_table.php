@@ -16,7 +16,6 @@ return new class extends Migration
             $table->text('question');
             $table->integer('questionTypeId');
             $table->integer('categoryId');
-
             $table->foreign('questionTypeId')->references('id')->on('question_types');
             $table->foreign('categoryId')->references('id')->on('categories')->onDelete('cascade');
 

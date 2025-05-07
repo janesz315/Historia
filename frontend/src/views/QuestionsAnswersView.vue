@@ -12,7 +12,6 @@
             @onClickCreateButton="onClickCreateButton"
           />
         </div>
-        <!-- <button class="create-question-btn" @click="onClickCreateButton">Új kérdés létrehozása</button> -->
 
         <!-- Táblázat Wrapper, hogy a görgetés csak itt történjen -->
         <div class="table-wrapper table-responsive">
@@ -61,11 +60,6 @@
         <h2 class="title">Témakörök</h2>
         <!-- Témakörök -->
         <table class="table table-hover user-table">
-          <thead>
-            <!-- <tr>
-              <th scope="col">Témakörök</th>
-            </tr> -->
-          </thead>
           <tbody>
             <tr
               class="my-cursor"
@@ -118,9 +112,6 @@ class Question {
     questionTypeId = null,
     categoryId = null
   ) {
-    //Itt nem kell létrehozni a változót
-    //JS nem erősen típusos
-    //Dekaráció pongyola: nem is kell, csak leírjuk
     this.id = id;
     this.question = question;
     this.questionTypeId = questionTypeId;
@@ -130,9 +121,6 @@ class Question {
 
 class Answer {
   constructor(id = null, answer = null, questionId = null, rightAnswer = null) {
-    //Itt nem kell létrehozni a változót
-    //JS nem erősen típusos
-    //Dekaráció pongyola: nem is kell, csak leírjuk
     this.id = id;
     this.answer = answer;
     this.questionId = questionId;
@@ -140,12 +128,6 @@ class Answer {
   }
 }
 
-class QuestionType {
-  constructor(id = null, questionCategory = null) {
-    this.id = id;
-    this.questionCategory = questionCategory;
-  }
-}
 import axios from "axios";
 import { BASE_URL } from "../helpers/baseUrls";
 import { useAuthStore } from "../stores/useAuthStore";
@@ -283,7 +265,6 @@ export default {
         });
         console.log("Új kérdés mentése sikeres:", response);
         this.fetchQuestionsAnswers();
-        // this.fetchQuestionsAnswersById(formData.questionid);
         this.state = "Read";
       } catch (error) {
         console.error("Hiba történt a kérdés mentésekor:", error);
@@ -302,7 +283,6 @@ export default {
         console.log("Kérdés frissítése sikeres:", response);
         this.fetchQuestionsAnswers();
         this.fetchQuestionsAnswersById(formData.questionId);
-        // this.state = "Read";
       } catch (error) {
         console.error("Hiba történt a kérdés frissítésekor:", error);
       }
@@ -337,7 +317,6 @@ export default {
     },
 
     async saveField(questionAnswers, index) {
-      // console.log(`Mentés az index-nél: ${index}`);
       console.log(questionAnswers);
       console.log(index);
       try {
@@ -370,7 +349,6 @@ export default {
         this.fetchQuestionsAnswers();
         this.fetchQuestionsAnswersById(answer.questionId);
 
-        // alert("A kategória sikeresen törölve!");
       } catch (error) {
         console.error("Törlés hiba:", error);
         alert("A válasz törlése nem sikerült!");
@@ -406,7 +384,6 @@ export default {
       this.no = "Nem";
       this.size = null;
       this.selectedRowId = questionAnswer.questionId;
-      // console.log(this.selectedRowId);
     },
 
     async onClickUpdateButton(questionAnswer) {
@@ -463,7 +440,6 @@ export default {
 }
 
 .admin-container {
-  /* height: calc(100vh - 200px); */
   max-height: 600px;
   max-width: 1000px;
   background: rgba(255, 248, 220, 0.9);

@@ -11,16 +11,7 @@ use Tests\TestCase;
 class UserTest extends TestCase
 {
     use DatabaseTransactions;
-    // protected function setUp(): void
-    // {
-    //     parent::setUp();
-
-    //     // Kikapcsoljuk az auth middleware-t tesztnél
-    //     $this->withoutMiddleware();
-    //     // VAGY célzottan csak az auth-ot:
-    //     // $this->withoutMiddleware(\App\Http\Middleware\Authenticate::class);
-    //     // $this->withoutMiddleware(\Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class);
-    // }
+    
     private function login(string $email = "test@example.com", string $password = "123")
     {
         //Bejelentkezés

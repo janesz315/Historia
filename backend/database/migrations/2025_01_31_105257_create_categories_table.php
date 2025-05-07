@@ -16,7 +16,6 @@ return new class extends Migration {
             $table->string('level', 10);
             $table->text('text')->nullable();
             $table->timestamps();
-
         });
     }
 

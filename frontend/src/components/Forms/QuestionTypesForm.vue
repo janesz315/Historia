@@ -4,8 +4,10 @@
     class="row g-3 needs-validation was-validated"
   >
     <!-- <p v-if="debug">{{ itemForm }}</p> -->
-    <div class=" mb-3">
-      <label for="questionCategory" class="form-label">A kérdéstípus neve:</label>
+    <div class="mb-3">
+      <label for="questionCategory" class="form-label"
+        >A kérdéstípus neve:</label
+      >
       <input
         type="text"
         class="form-control"

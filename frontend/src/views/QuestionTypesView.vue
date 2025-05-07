@@ -128,7 +128,6 @@ export default {
       try {
         const response = await axios.post(url, data, { headers });
         this.fetchQuestionTypes();
-        // alert("A kérdéstípus sikeresen létrehozva!");
       } catch (error) {
         console.error("Hiba történt a kérdéstípus mentésekor:", error);
       }
@@ -151,7 +150,6 @@ export default {
       try {
         const response = await axios.patch(url, data, { headers });
         this.fetchQuestionTypes();
-        // alert("A kérdéstípus sikeresen módosítva!");
       } catch (error) {
         console.error("Hiba történt a kérdéstípus frissítésekor:", error);
       }
@@ -181,7 +179,6 @@ export default {
       this.no = "Nem";
       this.size = null;
       this.selectedRowId = questionType.id;
-      // console.log(this.selectedRowId);
     },
 
     onClickUpdateQuestionTypeButton(questionType) {
@@ -192,7 +189,6 @@ export default {
       this.size = "lg";
       this.questionType = { ...questionType };
       this.selectedRowId = questionType.id;
-      // console.log(this.selectedRowId);
     },
 
     onClickCreateQuestionTypeButton() {
@@ -234,22 +230,6 @@ export default {
   align-items: center;
   margin: 0;
   padding: 0;
-}
-
-.admin-container {
-  max-height: 600px;
-  max-width: 1000px;
-  background: rgba(255, 248, 220, 0.9);
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  border: 2px solid #8b5a2b;
-  margin-top: 100px;
-  margin-bottom: 200px;
-  overflow: hidden;
-  /* Elrejti a görgetést az admin-containeren kívül */
-  position: relative;
-  /* A gomb pozicionálásához szükséges */
 }
 
 .table-wrapper {

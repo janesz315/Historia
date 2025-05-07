@@ -13,7 +13,6 @@ describe('UserTestForm', () => {
     expect(wrapper.find('#testName').exists()).toBe(true);
   });
 
-  // A többi teszteset valószínűleg helyes, ha az itemForm propot átadod
   it('should bind input value to itemForm.testName', async () => {
     const itemForm = { testName: '' };
     const wrapper = mount(UserTestForm, { props: { itemForm } });

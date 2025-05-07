@@ -14,7 +14,6 @@ class SourceController extends Controller
     public function index()
     {
         $rows = Source::all();
-        // $rows = Source::orderBy('categoryId', 'sourceLink', 'note')->get();
         $data = [
             'message' => 'ok',
             'data' => $rows

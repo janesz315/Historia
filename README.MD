@@ -29,7 +29,7 @@ Legelső lépésként klónozzuk le ezt a repozitóriumot a git clone parancssal
 
 - Ezután márcsak a "php artisan serve" parancsot kell kiadnunk és ezzel elindul a backend oldal. Ennek a helyes működéséről a request.rest nevű fájlban megtalálható kérések lefuttatásáról bizonyosodhatunk meg.
 
-- Amennyiben szeretnénk teszteket is lefuttatni, akkor importáljuk be a teszt adatbázis sql-jét a phpMyAdmin-ba. Ezután egy másik terminált nyitva beírjuk a "php artisan test" parancsot.
+- Amennyiben szeretnénk teszteket is lefuttatni, akkor importáljuk be a teszt adatbázis sql-jét a phpMyAdmin-ba, ami gyakorlatilag ugyanaz az adatbázis, csa más néven. Ezután egy másik terminált nyitva beírjuk a "php artisan test" parancsot.
 
 
 

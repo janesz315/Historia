@@ -106,9 +106,9 @@ import { useAuthStore } from "../../stores/useAuthStore";
 export default {
   data() {
     return {
-      user: {}, // Stores current user data
-      updatedField: {}, // Stores the value of the field being edited
-      isEditingField: null, // Tracks which field is being edited
+      user: {},
+      updatedField: {},
+      isEditingField: null,
       store: useAuthStore(),
     };
   },
@@ -119,7 +119,7 @@ export default {
           Authorization: `Bearer ${this.store.token}`,
         },
       });
-      this.user = response.data.row; // Store user data
+      this.user = response.data.row;
     } catch (error) {
       console.error("Error fetching user profile:", error);
     }
@@ -178,8 +178,8 @@ export default {
             },
           });
           alert("Felhasználó sikeresen törölve");
-          this.store.clearStoredData(); // Clear user data and token
-          this.$router.push("/regisztracio"); // Redirect to registration page
+          this.store.clearStoredData();
+          this.$router.push("/regisztracio");
         } catch (error) {
           console.error("Error deleting user:", error);
           alert("Nem sikerült letörölni a fiókot. Kérlek próbáld újra.");
@@ -191,7 +191,7 @@ export default {
 </script>
 
 <style scoped>
-/* 📜 Profil konténer */
+/* Profil konténer */
 .container {
   max-width: 600px;
   margin: auto;
@@ -213,10 +213,9 @@ export default {
   background-position: center;
   background-attachment: fixed;
   overflow: hidden;
-  /* position: fixed; */
 }
 
-/* 📜 Kártyák (Felhasználónév, Email, Jelszó) */
+/* Kártyák (Felhasználónév, Email, Jelszó) */
 .card {
   background: rgba(255, 248, 220, 0.95);
   border: 2px solid #8b5a2b;
@@ -224,7 +223,7 @@ export default {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
 
-/* 📜 Kártya belső része */
+/* Kártya belső része */
 .card-body {
   display: flex;
   justify-content: space-between;
@@ -232,7 +231,7 @@ export default {
   padding: 15px;
 }
 
-/* 🖋 Címek */
+/*Címek */
 h1 {
   font-size: 2rem;
   text-align: center;
@@ -240,7 +239,7 @@ h1 {
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-/* 🔘 Gombok */
+/* Gombok */
 button {
   padding: 10px 15px;
   border-radius: 8px;
@@ -248,7 +247,7 @@ button {
   transition: 0.3s;
 }
 
-/* 🟡 Módosítás gomb */
+/* Módosítás gomb */
 .btn-warning {
   background: #d4a76a;
   border: none;
@@ -260,7 +259,7 @@ button {
   transform: scale(1.05);
 }
 
-/* ✅ Mentés gomb */
+/*Mentés gomb */
 .btn-success {
   background: #5a3e1b;
   border: none;
@@ -271,7 +270,7 @@ button {
   transform: scale(1.05);
 }
 
-/* ⚠️ Mégse gomb */
+/* Mégse gomb */
 .btn-secondary {
   background: #c0a080;
   border: none;
@@ -281,7 +280,7 @@ button {
   background: #9a7c60;
 }
 
-/* ❌ Törlés gomb */
+/* Törlés gomb */
 .btn-danger {
   background: #8b0000;
   width: 100%;
@@ -293,7 +292,7 @@ button {
   transform: scale(1.05);
 }
 
-/* ✏️ Input mezők */
+/* Input mezők */
 input {
   border: 2px solid #8b5a2b;
   border-radius: 5px;

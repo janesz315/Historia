@@ -41,29 +41,6 @@ class UserController extends Controller
         
     }
     
-    // public function login(Request $request){
-    //     //beolvassuk az adatokat
-    //     $email = $request->input('email');
-    //     $password = $request->input('password');
-
-    //     //megkeressük a usert
-    //     $user= User::where('email', $email)->first();
-
-    //     if (!$user || !Hash::check($password, $password ? $user->password : "")) {
-    //         return response()->json([
-    //             'message' => 'invalid email or password'
-    //         ], 200);
-    //     }
-
-    //     //Minden oké az adatokkal
-    //     //Kitöröljük a userhez tartozó esetleges tokneket
-    //     // $user->tokens()->delete();
-
-    //     //Adunk egy tokent
-    //     $user->token = $user->createToken('access')->plainTextToken;
-    //     return response()->json(['user' => $user], options:JSON_UNESCAPED_UNICODE);
-    // }
-
     public function logout(Request $request){
         $token = $request->bearerToken();
         $personalAccessToken = PersonalAccessToken::findToken($token);

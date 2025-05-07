@@ -225,7 +225,7 @@ export default {
           headers: { Authorization: `Bearer ${this.store.token}` },
         });
 
-        // A sikeres törlés után frissíteni kell a kategóriák listáját
+        // A sikeres törlés után frissíteni kell a témakörök listáját
         await this.fetchCategories();
       } catch (error) {
         console.error("Törlés hiba:", error);
@@ -238,7 +238,7 @@ export default {
         const response = await axios.delete(`${BASE_URL}/sources/${id}`, {
           headers: { Authorization: `Bearer ${this.store.token}` },
         });
-        // A sikeres törlés után frissíteni kell a kategóriák listáját
+        // A sikeres törlés után frissíteni kell a források listáját
         await this.fetchSources();
       } catch (error) {
         console.error("Törlés hiba:", error);
@@ -294,7 +294,6 @@ export default {
       };
       try {
         const response = await axios.post(url, data, { headers });
-        // this.items.push(response.data.data);
         this.fetchCategories();
       } catch (error) {
         this.errorMessages = "A bővítés nem sikerült.";
@@ -342,7 +341,6 @@ export default {
       };
       try {
         const response = await axios.post(url, data, { headers });
-        // this.items.push(response.data.data);
         this.fetchSources();
       } catch (error) {
         console.error("Nem sikerült a forrás létrehozása:", error);
@@ -409,7 +407,7 @@ export default {
         this.createCategory();
       }
 
-      this.modal.hide(); // Ha a modalnak van hide() metódusa
+      this.modal.hide();
     },
     saveSourceHandler() {
       if (this.state === "Update2") {
@@ -418,7 +416,7 @@ export default {
         this.createSource();
       }
 
-      this.modal.hide(); // Ha a modalnak van hide() metódusa
+      this.modal.hide();
     },
   },
 };

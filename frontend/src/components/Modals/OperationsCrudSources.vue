@@ -1,6 +1,5 @@
 <template>
   <div>
-    <!-- class="d-inline d-flex justify-content-between align-items-center" -->
     <!-- Csak a törlés és módosítás gombok a kártya címénél -->
     <div v-if="source">
       <button

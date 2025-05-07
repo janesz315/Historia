@@ -75,7 +75,7 @@
       </div>
     </transition>
 
-    <!-- Kategória szerkesztő modal -->
+    <!-- Témakör szerkesztő modal -->
     <CategoryEditModal
       :category="category"
       :saveCategory="saveCategory"
@@ -235,7 +235,6 @@ export default {
 @media (max-width: 768px) {
   .category-title {
     font-size: 1.2rem;
-    /* max-width:150px; */
   }
 
   .btn {

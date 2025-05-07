@@ -94,7 +94,6 @@
           <div class="input-group-text me-2">
             <input type="checkbox" v-model="answer.rightAnswer" />
           </div>
-          <!--  -->
           <input
             type="text"
             class="form-control me-2"
@@ -163,8 +162,8 @@ export default {
 
   data() {
     return {
-      updatedField: {}, // Stores the value of the field being edited
-      isEditingField: null, // Tracks which field is being edited
+      updatedField: {},
+      isEditingField: null,
       editing: false,
       rightAnswerTempValue: false,
     };
@@ -177,7 +176,6 @@ export default {
 
     removeAnswer(answer, answerId) {
       this.$emit("removeAnswer", answer, answerId);
-      // this.formData.answers.splice(index, 1); // Eltávolítja a választ a tömbből
     },
 
     resetForm() {
@@ -208,7 +206,6 @@ export default {
       this.editing = false;
       this.isEditingField = null;
       this.updatedField = {};
-      // this.$emit("cancelEdit");
     },
 
     onClickSubmit() {

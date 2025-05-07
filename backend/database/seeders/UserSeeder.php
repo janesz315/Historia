@@ -18,7 +18,7 @@ class UserSeeder extends Seeder
                 'id' => 1,
                 'name' => 'test',
                 'email' => 'test@example.com',
-                'password' => '123', // Nem szükséges titkosítani itt, mivel a modell automatikusan megteszi
+                'password' => '123',
                 'roleId' => 1,
             ]);
         }

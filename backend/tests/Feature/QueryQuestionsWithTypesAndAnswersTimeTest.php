@@ -20,9 +20,6 @@ class QueryQuestionsWithTypesAndAnswersTimeTest extends TestCase
 
         // Kikapcsoljuk az auth middleware-t tesztnél
         $this->withoutMiddleware();
-        // VAGY célzottan csak az auth-ot:
-        // $this->withoutMiddleware(\App\Http\Middleware\Authenticate::class);
-        // $this->withoutMiddleware(\Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class);
     }
     public function test_the_querygetQuestionsWithTypesAndAnswers_response_time(): void
     {
