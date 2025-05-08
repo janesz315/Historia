@@ -20,8 +20,8 @@ SET time_zone = "+00:00";
 --
 -- Adatbázis: `historia`
 --
-CREATE DATABASE IF NOT EXISTS `historia` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-USE `historia`;
+CREATE DATABASE IF NOT EXISTS `testing-historia` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `testing-historia`;
 
 -- --------------------------------------------------------
 

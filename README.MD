@@ -1,23 +1,24 @@
 Legelső lépésként klónozzuk le ezt a repozitóriumot a git clone parancssal, amit a Git nevű program használatával lehet megoldani akár a Visual Studio Code-ban is. Vagy esetlegesen ZIP-ben is le lehet tölteni a repozitórium tartalmát.
 
 # Adatbázis
+
 - A gyökérben van egy mentés az adatbázisról.
-![A kép](/backend/img/save.jpg)
+  ![A kép](/backend/img/save.jpg)
 - Ahhoz, hogy ezt be tudd importálni, a XAMPP telepítése szükséges, mert az adatbáziskezelő szerver (MySQL) és a backend futtatásához szükséges PHP szerver is ebben van benne. Szóval le kell, hogy telepítsük [innen](https://www.apachefriends.org/hu/download.html)
 
-- A telepítés után indítsuk el a programot. Ha ez megvan, akkor ennek a képnek kell bennünket fogadnia: 
-![XAMPP_kezdetleges](/backend/img/XAMPP_starter.jpg)
+- A telepítés után indítsuk el a programot. Ha ez megvan, akkor ennek a képnek kell bennünket fogadnia:
+  ![XAMPP_kezdetleges](/backend/img/XAMPP_starter.jpg)
 - Nekünk az Apache és a MySQL szervereket kell okvetlenül elindítanunk. Körülbelül így kell kinéznie, ha minden jól ment:
-![XAMPP_fut](/backend/img/XAMPP_working.jpg)
+  ![XAMPP_fut](/backend/img/XAMPP_working.jpg)
 
 - Ha ez eddig megvan, akkor kattintsunk a "Stop" gomb melletti "Admin" gombra. Ezt kell látnunk:
-![phpMyAdmin](/backend/img/phpMyAdmin.jpg)
+  ![phpMyAdmin](/backend/img/phpMyAdmin.jpg)
 
 - Ezután felül az importálás gombra rákattintva importáljuk be az sql fájlt itt a tallózás gombra kattintva:
-![Database import](/backend/img/db_import.jpg)
+  ![Database import](/backend/img/db_import.jpg)
 
 - A sikeres importálás után ezt kell látnod:
-![Database import sikeres](/backend/img/db_import_successful.jpg)
+  ![Database import sikeres](/backend/img/db_import_successful.jpg)
 
 # Backend
 
@@ -25,13 +26,11 @@ Legelső lépésként klónozzuk le ezt a repozitóriumot a git clone parancssal
 
 - Ha ezek megvannak, akkor nyissuk meg a letöltött mappánkat a Visual Studio Code-ban. A Ctrl + Ö billentyűkombinációval a terminálba lépünk, ahol lépjünk bele a backend mappájába a "cd backend" paranccsal.
 
-- Ezután a "composer install" paranccsal tudjuk letelepíteni a Laravel keretrendszerhez szükséges fájlokat, amiket a vendor mappába tesz bele. 
+- Ezután a "composer install" paranccsal tudjuk letelepíteni a Laravel keretrendszerhez szükséges fájlokat, amiket a vendor mappába tesz bele.
 
 - Ezután márcsak a "php artisan serve" parancsot kell kiadnunk és ezzel elindul a backend oldal. Ennek a helyes működéséről a request.rest nevű fájlban megtalálható kérések lefuttatásáról bizonyosodhatunk meg.
 
-- Amennyiben szeretnénk teszteket is lefuttatni, akkor importáljuk be a teszt adatbázis sql-jét a phpMyAdmin-ba, ami gyakorlatilag ugyanaz az adatbázis, csa más néven. Ezután egy másik terminált nyitva beírjuk a "php artisan test" parancsot.
-
-
+- Amennyiben szeretnénk teszteket is lefuttatni, akkor importáljuk be a teszt adatbázis sql-jét (`backend/img/testing-historia.sql`) a phpMyAdmin-ba, ami gyakorlatilag ugyanaz az adatbázis, csa más néven. Ezután egy másik terminált nyitva beírjuk a "php artisan test" parancsot.
 
 # Frontend
 
@@ -40,5 +39,7 @@ Legelső lépésként klónozzuk le ezt a repozitóriumot a git clone parancssal
 - Kövessük a parancsokat és ha mindez megvan, akkor egy másik terminált nyitva menjünk bele a frontend mappánkba és adjuk ki az "npm i" parancsot, ami letölt minden szükséges csomagot a megfelelő működéshez.
 
 - Ezután az "npm run dev" paranccsal tudjuk beindítani a projektet. És ha a Ctrl lenyomása közben rákattintunk a localhost-os hivatkozásra, akkor megjelenik a weboldal.
+
+- Az end to end teszt telepítését az `npx playwright install` függvénnyel lehet.
 
 - Az npm run test:unit és a npm run test:e2e paranccsal egy másik terminálban még tesztelni is tudjuk a frontend oldalt is.
